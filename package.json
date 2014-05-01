@@ -1,0 +1,34 @@
+{
+  "name": "Simplecomplete",
+  "id": "simplecomplete",
+  "codename": "jquery.simplecomplete",
+  "version": "0.0.1",
+  "description": "Simple, easy, customisable and with cache support.",
+  "keywords": [
+    "autocomplete",
+    "cache",
+    "ajax",
+    "input",
+    "javascript",
+    "jquery",
+    "codler"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArtemFitiskin/jquery-simplecomplete"
+  },
+  "homepage": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
+  "demo": "http://artemfitiskin.github.com/jquery-simplecomplete",
+  "license": "MIT",
+  "author": {
+    "name": "Artem Fitiskin",
+    "email": "artem.fitiskin@yandex.ru",
+    "url": "http://codler.ru"
+  },
+  "devDependencies": {
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-jquerymanifest": "latest",
+    "grunt": "^0.4.4"
+  }
+}

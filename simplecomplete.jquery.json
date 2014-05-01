@@ -1,0 +1,34 @@
+{
+  "name": "simplecomplete",
+  "version": "0.0.1",
+  "title": "Simplecomplete",
+  "author": {
+    "name": "Artem Fitiskin",
+    "email": "artem.fitiskin@yandex.ru",
+    "url": "http://codler.ru"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "description": "Simple, easy, customisable and with cache support.",
+  "keywords": [
+    "autocomplete",
+    "cache",
+    "ajax",
+    "input",
+    "javascript",
+    "jquery",
+    "codler"
+  ],
+  "docs": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
+  "demo": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
+  "download": "https://github.com/ArtemFitiskin/jquery-simplecomplete",
+  "bugs": "https://github.com/ArtemFitiskin/jquery-simplecomplete/issues",
+  "homepage": "http://github.com/ArtemFitiskin/jquery-simplecomplete"
+}

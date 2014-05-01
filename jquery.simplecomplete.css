@@ -1,0 +1,60 @@
+/* 
+ * Simplecomplete v0.0.1 - 2014-05-01 
+ * Simple, easy, customisable and with cache support. 
+ * http://github.com/ArtemFitiskin/jquery-simplecomplete 
+ * 
+ * Copyright 2014 Artem Fitiskin; MIT Licensed 
+ */ 
+
+.simplecomplete {
+    width: 100%;
+    display: none;
+}
+
+.simplecomplete-show {
+    display: block;
+}
+
+.simplecomplete,
+.simplecomplete-hint {
+    position: absolute;
+}
+
+.simplecomplete-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.simplecomplete-item {
+    cursor: pointer;
+}
+
+.simplecomplete-item:hover {
+    /* Hover State */
+}
+
+.simplecomplete-item-selected {
+    /* Selected State */
+}
+
+.simplecomplete-item strong {
+    /* Highlight Matches */
+}
+
+.simplecomplete-hint {
+    width: 100%;
+    display: none;
+
+    /** Need absolute position over input text */
+}
+
+.simplecomplete-hint-show {
+    display: block;
+}
+
+.simplecomplete-hint span {
+    color: transparent;
+}
