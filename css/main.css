@@ -1,0 +1,155 @@
+/**
+ * Common
+ */
+
+body {
+    /* Pattern made by Atle Mo. */
+    background-image: url('../img/bcg.png');
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    text-align: center;
+    color: #ffffff;
+}
+
+main {
+    width: 600px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 58px;
+}
+
+hr {
+    width: 50%;
+    border: 0;
+    height: 1px;
+    margin: 40px auto;
+    background: #4d4d4d;
+}
+
+a {
+    color: #777;
+}
+
+p {
+    color: #c8c7c7;
+    font-size: 20px;
+}
+
+/**
+ * Custom
+ */
+
+p.caption {
+    color: #ccc;
+    font-size: 16px;
+}
+
+.button {
+    margin: 20px auto;
+    display: inline-block;
+    padding: 16px 40px;
+    background: #70b3eb;
+    text-decoration: none;
+    font-size: 30px;
+    color: #ffffff;
+    text-shadow: 0px -1px 1px rgba(26, 62, 103, 0.42);
+    box-shadow: inset 0 0 0 1px #70b3eb, inset 0 1px 0 1px rgba(255,255,255,0.5);
+    border-radius: 5px;
+    -webkit-transition: 0.2s ease -webkit-transform;
+    -moz-transition: 0.2s ease -moz-transform;
+    transition: 0.2s ease transform;
+}
+
+.button:hover {
+    -webkit-transform: translateY(-3px);
+    -moz-transform: translateY(-3px);
+    transform: translateY(-3px);
+}
+
+.field {
+    position: relative;
+}
+
+.field input {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #000000;
+    height: 50px;
+    font-size: 24px;
+    padding: 0 12px;
+    border: 0;
+}
+
+.field input:focus {
+    outline: 0;
+}
+
+/**
+ * Simplecomplete
+ */
+
+.simplecomplete {
+    width: 100%;
+    background: #dddddd;
+}
+
+.simplecomplete,
+.simplecomplete-hint {
+    position: absolute;
+}
+
+.simplecomplete-list {
+    box-shadow: inset 0px 0px 6px rgba(0,0,0,0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.simplecomplete-item-selected {
+    background: #ffffff;
+}
+
+.simplecomplete-item {
+    padding: 6px 12px;
+    color: #444444;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.simplecomplete-item:hover {
+    background: #dbed8a;
+}
+
+.simplecomplete-item strong {
+    background: #f9de8f;
+    text-shadow: 0 1px 0 #ffffff;
+}
+
+.simplecomplete-hint {
+    color: #ccc;
+    text-align: left;
+    top: -51px;
+    font-weight: 400;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+    font-size: 24px;
+    display: none;
+}
+
+.simplecomplete-hint span {
+    color: transparent;
+}
+
+.simplecomplete-hint-show {
+    display: block;
+}
+
+.simplecomplete-closed {
+    display: none;
+}
