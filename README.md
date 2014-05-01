@@ -1,6 +1,9 @@
 <a href="http://gruntjs.com" target="_blank"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a>
-
 # jQuery Simplecomplete
+
+## Demo:
+
+Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-simplecomplete/).
 
 ## Usage:
 
@@ -58,3 +61,58 @@ Simplecomplete has some options.
 | ignoredKeyCode | array      |  Array with ignorable keycodes, by default: ``9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`` | [] |
 | combine | function | Returns an object for extend ajax data. Useful if you want to pass on any additional server options | $.noop |
 | callback | function      |  Select value callback function. Arguments: ``value``, ``index`` | $.noop |
+
+## Methods:
+
+#### Clear all cache:
+```javascript
+$.simplecomplete('clearCache');
+```
+
+#### Set defaults:
+```javascript
+$.simplecomplete('defaults', {
+    customClass: 'myClassForSimplecomplete'
+});
+```
+
+#### Destroy plugin:
+```javascript
+$("#firstname").simplecomplete('destroy');
+```
+
+## Example:
+
+Simplecomplete for firstname input with caching, highlight matches and 5 results limit. Remote response depends from gender:
+
+#### Form:
+```html
+<label for="gender_male">Male</label>
+<input type="radio" name="gender" value="male" id="gender_male" checked="checked" />
+
+<label for="gender_female">Female</label>
+<input type="radio" name="gender" value="female" id="gender_female" />
+
+<label for="firstname">First Name</label>
+<input type="text" name="firstname" id="firstname" />
+```
+
+#### JavaScript:
+```javascript
+$(function () {
+    $("#firstname").simplecomplete({
+        limit: 5,
+        cache: true,
+        combine: function () {
+            var gender = $("input:radio[name=gender]:checked").val();
+
+            return {
+                gender: gender
+            };
+        },
+        callback: function (value, index) {
+            console.log( "Value "+value+" are selected (with index "+index+")." );
+        }
+    });
+});
+```
