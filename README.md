@@ -53,9 +53,9 @@ Simplecomplete has some options.
 | source    | str, obj  | URL to server or local object  | null |
 | empty     | bool      |  Launch if value are empty |  true  |
 | limit | int      |  Count results to show | 10 |
-| customClass | int      |  Count results to show | [] |
+| customClass | array      |  Array with custom classes for simplecomplete element | [] |
 | cache | bool      |  Save xhr data to localStorage to avoid repeated requests | true |
-| focusOpen | bool      |  Launch simplecomplete when input  | true |
+| focusOpen | bool      |  Launch simplecomplete when input get focus  | true |
 | hint | bool      |  Add hint to input with first match label, appropriate styles should be established | false |
 | selectFirst | bool      |  If set ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on | false |
 | changeWhenSelect | bool      |  Change input value when use arrow keys navigation in autocomplete list | true |

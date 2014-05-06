@@ -31,6 +31,24 @@
          })(),
         cache = _loadCache();
 
+    /**
+	 * @options
+	 * @param source [(string|object)] <null> "URL to server or local object"
+	 * @param empty [boolean] <true> "Launch if value are empty"
+	 * @param limit [int] <10> "Count results to show"
+	 * @param customClass [array] <[]> "Array with custom classes for simplecomplete element"
+	 * @param cache [boolean] <true> "Save xhr data to localStorage to avoid repeated requests"
+	 * @param focusOpen [boolean] <true> "Launch simplecomplete when input get focus"
+	 * @param hint [boolean] <false> "Add hint to input with first match label, appropriate styles should be established "
+	 * @param selectFirst [boolean] <false> "If set true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on"
+	 * @param changeWhenSelect [boolean] <true> "Change input value when use arrow keys navigation in autocomplete list"
+	 * @param highlightMatches [boolean] <false> "This option define <strong> tag wrap for matches in autocomplete results"
+	 * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
+	 * @param customLabel [boolean] <false> "Property name in source who will be implemented as label"
+	 * @param customValue [boolean] <false> "Property name in source who will be implemented as value"
+	 * @param combine [function] <$.noop> "Returns an object for extend ajax data. Useful if you want to pass on any additional server options"
+	 * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
+	 */
     var options = {
         source: null,
         empty: true,
@@ -50,13 +68,34 @@
     };
 
     var publics = {
+
+        /**
+		 * @method
+		 * @name defaults
+		 * @description Sets default plugin options
+		 * @param opts [object] <{}> "Options object"
+		 * @example $.simplecomplete("defaults", opts);
+		 */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
             return $(this);
         },
+
+        /**
+         * @method
+         * @name clearCache
+         * @description Remove localStorage cache
+         */
         clearCache: function () {
             _deleteCache();
         },
+
+        /**
+		 * @method
+		 * @name destroy
+		 * @description Removes instance of plugin
+		 * @example $(".target").simplecomplete("destroy");
+		 */
         destroy: function () {
             return $(this).each(function (i, input) {
                 var data = $(input).next(".simplecomplete").data("simplecomplete");
@@ -90,6 +129,12 @@
         }
     };
 
+    /**
+	 * @method private
+	 * @name _init
+	 * @description Initializes plugin
+	 * @param opts [object] "Initialization options"
+	 */
     function _init(opts) {
         // Local options
         opts = $.extend({}, options, opts || {});
@@ -108,6 +153,13 @@
         return $items;
     }
 
+    /**
+	 * @method private
+	 * @name _build
+	 * @description Builds each instance
+	 * @param $node [jQuery object] "Target jQuery object"
+	 * @param opts [object] <{}> "Options object"
+	 */
     function _build($node, opts) {
         if (!$node.hasClass("simplecomplete-node")) {
             // Extend options
@@ -152,13 +204,19 @@
 
             // Bind node events
             data.$node.on("keyup.simplecomplete", data, _onKeyup)
-                      .on("keydown.simplecomplete", data, _onKeyupHelper)
+                      .on("keydown.simplecomplete", data, _onKeydownHelper)
                       .on("focus.simplecomplete", data, _onFocus)
                       .on("blur.simplecomplete", data, _onBlur)
                       .on("mousedown.simplecomplete", data, _onMousedown);
         }
     }
 
+    /**
+     * @method private
+     * @name _launch
+     * @description Use source locally or create xhr
+     * @param data [object] "Instance data"
+     */
     function _launch(data) {
         data.query = data.$node.val().trim();
 
@@ -214,6 +272,11 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _clear
+     * @param data [object] "Instance data"
+     */
     function _clear(data) {
         // Clear data
         data.response = null;
@@ -227,6 +290,13 @@
         _close(null, data);
     }
 
+    /**
+     * @method private
+     * @name _response
+     * @description Main source response function
+     * @param response [object] "Source data"
+     * @param data [object] "Instance data"
+     */
     function _response(response, data) {
         _buildList(response, data);
 
@@ -235,6 +305,13 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _buildList
+     * @description Generate simplecomplete-list and update instance data by source
+     * @param list [object] "Source data"
+     * @param data [object] "Instance data"
+     */
     function _buildList(list, data) {
         var menu = '';
 
@@ -280,6 +357,12 @@
         });
     }
 
+    /**
+     * @method private
+     * @name _onKeyup
+     * @description Keyup events in node, up/down simplecomplete-list navigation, typing and enter button callbacks
+     * @param e [object] "Event data"
+     */
     function _onKeyup(e) {
         var data = e.data;
 
@@ -339,7 +422,13 @@
         }
     }
 
-    function _onKeyupHelper(e) {
+    /**
+     * @method private
+     * @name _onKeydownHelper
+     * @description Keydown events in node, up/down for prevent cursor moving and right arrow for hint
+     * @param e [object] "Event data"
+     */
+    function _onKeydownHelper(e) {
         if (e.keyCode == 40 || e.keyCode == 38 ) {
             e.preventDefault();
         } else if (e.keyCode == 39) {
@@ -357,6 +446,13 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _onFocus
+     * @description Handles instance focus
+     * @param e [object] "Event data"
+     * @param internal [boolean] "Called by plugin"
+     */
     function _onFocus(e, internal) {
         if (!internal) {
             var data = e.data;
@@ -374,6 +470,13 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _onBlur
+     * @description Handles instance blur
+     * @param e [object] "Event data"
+     * @param internal [boolean] "Called by plugin"
+     */
     function _onBlur(e, internal) {
         e.preventDefault();
         e.stopPropagation();
@@ -386,6 +489,12 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _onMousedown
+     * @description Handles mousedown to node
+     * @param e [object] "Event data"
+     */
     function _onMousedown(e) {
         // Disable middle & right mouse click
         if (e.type == "mousedown" && [2, 3].indexOf(e.which) != -1) { return; }
@@ -414,6 +523,13 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _open
+     * @description Opens option set
+     * @param e [object] "Event data"
+     * @param data [object] "Instance data"
+     */
     function _open(e, data) {
         var data = e ? e.data : data;
 
@@ -423,6 +539,12 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _closeHelper
+     * @description Determines if event target is outside instance before closing
+     * @param e [object] "Event data"
+     */
     function _closeHelper(e) {
         if ( $(e.target).hasClass('simplecomplete-node') ) {
             return;
@@ -436,6 +558,13 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _close
+     * @description Closes option set
+     * @param e [object] "Event data"
+     * @param data [object] "Instance data"
+     */
     function _close(e, data) {
         var data = e ? e.data : data;
 
@@ -445,6 +574,12 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _select
+     * @description Select item from .simplecomplete-list
+     * @param e [object] "Event data"
+     */
     function _select(e) {
         // Disable middle & right mouse click
         if (e.type == "mousedown" && [2, 3].indexOf(e.which) != -1) { return; }
@@ -457,10 +592,8 @@
         var $target = (e.type == "keyup" && data.$selected ) ? data.$selected : $(this);
 
         if (!data.$node.prop("disabled")) {
-            var active = data.$list.index($target);
-
             _close(e);
-            _update(active, data);
+            _update(data);
 
             if (e.type == "click") {
                 data.$node.trigger("focus", [true]);
@@ -468,12 +601,24 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _setHint
+     * @description Set simplecomplete by hint
+     * @param data [object] "Instance data"
+     */
     function _setHint(data) {
         _setValue(data);
         _handleChange(data);
         _launch(data);
     }
 
+    /**
+     * @method private
+     * @name _setValue
+     * @description Set value for native field
+     * @param data [object] "Instance data"
+     */
     function _setValue(data) {
         if (data.$selected) {
             if (data.hintText && data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
@@ -489,17 +634,35 @@
         }
     }
 
-    function _update(active, data) {
+    /**
+     * @method private
+     * @name _update
+     * @param data [object] "Instance data"
+     */
+    function _update(data) {
         _setValue(data);
         _handleChange(data);
         _clear(data);
     }
 
+    /**
+     * @method private
+     * @name _handleChange
+     * @description Trigger node change event and call the callback function
+     * @param data [object] "Instance data"
+     */
     function _handleChange(data) {
         data.callback.call(data.$simplecomplete, data.$node.val(), data.index, data.response[data.index]);
         data.$node.trigger("change");
     }
 
+    /**
+     * @method private
+     * @name _getCache
+     * @description Store AJAX response in plugin cache
+     * @param url [string] "AJAX get query string"
+     * @param data [object] "AJAX response data"
+     */
     function _setCache(url, data) {
         if (!supportLocalStorage) { return; }
         if (url && data) {
@@ -521,18 +684,34 @@
         }
     }
 
+    /**
+     * @method private
+     * @name _getCache
+     * @description Get cached data by url if exist
+     * @param url [string] "AJAX get query string"
+     */
     function _getCache(url) {
         if (!url) { return; }
         var response = (cache[url] && cache[url].value) ? cache[url].value : false;
         return response;
     }
 
+    /**
+     * @method private
+     * @name _loadCache
+     * @description Load all plugin cache from localStorage
+     */
     function _loadCache() {
         if (!supportLocalStorage) { return; }
         var json = localStorage.getItem(localStorageKey) || '{}';
         return JSON.parse(json);
     }
 
+    /**
+	 * @method private
+	 * @name _deleteCache
+	 * @description Delete all plugin cache from localStorage
+	 */
     function _deleteCache() {
         try {
             localStorage.removeItem(localStorageKey);
