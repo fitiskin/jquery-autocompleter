@@ -42,6 +42,8 @@ $(function () {
 });
 ```
 
+If you will not defined a value in source object, label will be used as value in input field after select.
+
 ## Options:
 
 Simplecomplete has some options.
@@ -59,6 +61,8 @@ Simplecomplete has some options.
 | changeWhenSelect | bool      |  Change input value when use arrow keys navigation in autocomplete list | true |
 | highlightmatches | bool      |  This option define ``<strong>`` tag wrap for matches in autocomplete results | false |
 | ignoredKeyCode | array      |  Array with ignorable keycodes, by default: ``9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`` | [] |
+| customLabel  | str | Property name in source who will be implemented as label | false |
+| customValue  | str | Property name in source who will be implemented as value | false |
 | combine | function | Returns an object for extend ajax data. Useful if you want to pass on any additional server options | $.noop |
 | callback | function      |  Select value callback function. Arguments: ``value``, ``index`` | $.noop |
 

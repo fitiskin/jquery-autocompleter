@@ -537,9 +537,9 @@
         try {
             localStorage.removeItem(localStorageKey);
             cache = _loadCache();
-          } catch (e) {
+        } catch (e) {
             throw(e);
-          }
+        }
     }
 
     $.fn.simplecomplete = function (method) {
