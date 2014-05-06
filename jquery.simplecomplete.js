@@ -1,5 +1,5 @@
 /* 
- * Simplecomplete v0.0.1 - 2014-05-01 
+ * Simplecomplete v0.0.1 - 2014-05-06 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-simplecomplete 
  * 
@@ -20,12 +20,12 @@
         supportLocalStorage = (function () {
             var supported = typeof window.localStorage !== 'undefined';
             if (supported) {
-                  try {
+                try {
                     localStorage.setItem("simplecomplete", "simplecomplete");
                     localStorage.removeItem("simplecomplete");
-                  } catch (e) {
+                } catch (e) {
                     supported = false;
-                  }
+                }
             }
             return supported;
          })(),
@@ -41,8 +41,10 @@
         hint: false,
         selectFirst: false,
         changeWhenSelect: true,
-        highlightmatches: false,
+        highlightMatches: false,
         ignoredKeyCode: [],
+        customLabel: false,
+        customValue: false,
         combine: $.noop,
         callback: $.noop
     };
@@ -111,7 +113,7 @@
             // Extend options
             opts = $.extend({}, opts, $node.data("simplecomplete-options"));
 
-            var html = '<div class="simplecomplete '+opts.customClass.join(' ')+'">';
+            var html = '<div class="simplecomplete '+opts.customClass.join(' ')+'" id="simplecomplete-'+(guid+1)+'">';
                 if (opts.hint) {
                     html += '<div class="simplecomplete-hint"></div>';
                 }
@@ -137,6 +139,8 @@
                 hintText: false,
                 source: false,
                 jqxhr: false,
+                response: null,
+                focused: false,
                 query: '',
                 originalAutocomplete: originalAutocomplete,
                 guid: guid++
@@ -151,7 +155,7 @@
                       .on("keydown.simplecomplete", data, _onKeyupHelper)
                       .on("focus.simplecomplete", data, _onFocus)
                       .on("blur.simplecomplete", data, _onBlur)
-                      .on("click.simplecomplete", data, _onClick);
+                      .on("mousedown.simplecomplete", data, _onMousedown);
         }
     }
 
@@ -212,6 +216,7 @@
 
     function _clear(data) {
         // Clear data
+        data.response = null;
         data.$list = null;
         data.$selected = null;
         data.index = 0;
@@ -241,8 +246,16 @@
             }
 
             var re = new RegExp(data.query, "gi");
-            var label = data.highlightmatches ? list[item].label.replace(re, "<strong>$&</strong>") : list[item].label;
-            menu += '<li data-value="'+list[item].value+'" class="'+classes.join(' ')+'">' + label + '</li>';
+            var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label;
+                label = data.highlightMatches ? label.replace(re, "<strong>$&</strong>") : label;
+
+            var value = (data.customValue && list[item][data.customValue]) ? list[item][data.customValue] : list[item].value;
+
+            if (value) {
+                menu += '<li data-value="'+value+'" class="'+classes.join(' ')+'">' + label + '</li>';
+            } else {
+                menu += '<li class="'+classes.join(' ')+'">' + label + '</li>';
+            }
         }
 
         // Set hint
@@ -257,16 +270,20 @@
         }
 
         // Update data
-        data.$simplecomplete.find("ul").html(menu);
+        data.response = list;
+        data.$simplecomplete.find(".simplecomplete-list").html(menu);
         data.$selected = (data.$simplecomplete.find(".simplecomplete-item-selected").length) ? data.$simplecomplete.find(".simplecomplete-item-selected") : null;
-        data.$list = (list.length) ? data.$simplecomplete.find("ul li") : null;
+        data.$list = (list.length) ? data.$simplecomplete.find(".simplecomplete-item") : null;
         data.index = data.$selected ? data.$list.index(data.$selected): -1;
+        data.$simplecomplete.find(".simplecomplete-item").each(function (i, j) {
+            $(j).data(data.response[i]);
+        });
     }
 
     function _onKeyup(e) {
         var data = e.data;
 
-        if (e.keyCode == 40 || e.keyCode == 38 ) {
+        if ( (e.keyCode == 40 || e.keyCode == 38) && data.$simplecomplete.hasClass('simplecomplete-show') ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -313,7 +330,8 @@
                 _select(e);
             } else {
                 e.preventDefault();
-                data.$node.trigger('click.simplecomplete');
+                e.stopPropagation();
+                data.$node.trigger('mousedown.simplecomplete');
             }
         } else if (ignoredKeyCode.indexOf(e.keyCode) == -1 && data.ignoredKeyCode.indexOf(e.keyCode) == -1) {
             // Typing
@@ -341,15 +359,16 @@
 
     function _onFocus(e, internal) {
         if (!internal) {
-            e.preventDefault();
-            e.stopPropagation();
-
             var data = e.data;
 
             if (!data.$node.prop("disabled") && !data.$simplecomplete.hasClass('simplecomplete-show')) {
                 data.$simplecomplete.addClass("simplecomplete-focus")
                 if (data.focusOpen) {
                     _launch(data);
+                    data.focused = true;
+                    setTimeout(function () {
+                        data.focused = false;
+                    }, 500);
                 }
             }
         }
@@ -367,39 +386,35 @@
         }
     }
 
-    function _onClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    function _onMousedown(e) {
+        // Disable middle & right mouse click
+        if (e.type == "mousedown" && [2, 3].indexOf(e.which) != -1) { return; }
 
         var data = e.data;
-
-        if (!data.$node.is(":disabled")) {
-            if (isMobile && !isFirefoxMobile) {
-                var el = data.$select[0];
-                if (window.document.createEvent) { // All
-                    var evt = window.document.createEvent("MouseEvents");
-                    evt.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                    el.dispatchEvent(evt);
-                } else if (el.fireEvent) { // IE
-                    el.fireEvent("onmousedown");
-                }
-            } else {
-                // Delegate intent
-                if (data.$simplecomplete.hasClass("simplecomplete-closed")) {
-                    _open(e);
-                } else if (data.$simplecomplete.hasClass("simplecomplete-show")) {
-                    _close(e);
+        if (data.$list && !data.focused) {
+            if (!data.$node.is(":disabled")) {
+                if (isMobile && !isFirefoxMobile) {
+                    var el = data.$select[0];
+                    if (window.document.createEvent) { // All
+                        var evt = window.document.createEvent("MouseEvents");
+                        evt.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                        el.dispatchEvent(evt);
+                    } else if (el.fireEvent) { // IE
+                        el.fireEvent("onmousedown");
+                    }
+                } else {
+                    // Delegate intent
+                    if (data.$simplecomplete.hasClass("simplecomplete-closed")) {
+                        _open(e);
+                    } else if (data.$simplecomplete.hasClass("simplecomplete-show")) {
+                        _close(e);
+                    }
                 }
             }
         }
     }
 
     function _open(e, data) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
         var data = e ? e.data : data;
 
         if (!data.$node.prop("disabled") && !data.$simplecomplete.hasClass("simplecomplete-show") && data.$list && data.$list.length ) {
@@ -409,6 +424,10 @@
     }
 
     function _closeHelper(e) {
+        if ( $(e.target).hasClass('simplecomplete-node') ) {
+            return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -418,11 +437,6 @@
     }
 
     function _close(e, data) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
         var data = e ? e.data : data;
 
         if (data.$simplecomplete.hasClass("simplecomplete-show")) {
@@ -465,7 +479,8 @@
             if (data.hintText && data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
                 data.$simplecomplete.find('.simplecomplete-hint').removeClass('simplecomplete-hint-show');
             }
-            data.$node.val(data.$selected.text().trim());
+            var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.text().trim();
+            data.$node.val(value);
         } else {
             if (data.hintText && !data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
                 data.$simplecomplete.find('.simplecomplete-hint').addClass('simplecomplete-hint-show');
@@ -481,7 +496,7 @@
     }
 
     function _handleChange(data) {
-        data.callback.call(data.$simplecomplete, data.$node.val(), data.index);
+        data.callback.call(data.$simplecomplete, data.$node.val(), data.index, data.response[data.index]);
         data.$node.trigger("change");
     }
 
