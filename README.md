@@ -120,3 +120,17 @@ $(function () {
     });
 });
 ```
+
+## Main structure:
+
+Simple 3-level: div (node) -> ul (list) -> li (item).
+
+```html
+<div class="simplecomplete" id="simplecomplete-1">
+	<ul class="simplecomplete-list">
+		<li class="simplecomplete-item">First</li>
+		...
+		<li class="simplecomplete-item">Last</li>
+	</ul>
+</div>
+```
