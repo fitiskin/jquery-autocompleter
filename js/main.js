@@ -672,9 +672,9 @@ var colors =
 ];
 
 $(function () {
-    $('#nope').simplecomplete({
+    $('#nope').autocompleter({
         // marker for autocomplete matches
-        highlightmatches: true,
+        highlightMatches: true,
 
         // object to local or url to remote search
         source: colors,
