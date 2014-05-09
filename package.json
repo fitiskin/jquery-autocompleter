@@ -2,7 +2,7 @@
   "name": "Autocompleter",
   "id": "autocompleter",
   "codename": "jquery.autocompleter",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Simple, easy, customisable and with cache support.",
   "keywords": [
     "autocomplete",
