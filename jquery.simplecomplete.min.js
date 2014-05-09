@@ -1,5 +1,5 @@
 /* 
- * Simplecomplete v0.0.1 - 2014-05-06 
+ * Simplecomplete v0.0.3-alpha - 2014-05-09 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-simplecomplete 
  * 

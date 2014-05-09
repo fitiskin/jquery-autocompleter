@@ -2,7 +2,7 @@
   "name": "Simplecomplete",
   "id": "simplecomplete",
   "codename": "jquery.simplecomplete",
-  "version": "0.0.1",
+  "version": "0.0.3-alpha",
   "description": "Simple, easy, customisable and with cache support.",
   "keywords": [
     "autocomplete",
@@ -26,9 +26,9 @@
     "url": "http://codler.ru"
   },
   "devDependencies": {
+    "grunt": "^0.4.4",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
-    "grunt-jquerymanifest": "latest",
-    "grunt": "^0.4.4"
+    "grunt-jquerymanifest": "latest"
   }
 }
