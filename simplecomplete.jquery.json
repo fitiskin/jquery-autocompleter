@@ -1,6 +1,6 @@
 {
   "name": "simplecomplete",
-  "version": "0.0.3-alpha",
+  "version": "0.0.5",
   "title": "Simplecomplete",
   "author": {
     "name": "Artem Fitiskin",
@@ -27,7 +27,7 @@
     "codler"
   ],
   "docs": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
-  "demo": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
+  "demo": "http://artemfitiskin.github.io/jquery-simplecomplete/",
   "download": "https://github.com/ArtemFitiskin/jquery-simplecomplete",
   "bugs": "https://github.com/ArtemFitiskin/jquery-simplecomplete/issues",
   "homepage": "http://github.com/ArtemFitiskin/jquery-simplecomplete"

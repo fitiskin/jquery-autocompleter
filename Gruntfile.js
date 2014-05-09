@@ -51,7 +51,7 @@ module.exports = function(grunt) {
 					keywords: '<%= pkg.keywords %>',
 					homepage: '<%= pkg.homepage %>',
 					docs: 	  '<%= pkg.homepage %>',
-					demo: 	  '<%= pkg.homepage %>',
+					demo: 	  '<%= pkg.demo %>',
 					download: '<%= pkg.repository.url %>',
 					bugs: 	  '<%= pkg.repository.url %>/issues',
 					dependencies: {

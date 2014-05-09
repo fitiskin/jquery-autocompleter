@@ -2,7 +2,7 @@
   "name": "Simplecomplete",
   "id": "simplecomplete",
   "codename": "jquery.simplecomplete",
-  "version": "0.0.3-alpha",
+  "version": "0.0.5",
   "description": "Simple, easy, customisable and with cache support.",
   "keywords": [
     "autocomplete",
@@ -18,7 +18,7 @@
     "url": "https://github.com/ArtemFitiskin/jquery-simplecomplete"
   },
   "homepage": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
-  "demo": "http://artemfitiskin.github.com/jquery-simplecomplete",
+  "demo": "http://artemfitiskin.github.io/jquery-simplecomplete/",
   "license": "MIT",
   "author": {
     "name": "Artem Fitiskin",
