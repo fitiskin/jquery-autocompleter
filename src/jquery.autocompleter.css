@@ -1,18 +1,18 @@
-.simplecomplete {
+.autocompleter {
     width: 100%;
     display: none;
 }
 
-.simplecomplete-show {
+.autocompleter-show {
     display: block;
 }
 
-.simplecomplete,
-.simplecomplete-hint {
+.autocompleter,
+.autocompleter-hint {
     position: absolute;
 }
 
-.simplecomplete-list {
+.autocompleter-list {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -20,33 +20,33 @@
     box-sizing: border-box;
 }
 
-.simplecomplete-item {
+.autocompleter-item {
     cursor: pointer;
 }
 
-.simplecomplete-item:hover {
+.autocompleter-item:hover {
     /* Hover State */
 }
 
-.simplecomplete-item-selected {
+.autocompleter-item-selected {
     /* Selected State */
 }
 
-.simplecomplete-item strong {
+.autocompleter-item strong {
     /* Highlight Matches */
 }
 
-.simplecomplete-hint {
+.autocompleter-hint {
     width: 100%;
     display: none;
 
     /** Need absolute position over input text */
 }
 
-.simplecomplete-hint-show {
+.autocompleter-hint-show {
     display: block;
 }
 
-.simplecomplete-hint span {
+.autocompleter-hint span {
     color: transparent;
 }

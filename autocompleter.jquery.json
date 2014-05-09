@@ -1,10 +1,10 @@
 {
-  "name": "simplecomplete",
+  "name": "autocompleter",
   "version": "0.0.5",
-  "title": "Simplecomplete",
+  "title": "Autocompleter",
   "author": {
     "name": "Artem Fitiskin",
-    "email": "artem.fitiskin@yandex.ru",
+    "email": "me@artemfitiskin.ru",
     "url": "http://codler.ru"
   },
   "licenses": [
@@ -26,9 +26,9 @@
     "jquery",
     "codler"
   ],
-  "docs": "http://github.com/ArtemFitiskin/jquery-simplecomplete",
-  "demo": "http://artemfitiskin.github.io/jquery-simplecomplete/",
-  "download": "https://github.com/ArtemFitiskin/jquery-simplecomplete",
-  "bugs": "https://github.com/ArtemFitiskin/jquery-simplecomplete/issues",
-  "homepage": "http://github.com/ArtemFitiskin/jquery-simplecomplete"
+  "docs": "http://github.com/ArtemFitiskin/jquery-autocompleter",
+  "demo": "http://artemfitiskin.github.io/jquery-autocompleter/",
+  "download": "https://github.com/ArtemFitiskin/jquery-autocompleter",
+  "bugs": "https://github.com/ArtemFitiskin/jquery-autocompleter/issues",
+  "homepage": "http://github.com/ArtemFitiskin/jquery-autocompleter"
 }

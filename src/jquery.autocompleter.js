@@ -8,13 +8,13 @@
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
         isFirefoxMobile = (isFirefox && isMobile),
         $body = null,
-        localStorageKey = 'simpleAutocompleteCache',
+        localStorageKey = 'autocompleterCache',
         supportLocalStorage = (function () {
             var supported = typeof window.localStorage !== 'undefined';
             if (supported) {
                 try {
-                    localStorage.setItem("simplecomplete", "simplecomplete");
-                    localStorage.removeItem("simplecomplete");
+                    localStorage.setItem("autocompleter", "autocompleter");
+                    localStorage.removeItem("autocompleter");
                 } catch (e) {
                     supported = false;
                 }
@@ -28,9 +28,9 @@
 	 * @param source [(string|object)] <null> "URL to server or local object"
 	 * @param empty [boolean] <true> "Launch if value are empty"
 	 * @param limit [int] <10> "Count results to show"
-	 * @param customClass [array] <[]> "Array with custom classes for simplecomplete element"
+	 * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
 	 * @param cache [boolean] <true> "Save xhr data to localStorage to avoid repeated requests"
-	 * @param focusOpen [boolean] <true> "Launch simplecomplete when input get focus"
+	 * @param focusOpen [boolean] <true> "Launch autocompleter when input get focus"
 	 * @param hint [boolean] <false> "Add hint to input with first match label, appropriate styles should be established "
 	 * @param selectFirst [boolean] <false> "If set true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on"
 	 * @param changeWhenSelect [boolean] <true> "Change input value when use arrow keys navigation in autocomplete list"
@@ -66,7 +66,7 @@
 		 * @name defaults
 		 * @description Sets default plugin options
 		 * @param opts [object] <{}> "Options object"
-		 * @example $.simplecomplete("defaults", opts);
+		 * @example $.autocompleter("defaults", opts);
 		 */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
@@ -86,11 +86,11 @@
 		 * @method
 		 * @name destroy
 		 * @description Removes instance of plugin
-		 * @example $(".target").simplecomplete("destroy");
+		 * @example $(".target").autocompleter("destroy");
 		 */
         destroy: function () {
             return $(this).each(function (i, input) {
-                var data = $(input).next(".simplecomplete").data("simplecomplete");
+                var data = $(input).next(".autocompleter").data("autocompleter");
 
                 if (data) {
                     // About xhr
@@ -99,9 +99,9 @@
                     }
 
                     // If has selected item & open - confirm it
-                    if (data.$simplecomplete.hasClass("open")) {
-                        data.$simplecomplete.find(".simplecomplete-selected")
-                                            .trigger("click.simplecomplete");
+                    if (data.$autocompleter.hasClass("open")) {
+                        data.$autocompleter.find(".autocompleter-selected")
+                                            .trigger("click.autocompleter");
                     }
 
                     // Restore original autocomplete attr
@@ -111,10 +111,10 @@
                         data.$node.attr("autocomplete", data.originalAutocomplete);
                     }
 
-                    // Remove simplecomplete & unbind events
-                     data.$node.off(".simplecomplete")
-                               .removeClass("simplecomplete-node");
-                     data.$simplecomplete.off(".simplecomplete")
+                    // Remove autocompleter & unbind events
+                     data.$node.off(".autocompleter")
+                               .removeClass("autocompleter-node");
+                     data.$autocompleter.off(".autocompleter")
                                          .remove();
                 }
             });
@@ -153,21 +153,21 @@
 	 * @param opts [object] <{}> "Options object"
 	 */
     function _build($node, opts) {
-        if (!$node.hasClass("simplecomplete-node")) {
+        if (!$node.hasClass("autocompleter-node")) {
             // Extend options
-            opts = $.extend({}, opts, $node.data("simplecomplete-options"));
+            opts = $.extend({}, opts, $node.data("autocompleter-options"));
 
-            var html = '<div class="simplecomplete '+opts.customClass.join(' ')+'" id="simplecomplete-'+(guid+1)+'">';
+            var html = '<div class="autocompleter '+opts.customClass.join(' ')+'" id="autocompleter-'+(guid+1)+'">';
                 if (opts.hint) {
-                    html += '<div class="simplecomplete-hint"></div>';
+                    html += '<div class="autocompleter-hint"></div>';
                 }
-                html += '<ul class="simplecomplete-list"></ul>';
+                html += '<ul class="autocompleter-list"></ul>';
                 html += '</div>';
 
-            $node.addClass("simplecomplete-node")
+            $node.addClass("autocompleter-node")
                  .after(html);
 
-            var $simplecomplete = $node.next(".simplecomplete").eq(0);
+            var $autocompleter = $node.next(".autocompleter").eq(0);
 
             // Set autocomplete to off for warn overlay
             var originalAutocomplete = $node.attr("autocomplete");
@@ -176,7 +176,7 @@
             // Store plugin data
             var data = $.extend({
                 $node: $node,
-                $simplecomplete: $simplecomplete,
+                $autocompleter: $autocompleter,
                 $selected: null,
                 $list: null,
                 index: -1,
@@ -190,16 +190,16 @@
                 guid: guid++
             }, opts);
 
-            // Bind simplecomplete events
-            data.$simplecomplete.on("mousedown.simplecomplete", ".simplecomplete-item", data, _select)
-                                .data("simplecomplete", data);
+            // Bind autocompleter events
+            data.$autocompleter.on("mousedown.autocompleter", ".autocompleter-item", data, _select)
+                                .data("autocompleter", data);
 
             // Bind node events
-            data.$node.on("keyup.simplecomplete", data, _onKeyup)
-                      .on("keydown.simplecomplete", data, _onKeydownHelper)
-                      .on("focus.simplecomplete", data, _onFocus)
-                      .on("blur.simplecomplete", data, _onBlur)
-                      .on("mousedown.simplecomplete", data, _onMousedown);
+            data.$node.on("keyup.autocompleter", data, _onKeyup)
+                      .on("keydown.autocompleter", data, _onKeydownHelper)
+                      .on("focus.autocompleter", data, _onFocus)
+                      .on("blur.autocompleter", data, _onBlur)
+                      .on("mousedown.autocompleter", data, _onMousedown);
         }
     }
 
@@ -240,7 +240,7 @@
                     dataType:   "json",
                     data:       ajaxData,
                     beforeSend: function (xhr) {
-                        data.$simplecomplete.addClass('simplecomplete-ajax');
+                        data.$autocompleter.addClass('autocompleter-ajax');
                         _clear(data);
                         if (data.cache) {
                             var stored = _getCache(this.url);
@@ -258,7 +258,7 @@
                     _response(response, data)
                 })
                 .always(function () {
-                    data.$simplecomplete.removeClass('simplecomplete-ajax');
+                    data.$autocompleter.removeClass('autocompleter-ajax');
                 });
             }
         }
@@ -275,8 +275,8 @@
         data.$list = null;
         data.$selected = null;
         data.index = 0;
-        data.$simplecomplete.find(".simplecomplete-list").empty();
-        data.$simplecomplete.find('.simplecomplete-hint').removeClass('simplecomplete-hint-show').empty();
+        data.$autocompleter.find(".autocompleter-list").empty();
+        data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show').empty();
         data.hintText = false;
 
         _close(null, data);
@@ -292,7 +292,7 @@
     function _response(response, data) {
         _buildList(response, data);
 
-        if (data.$simplecomplete.hasClass('simplecomplete-focus')) {
+        if (data.$autocompleter.hasClass('autocompleter-focus')) {
             _open(null, data);
         }
     }
@@ -300,7 +300,7 @@
     /**
      * @method private
      * @name _buildList
-     * @description Generate simplecomplete-list and update instance data by source
+     * @description Generate autocompleter-list and update instance data by source
      * @param list [object] "Source data"
      * @param data [object] "Instance data"
      */
@@ -308,10 +308,10 @@
         var menu = '';
 
         for (var item in list) {
-            var classes = ["simplecomplete-item"];
+            var classes = ["autocompleter-item"];
 
             if (data.selectFirst && item == "0" && !data.changeWhenSelect) {
-                classes.push("simplecomplete-item-selected");
+                classes.push("autocompleter-item-selected");
             }
 
             var re = new RegExp(data.query, "gi");
@@ -333,18 +333,18 @@
             if (hint && (data.query != list[0].label)) {
                 var re = new RegExp(data.query, "i");
                 var hintText = hint.replace(re, "<span>"+data.query+"</span>");
-                data.$simplecomplete.find('.simplecomplete-hint').addClass('simplecomplete-hint-show').html(hintText);
+                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
                 data.hintText = hintText;
             }
         }
 
         // Update data
         data.response = list;
-        data.$simplecomplete.find(".simplecomplete-list").html(menu);
-        data.$selected = (data.$simplecomplete.find(".simplecomplete-item-selected").length) ? data.$simplecomplete.find(".simplecomplete-item-selected") : null;
-        data.$list = (list.length) ? data.$simplecomplete.find(".simplecomplete-item") : null;
+        data.$autocompleter.find(".autocompleter-list").html(menu);
+        data.$selected = (data.$autocompleter.find(".autocompleter-item-selected").length) ? data.$autocompleter.find(".autocompleter-item-selected") : null;
+        data.$list = (list.length) ? data.$autocompleter.find(".autocompleter-item") : null;
         data.index = data.$selected ? data.$list.index(data.$selected): -1;
-        data.$simplecomplete.find(".simplecomplete-item").each(function (i, j) {
+        data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
             $(j).data(data.response[i]);
         });
     }
@@ -352,13 +352,13 @@
     /**
      * @method private
      * @name _onKeyup
-     * @description Keyup events in node, up/down simplecomplete-list navigation, typing and enter button callbacks
+     * @description Keyup events in node, up/down autocompleter-list navigation, typing and enter button callbacks
      * @param e [object] "Event data"
      */
     function _onKeyup(e) {
         var data = e.data;
 
-        if ( (e.keyCode == 40 || e.keyCode == 38) && data.$simplecomplete.hasClass('simplecomplete-show') ) {
+        if ( (e.keyCode == 40 || e.keyCode == 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -390,23 +390,23 @@
                 data.index = (e.keyCode == 40) ? next : prev;
 
                 // Update HTML
-                data.$list.removeClass("simplecomplete-item-selected");
+                data.$list.removeClass("autocompleter-item-selected");
                 if (data.index != -1) {
-                    data.$list.eq(data.index).addClass("simplecomplete-item-selected");
+                    data.$list.eq(data.index).addClass("autocompleter-item-selected");
                 }
-                data.$selected = data.$simplecomplete.find(".simplecomplete-item-selected").length ? data.$simplecomplete.find(".simplecomplete-item-selected") : null;
+                data.$selected = data.$autocompleter.find(".autocompleter-item-selected").length ? data.$autocompleter.find(".autocompleter-item-selected") : null;
                 if (data.changeWhenSelect) {
                     _setValue(data);
                 }
             }
         } else if ([13].indexOf(e.keyCode) != -1) {
             // Enter
-            if (data.$simplecomplete.hasClass('simplecomplete-show') && data.$selected) {
+            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
                 _select(e);
             } else {
                 e.preventDefault();
                 e.stopPropagation();
-                data.$node.trigger('mousedown.simplecomplete');
+                data.$node.trigger('mousedown.autocompleter');
             }
         } else if (ignoredKeyCode.indexOf(e.keyCode) == -1 && data.ignoredKeyCode.indexOf(e.keyCode) == -1) {
             // Typing
@@ -426,10 +426,10 @@
         } else if (e.keyCode == 39) {
             // Right arrow
             var data = e.data;
-            if (data.hint && data.hintText && data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
+            if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 e.preventDefault();
 
-                var hintOrigin = data.$simplecomplete.find(".simplecomplete-item").length ? data.$simplecomplete.find(".simplecomplete-item").eq(0).text().trim() : false;
+                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).text().trim() : false;
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
@@ -449,8 +449,8 @@
         if (!internal) {
             var data = e.data;
 
-            if (!data.$node.prop("disabled") && !data.$simplecomplete.hasClass('simplecomplete-show')) {
-                data.$simplecomplete.addClass("simplecomplete-focus")
+            if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass('autocompleter-show')) {
+                data.$autocompleter.addClass("autocompleter-focus")
                 if (data.focusOpen) {
                     _launch(data);
                     data.focused = true;
@@ -476,7 +476,7 @@
         var data = e.data;
 
         if (!internal) {
-            data.$simplecomplete.removeClass("simplecomplete-focus")
+            data.$autocompleter.removeClass("autocompleter-focus")
             _close(e);
         }
     }
@@ -505,9 +505,9 @@
                     }
                 } else {
                     // Delegate intent
-                    if (data.$simplecomplete.hasClass("simplecomplete-closed")) {
+                    if (data.$autocompleter.hasClass("autocompleter-closed")) {
                         _open(e);
-                    } else if (data.$simplecomplete.hasClass("simplecomplete-show")) {
+                    } else if (data.$autocompleter.hasClass("autocompleter-show")) {
                         _close(e);
                     }
                 }
@@ -525,9 +525,9 @@
     function _open(e, data) {
         var data = e ? e.data : data;
 
-        if (!data.$node.prop("disabled") && !data.$simplecomplete.hasClass("simplecomplete-show") && data.$list && data.$list.length ) {
-            data.$simplecomplete.removeClass("simplecomplete-closed").addClass("simplecomplete-show");
-            $body.on("click.simplecomplete-" + data.guid, ":not(.simplecomplete-item)", data, _closeHelper);
+        if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length ) {
+            data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
+            $body.on("click.autocompleter-" + data.guid, ":not(.autocompleter-item)", data, _closeHelper);
         }
     }
 
@@ -538,14 +538,14 @@
      * @param e [object] "Event data"
      */
     function _closeHelper(e) {
-        if ( $(e.target).hasClass('simplecomplete-node') ) {
+        if ( $(e.target).hasClass('autocompleter-node') ) {
             return;
         }
 
         e.preventDefault();
         e.stopPropagation();
 
-        if ($(e.currentTarget).parents(".simplecomplete").length === 0) {
+        if ($(e.currentTarget).parents(".autocompleter").length === 0) {
             _close(e);
         }
     }
@@ -560,16 +560,16 @@
     function _close(e, data) {
         var data = e ? e.data : data;
 
-        if (data.$simplecomplete.hasClass("simplecomplete-show")) {
-            data.$simplecomplete.removeClass("simplecomplete-show").addClass("simplecomplete-closed");
-            $body.off(".simplecomplete-" + data.guid);
+        if (data.$autocompleter.hasClass("autocompleter-show")) {
+            data.$autocompleter.removeClass("autocompleter-show").addClass("autocompleter-closed");
+            $body.off(".autocompleter-" + data.guid);
         }
     }
 
     /**
      * @method private
      * @name _select
-     * @description Select item from .simplecomplete-list
+     * @description Select item from .autocompleter-list
      * @param e [object] "Event data"
      */
     function _select(e) {
@@ -596,7 +596,7 @@
     /**
      * @method private
      * @name _setHint
-     * @description Set simplecomplete by hint
+     * @description Set autocompleter by hint
      * @param data [object] "Instance data"
      */
     function _setHint(data) {
@@ -613,14 +613,14 @@
      */
     function _setValue(data) {
         if (data.$selected) {
-            if (data.hintText && data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
-                data.$simplecomplete.find('.simplecomplete-hint').removeClass('simplecomplete-hint-show');
+            if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+                data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
             }
             var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.text().trim();
             data.$node.val(value);
         } else {
-            if (data.hintText && !data.$simplecomplete.find('.simplecomplete-hint').hasClass('simplecomplete-hint-show')) {
-                data.$simplecomplete.find('.simplecomplete-hint').addClass('simplecomplete-hint-show');
+            if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
             }
             data.$node.val(data.query);
         }
@@ -644,7 +644,7 @@
      * @param data [object] "Instance data"
      */
     function _handleChange(data) {
-        data.callback.call(data.$simplecomplete, data.$node.val(), data.index, data.response[data.index]);
+        data.callback.call(data.$autocompleter, data.$node.val(), data.index, data.response[data.index]);
         data.$node.trigger("change");
     }
 
@@ -713,7 +713,7 @@
         }
     }
 
-    $.fn.simplecomplete = function (method) {
+    $.fn.autocompleter = function (method) {
         if (publics[method]) {
             return publics[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
@@ -722,7 +722,7 @@
         return this;
     };
 
-    $.simplecomplete = function (method) {
+    $.autocompleter = function (method) {
         if (method === "defaults") {
             publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (method === "clearCache") {

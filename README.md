@@ -1,30 +1,30 @@
 <a href="http://gruntjs.com" target="_blank"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a>
-# jQuery Simplecomplete
+# jQuery Autocompleter
 
 ## Demo:
 
-Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-simplecomplete/).
+Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-autocompleter/).
 
 ## Usage:
 
-The minimum to include: ``jquery.simplecomplete.css`` and ``jquery.simplecomplete.min.js``.
+The minimum to include: ``jquery.autocompleter.css`` and ``jquery.autocompleter.min.js``.
 
 #### Scripts:
 ```html
 <script src="js/jquery.js" type="text/javascript"></script>
-<script src="js/jquery.simplecomplete.min.js" type="text/javascript"></script>
+<script src="js/jquery.autocompleter.min.js" type="text/javascript"></script>
 ```
 
 #### Styles:
 ```html
-<link rel="stylesheet" href="css/jquery.simplecomplete.css">
+<link rel="stylesheet" href="css/jquery.autocompleter.css">
 ```
 
-#### Define your simplecomplete:
+#### Define your autocompleter:
 
 ```javascript
 $(function () {
-    $('input').simplecomplete({ source: 'path/to/get_data_request' });
+    $('input').autocompleter({ source: 'path/to/get_data_request' });
 });
 ```
 
@@ -38,7 +38,7 @@ var data = [
 ];
 
 $(function () {
-    $('input').simplecomplete({ source: data });
+    $('input').autocompleter({ source: data });
 });
 ```
 
@@ -46,16 +46,16 @@ If you will not defined a value in source object, label will be used as value in
 
 ## Options:
 
-Simplecomplete has some options.
+Autocompleter has some options.
 
 | Name        | Type | Description           | Deafult  |
 | ------------- |:-------------:| -----:|-----:|
 | source    | str, obj  | URL to server or local object  | null |
 | empty     | bool      |  Launch if value are empty |  true  |
 | limit | int      |  Count results to show | 10 |
-| customClass | array      |  Array with custom classes for simplecomplete element | [] |
+| customClass | array      |  Array with custom classes for autocompleter element | [] |
 | cache | bool      |  Save xhr data to localStorage to avoid repeated requests | true |
-| focusOpen | bool      |  Launch simplecomplete when input get focus  | true |
+| focusOpen | bool      |  Launch autocompleter when input get focus  | true |
 | hint | bool      |  Add hint to input with first match label, appropriate styles should be established | false |
 | selectFirst | bool      |  If set ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on | false |
 | changeWhenSelect | bool      |  Change input value when use arrow keys navigation in autocomplete list | true |
@@ -70,24 +70,24 @@ Simplecomplete has some options.
 
 #### Clear all cache:
 ```javascript
-$.simplecomplete('clearCache');
+$.autocompleter('clearCache');
 ```
 
 #### Set defaults:
 ```javascript
-$.simplecomplete('defaults', {
-    customClass: 'myClassForSimplecomplete'
+$.autocompleter('defaults', {
+    customClass: 'myClassForAutocompleter'
 });
 ```
 
 #### Destroy plugin:
 ```javascript
-$("#firstname").simplecomplete('destroy');
+$("#firstname").autocompleter('destroy');
 ```
 
 ## Example:
 
-Simplecomplete for firstname input with caching, highlight matches and 5 results limit. Remote response depends from gender:
+Autocompleter for firstname input with caching, highlight matches and 5 results limit. Remote response depends from gender:
 
 #### Form:
 ```html
@@ -104,7 +104,7 @@ Simplecomplete for firstname input with caching, highlight matches and 5 results
 #### JavaScript:
 ```javascript
 $(function () {
-    $("#firstname").simplecomplete({
+    $("#firstname").autocompleter({
         limit: 5,
         cache: true,
         combine: function () {
@@ -126,11 +126,11 @@ $(function () {
 Simple 3-level: div (node) -> ul (list) -> li (item).
 
 ```html
-<div class="simplecomplete" id="simplecomplete-1">
-	<ul class="simplecomplete-list">
-		<li class="simplecomplete-item">First</li>
+<div class="autocompleter" id="autocompleter-1">
+	<ul class="autocompleter-list">
+		<li class="autocompleter-item">First</li>
 		...
-		<li class="simplecomplete-item">Last</li>
+		<li class="autocompleter-item">Last</li>
 	</ul>
 </div>
 ```
