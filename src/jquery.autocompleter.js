@@ -23,7 +23,7 @@
          })(),
         cache = _loadCache();
 
-    /**
+  /**
 	 * @options
 	 * @param source [(string|object)] <null> "URL to server or local object"
 	 * @param empty [boolean] <true> "Launch if value are empty"
@@ -62,12 +62,12 @@
     var publics = {
 
         /**
-		 * @method
-		 * @name defaults
-		 * @description Sets default plugin options
-		 * @param opts [object] <{}> "Options object"
-		 * @example $.autocompleter("defaults", opts);
-		 */
+    		 * @method
+    		 * @name defaults
+    		 * @description Sets default plugin options
+    		 * @param opts [object] <{}> "Options object"
+    		 * @example $.autocompleter("defaults", opts);
+    		 */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
             return $(this);
@@ -83,17 +83,17 @@
         },
 
         /**
-		 * @method
-		 * @name destroy
-		 * @description Removes instance of plugin
-		 * @example $(".target").autocompleter("destroy");
-		 */
+    		 * @method
+    		 * @name destroy
+    		 * @description Removes instance of plugin
+    		 * @example $(".target").autocompleter("destroy");
+    		 */
         destroy: function () {
             return $(this).each(function (i, input) {
                 var data = $(input).next(".autocompleter").data("autocompleter");
 
                 if (data) {
-                    // About xhr
+                    // Abort xhr
                     if (data.jqxhr) {
                         data.jqxhr.abort();
                     }
@@ -121,7 +121,7 @@
         }
     };
 
-    /**
+  /**
 	 * @method private
 	 * @name _init
 	 * @description Initializes plugin
@@ -145,7 +145,7 @@
         return $items;
     }
 
-    /**
+  /**
 	 * @method private
 	 * @name _build
 	 * @description Builds each instance
@@ -700,10 +700,10 @@
     }
 
     /**
-	 * @method private
-	 * @name _deleteCache
-	 * @description Delete all plugin cache from localStorage
-	 */
+	   * @method private
+     * @name _deleteCache
+     * @description Delete all plugin cache from localStorage
+     */
     function _deleteCache() {
         try {
             localStorage.removeItem(localStorageKey);
