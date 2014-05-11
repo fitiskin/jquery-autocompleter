@@ -23,7 +23,7 @@
          })(),
         cache = _loadCache();
 
-  /**
+    /**
 	 * @options
 	 * @param source [(string|object)] <null> "URL to server or local object"
 	 * @param empty [boolean] <true> "Launch if value are empty"
@@ -62,12 +62,12 @@
     var publics = {
 
         /**
-    		 * @method
-    		 * @name defaults
-    		 * @description Sets default plugin options
-    		 * @param opts [object] <{}> "Options object"
-    		 * @example $.autocompleter("defaults", opts);
-    		 */
+    	 * @method
+         * @name defaults
+         * @description Sets default plugin options
+         * @param opts [object] <{}> "Options object"
+         * @example $.autocompleter("defaults", opts);
+         */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
             return $(this);
@@ -83,11 +83,11 @@
         },
 
         /**
-    		 * @method
-    		 * @name destroy
-    		 * @description Removes instance of plugin
-    		 * @example $(".target").autocompleter("destroy");
-    		 */
+         * @method
+         * @name destroy
+         * @description Removes instance of plugin
+         * @example $(".target").autocompleter("destroy");
+         */
         destroy: function () {
             return $(this).each(function (i, input) {
                 var data = $(input).next(".autocompleter").data("autocompleter");
@@ -121,7 +121,7 @@
         }
     };
 
-  /**
+    /**
 	 * @method private
 	 * @name _init
 	 * @description Initializes plugin
@@ -145,7 +145,7 @@
         return $items;
     }
 
-  /**
+    /**
 	 * @method private
 	 * @name _build
 	 * @description Builds each instance
@@ -205,6 +205,45 @@
 
     /**
      * @method private
+     * @name _search
+     * @description Local search function, return best collation
+     * @param query [string] "Query string"
+     * @param source [object] "Source data"
+     * @param limit [integer] "Results length"
+     */
+    function _search(query, source, limit) {
+        var response = [];
+        query = query.toUpperCase();
+
+        if (source.length) {
+            for (var i = 0; i < 2; i++) {
+                for (var item in source) {
+                    if (response.length < limit) {
+                        switch (i) {
+                            case 0:
+                                if (source[item].label.toUpperCase().indexOf(query) === 0) {
+                                    response.push(source[item]);
+                                    delete source[item];
+                                }
+                            break;
+
+                            case 1:
+                                if (source[item].label.toUpperCase().indexOf(query) != -1) {
+                                    response.push(source[item]);
+                                    delete source[item];
+                                }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return response;
+    }
+
+    /**
+     * @method private
      * @name _launch
      * @description Use source locally or create xhr
      * @param data [object] "Instance data"
@@ -218,10 +257,9 @@
         } else {
             if (typeof data.source == 'object') {
                 _clear(data);
-                var search = $.grep(data.source, function(n, i) {
-                    return ( n.label.toUpperCase().indexOf(data.query.toUpperCase()) != -1 );
-                }).filter(function (n, i) { return i < data.limit  });
 
+                // Local search
+                var search = _search(data.query, _clone(data.source), data.limit);
                 if (search.length) {
                     _response(search, data)
                 }
@@ -343,7 +381,7 @@
         data.$autocompleter.find(".autocompleter-list").html(menu);
         data.$selected = (data.$autocompleter.find(".autocompleter-item-selected").length) ? data.$autocompleter.find(".autocompleter-item-selected") : null;
         data.$list = (list.length) ? data.$autocompleter.find(".autocompleter-item") : null;
-        data.index = data.$selected ? data.$list.index(data.$selected): -1;
+        data.index = data.$selected ? data.$list.index(data.$selected) : -1;
         data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
             $(j).data(data.response[i]);
         });
@@ -449,8 +487,9 @@
         if (!internal) {
             var data = e.data;
 
+            data.$autocompleter.addClass("autocompleter-focus");
+
             if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass('autocompleter-show')) {
-                data.$autocompleter.addClass("autocompleter-focus")
                 if (data.focusOpen) {
                     _launch(data);
                     data.focused = true;
@@ -581,7 +620,10 @@
         e.preventDefault();
         e.stopPropagation();
 
-        var $target = (e.type == "keyup" && data.$selected ) ? data.$selected : $(this);
+        if (e.type == "mousedown" && $(this).length) {
+            data.$selected = $(this);
+            data.index = data.$list.index(data.$selected);
+        }
 
         if (!data.$node.prop("disabled")) {
             _close(e);
@@ -700,7 +742,7 @@
     }
 
     /**
-	   * @method private
+	 * @method private
      * @name _deleteCache
      * @description Delete all plugin cache from localStorage
      */
@@ -711,6 +753,20 @@
         } catch (e) {
             throw(e);
         }
+    }
+
+    /**
+     * @method private
+     * @name _clone
+     * @description Clone JavaScript object
+     */
+    function _clone(obj) {
+        if (null == obj || "object" != typeof obj) return obj;
+        var copy = obj.constructor();
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+        }
+        return copy;
     }
 
     $.fn.autocompleter = function (method) {
