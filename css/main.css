@@ -145,6 +145,10 @@ p.caption {
     text-shadow: 0 1px 0 #ffffff;
 }
 
+.autocompleter-item span {
+    color: #bbbbbb;
+}
+
 .autocompleter-hint {
     color: #ccc;
     text-align: left;

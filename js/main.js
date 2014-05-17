@@ -679,6 +679,9 @@ $(function () {
         // object to local or url to remote search
         source: colors,
 
+        // custom template
+        template: '{{ label }} <span>({{ hex }})</span>',
+
         // show hint
         hint: true,
 
