@@ -38,6 +38,7 @@
 	 * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
 	 * @param customLabel [boolean] <false> "Property name in source who will be implemented as label"
 	 * @param customValue [boolean] <false> "Property name in source who will be implemented as value"
+     * @param template [(string|boolean)] <false> "Custom template for list items"
 	 * @param combine [function] <$.noop> "Returns an object for extend ajax data. Useful if you want to pass on any additional server options"
 	 * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
 	 */
@@ -55,6 +56,7 @@
         ignoredKeyCode: [],
         customLabel: false,
         customValue: false,
+        template: false,
         combine: $.noop,
         callback: $.noop
     };
@@ -354,14 +356,29 @@
 
             var re = new RegExp(data.query, "gi");
             var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label;
-                label = data.highlightMatches ? label.replace(re, "<strong>$&</strong>") : label;
+
+            var clear = label
+
+            label = data.highlightMatches ? label.replace(re, "<strong>$&</strong>") : label;
 
             var value = (data.customValue && list[item][data.customValue]) ? list[item][data.customValue] : list[item].value;
 
+            // Apply custom template
+            if (data.template) {
+                var template = data.template.replace(/({{ label }})/gi, label);
+
+                for (var property in list[item] ) {
+                    var regex = new RegExp('{{ '+ property +' }}', 'gi');
+                    template = template.replace(regex, list[item][property]);
+                }
+
+                label = template;
+            }
+
             if (value) {
-                menu += '<li data-value="'+value+'" class="'+classes.join(' ')+'">' + label + '</li>';
+                menu += '<li data-value="'+value+'" data-label="'+clear+'" class="'+classes.join(' ')+'">'+label+'</li>';
             } else {
-                menu += '<li class="'+classes.join(' ')+'">' + label + '</li>';
+                menu += '<li data-label="'+clear+'" class="'+classes.join(' ')+'">'+label+'</li>';
             }
         }
 
@@ -467,7 +484,7 @@
             if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 e.preventDefault();
 
-                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).text().trim() : false;
+                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr('data-label') : false;
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
@@ -658,7 +675,7 @@
             if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
             }
-            var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.text().trim();
+            var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label');
             data.$node.val(value);
         } else {
             if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
