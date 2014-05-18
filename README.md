@@ -7,6 +7,12 @@ Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-autoco
 
 ## Usage:
 
+### Bower support:
+
+Use: ``bower install Autocompleter`` command.
+
+### Manually:
+
 The minimum to include: ``jquery.autocompleter.css`` and ``jquery.autocompleter.min.js``.
 
 #### Scripts:
