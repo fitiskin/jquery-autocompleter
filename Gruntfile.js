@@ -11,6 +11,30 @@ module.exports = function(grunt) {
 					' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; <%= pkg.license %> Licensed \n' +
 					' */ \n\n'
 		},
+		// JS Hint
+		jshint: {
+			options: {
+				globals: {
+					'jQuery': true,
+					'$'     : true
+				},
+				browser:   true,
+				curly:     true,
+				eqeqeq:    true,
+				forin:     true,
+				freeze:    true,
+				immed:	   true,
+				latedef:   true,
+				newcap:    true,
+				noarg:     true,
+				nonew:     true,
+				smarttabs: true,
+				sub:       true,
+				undef:     true,
+				validthis: true
+			},
+			files: ['src/<%= pkg.codename %>.js']
+		},
 		// Concat
 		concat: {
 			js: {
@@ -59,14 +83,31 @@ module.exports = function(grunt) {
 					}
 				}
 			}
+		},
+		//Bower sync
+		sync: {
+			all: {
+				options: {
+					sync: [ 'name', 'version', 'description', 'author', 'license', 'homepage' ],
+					overrides: {
+						main: [
+							'<%= pkg.codename %>.js',
+							'<%= pkg.codename %>.css'
+						],
+						ignore: [ "*.jquery.json", "Gruntfile.js", "src/" ]
+					}
+				}
+			}
 		}
 	});
 
 	// Load tasks
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-jquerymanifest');
+	grunt.loadNpmTasks('grunt-npm2bower-sync');
 
 	// Default task.
-	grunt.registerTask('default', [ 'concat', 'uglify', 'jquerymanifest' ]);
+	grunt.registerTask('default', [ 'jshint', 'concat', 'uglify', 'jquerymanifest', 'sync' ]);
 };

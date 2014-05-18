@@ -1,0 +1,12 @@
+{
+  "name": "Autocompleter",
+  "version": "0.1.1",
+  "description": "Simple, easy, customisable and with cache support.",
+  "author": {
+    "name": "Artem Fitiskin",
+    "email": "me@artemfitiskin.ru",
+    "url": "http://codler.ru"
+  },
+  "license": "MIT",
+  "homepage": "http://github.com/ArtemFitiskin/jquery-autocompleter"
+}
