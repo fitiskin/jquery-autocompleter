@@ -412,8 +412,9 @@
      */
     function _onKeyup(e) {
         var data = e.data;
+        var code = e.keyCode ? e.keyCode : e.which;
 
-        if ( (e.keyCode == 40 || e.keyCode == 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
+        if ( (code == 40 || code == 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -442,7 +443,7 @@
                     prev = -1;
                     next = -1;
                 }
-                data.index = (e.keyCode == 40) ? next : prev;
+                data.index = (code == 40) ? next : prev;
 
                 // Update HTML
                 data.$list.removeClass("autocompleter-item-selected");
@@ -454,16 +455,7 @@
                     _setValue(data);
                 }
             }
-        } else if ([13].indexOf(e.keyCode) != -1) {
-            // Enter
-            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
-                _select(e);
-            } else {
-                e.preventDefault();
-                e.stopPropagation();
-                data.$node.trigger('mousedown.autocompleter');
-            }
-        } else if (ignoredKeyCode.indexOf(e.keyCode) == -1 && data.ignoredKeyCode.indexOf(e.keyCode) == -1) {
+        } else if (ignoredKeyCode.indexOf(code) == -1 && data.ignoredKeyCode.indexOf(code) == -1) {
             // Typing
             _launch(data);
         }
@@ -476,19 +468,28 @@
      * @param e [object] "Event data"
      */
     function _onKeydownHelper(e) {
-        if (e.keyCode == 40 || e.keyCode == 38 ) {
+        var code = e.keyCode ? e.keyCode : e.which;
+        var data = e.data;
+
+        if (code == 40 || code == 38 ) {
             e.preventDefault();
-        } else if (e.keyCode == 39) {
+            e.stopPropagation();
+        } else if (code == 39) {
             // Right arrow
-            var data = e.data;
             if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 e.preventDefault();
+                e.stopPropagation();
 
                 var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr('data-label') : false;
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
                 }
+            }
+        } else if (code == 13) {
+            // Enter
+            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
+                _select(e);
             }
         }
     }
@@ -597,9 +598,6 @@
         if ( $(e.target).hasClass('autocompleter-node') ) {
             return;
         }
-
-        e.preventDefault();
-        e.stopPropagation();
 
         if ($(e.currentTarget).parents(".autocompleter").length === 0) {
             _close(e);
