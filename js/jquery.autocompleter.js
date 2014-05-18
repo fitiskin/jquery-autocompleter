@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.0.7 - 2014-05-17 
+ * Autocompleter v0.1.1 - 2014-05-18 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -28,8 +28,7 @@
                 }
             }
             return supported;
-         })(),
-        cache = _loadCache();
+        })();
 
     /**
 	 * @options
@@ -72,7 +71,7 @@
     var publics = {
 
         /**
-    	 * @method
+         * @method
          * @name defaults
          * @description Sets default plugin options
          * @param opts [object] <{}> "Options object"
@@ -132,11 +131,11 @@
     };
 
     /**
-	 * @method private
-	 * @name _init
-	 * @description Initializes plugin
-	 * @param opts [object] "Initialization options"
-	 */
+     * @method private
+     * @name _init
+     * @description Initializes plugin
+     * @param opts [object] "Initialization options"
+     */
     function _init(opts) {
         // Local options
         opts = $.extend({}, options, opts || {});
@@ -231,14 +230,14 @@
                     if (response.length < limit) {
                         switch (i) {
                             case 0:
-                                if (source[item].label.toUpperCase().indexOf(query) === 0) {
+                                if (source[item].label.toUpperCase().search(query) === 0) {
                                     response.push(source[item]);
                                     delete source[item];
                                 }
                             break;
 
                             case 1:
-                                if (source[item].label.toUpperCase().indexOf(query) != -1) {
+                                if (source[item].label.toUpperCase().search(query) !== -1) {
                                     response.push(source[item]);
                                     delete source[item];
                                 }
@@ -259,19 +258,19 @@
      * @param data [object] "Instance data"
      */
     function _launch(data) {
-        data.query = data.$node.val().trim();
+        data.query = $.trim(data.$node.val());
 
         if (!data.empty && data.query.length === 0) {
             _clear(data);
             return;
         } else {
-            if (typeof data.source == 'object') {
+            if (typeof data.source === 'object') {
                 _clear(data);
 
                 // Local search
                 var search = _search(data.query, _clone(data.source), data.limit);
                 if (search.length) {
-                    _response(search, data)
+                    _response(search, data);
                 }
             } else {
                 if (data.jqxhr) {
@@ -294,16 +293,16 @@
                             var stored = _getCache(this.url);
                             if (stored) {
                                 xhr.abort();
-                                _response(stored, data)
+                                _response(stored, data);
                             }
                         }
                     }
                 })
                 .done(function (response) {
                     if (data.cache) {
-                        _setCache(this.url, response)
+                        _setCache(this.url, response);
                     }
-                    _response(response, data)
+                    _response(response, data);
                 })
                 .always(function () {
                     data.$autocompleter.removeClass('autocompleter-ajax');
@@ -355,19 +354,19 @@
     function _buildList(list, data) {
         var menu = '';
 
-        for (var item in list) {
+        for (var item = 0, count = list.length; item < count; item++) {
             var classes = ["autocompleter-item"];
 
-            if (data.selectFirst && item == "0" && !data.changeWhenSelect) {
+            if (data.selectFirst && item === 0 && !data.changeWhenSelect) {
                 classes.push("autocompleter-item-selected");
             }
 
-            var re = new RegExp(data.query, "gi");
+            var highlightReg = new RegExp(data.query, "gi");
             var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label;
 
-            var clear = label
+            var clear = label;
 
-            label = data.highlightMatches ? label.replace(re, "<strong>$&</strong>") : label;
+            label = data.highlightMatches ? label.replace(highlightReg, "<strong>$&</strong>") : label;
 
             var value = (data.customValue && list[item][data.customValue]) ? list[item][data.customValue] : list[item].value;
 
@@ -375,9 +374,11 @@
             if (data.template) {
                 var template = data.template.replace(/({{ label }})/gi, label);
 
-                for (var property in list[item] ) {
-                    var regex = new RegExp('{{ '+ property +' }}', 'gi');
-                    template = template.replace(regex, list[item][property]);
+                for (var property in list[item]) {
+                    if (list[item].hasOwnProperty(property)) {
+                        var regex = new RegExp('{{ '+ property +' }}', 'gi');
+                        template = template.replace(regex, list[item][property]);
+                    }
                 }
 
                 label = template;
@@ -392,10 +393,10 @@
 
         // Set hint
         if (list.length && data.hint) {
-            var hint = ( list[0].label.substr(0, data.query.length).toUpperCase() == data.query.toUpperCase() ) ? list[0].label : false;
-            if (hint && (data.query != list[0].label)) {
-                var re = new RegExp(data.query, "i");
-                var hintText = hint.replace(re, "<span>"+data.query+"</span>");
+            var hint = ( list[0].label.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ) ? list[0].label : false;
+            if (hint && (data.query !== list[0].label)) {
+                var hintReg = new RegExp(data.query, "i");
+                var hintText = hint.replace(hintReg, "<span>"+data.query+"</span>");
                 data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
                 data.hintText = hintText;
             }
@@ -420,8 +421,9 @@
      */
     function _onKeyup(e) {
         var data = e.data;
+        var code = e.keyCode ? e.keyCode : e.which;
 
-        if ( (e.keyCode == 40 || e.keyCode == 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
+        if ( (code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -430,31 +432,31 @@
             if (len) {
                 // Determine new index
                 if (len > 1) {
-                    if (data.index == len - 1) {
+                    if (data.index === len - 1) {
                         next = data.changeWhenSelect ? -1 : 0;
                         prev = data.index - 1;
                     } else if (data.index === 0) {
                         next = data.index + 1;
                         prev = data.changeWhenSelect ? -1 : len - 1;
-                    } else if (data.index == -1) {
+                    } else if (data.index === -1) {
                         next = 0;
                         prev = len - 1;
                     } else {
                         next = data.index + 1;
                         prev = data.index - 1;
                     }
-                } else if (data.index == -1) {
+                } else if (data.index === -1) {
                     next = 0;
                     prev = 0;
                 } else {
                     prev = -1;
                     next = -1;
                 }
-                data.index = (e.keyCode == 40) ? next : prev;
+                data.index = (code === 40) ? next : prev;
 
                 // Update HTML
                 data.$list.removeClass("autocompleter-item-selected");
-                if (data.index != -1) {
+                if (data.index !== -1) {
                     data.$list.eq(data.index).addClass("autocompleter-item-selected");
                 }
                 data.$selected = data.$autocompleter.find(".autocompleter-item-selected").length ? data.$autocompleter.find(".autocompleter-item-selected") : null;
@@ -462,16 +464,7 @@
                     _setValue(data);
                 }
             }
-        } else if ([13].indexOf(e.keyCode) != -1) {
-            // Enter
-            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
-                _select(e);
-            } else {
-                e.preventDefault();
-                e.stopPropagation();
-                data.$node.trigger('mousedown.autocompleter');
-            }
-        } else if (ignoredKeyCode.indexOf(e.keyCode) == -1 && data.ignoredKeyCode.indexOf(e.keyCode) == -1) {
+        } else if ($.inArray(code, ignoredKeyCode) === -1 && $.inArray(code, data.ignoredKeyCode) === -1) {
             // Typing
             _launch(data);
         }
@@ -484,19 +477,28 @@
      * @param e [object] "Event data"
      */
     function _onKeydownHelper(e) {
-        if (e.keyCode == 40 || e.keyCode == 38 ) {
+        var code = e.keyCode ? e.keyCode : e.which;
+        var data = e.data;
+
+        if (code === 40 || code === 38 ) {
             e.preventDefault();
-        } else if (e.keyCode == 39) {
+            e.stopPropagation();
+        } else if (code === 39) {
             // Right arrow
-            var data = e.data;
             if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 e.preventDefault();
+                e.stopPropagation();
 
                 var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr('data-label') : false;
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
                 }
+            }
+        } else if (code === 13) {
+            // Enter
+            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
+                _select(e);
             }
         }
     }
@@ -540,7 +542,7 @@
         var data = e.data;
 
         if (!internal) {
-            data.$autocompleter.removeClass("autocompleter-focus")
+            data.$autocompleter.removeClass("autocompleter-focus");
             _close(e);
         }
     }
@@ -553,7 +555,7 @@
      */
     function _onMousedown(e) {
         // Disable middle & right mouse click
-        if (e.type == "mousedown" && [2, 3].indexOf(e.which) != -1) { return; }
+        if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) { return; }
 
         var data = e.data;
         if (data.$list && !data.focused) {
@@ -584,10 +586,10 @@
      * @name _open
      * @description Opens option set
      * @param e [object] "Event data"
-     * @param data [object] "Instance data"
+     * @param instanceData [object] "Instance data"
      */
-    function _open(e, data) {
-        var data = e ? e.data : data;
+    function _open(e, instanceData) {
+        var data = e ? e.data : instanceData;
 
         if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length ) {
             data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
@@ -606,9 +608,6 @@
             return;
         }
 
-        e.preventDefault();
-        e.stopPropagation();
-
         if ($(e.currentTarget).parents(".autocompleter").length === 0) {
             _close(e);
         }
@@ -619,10 +618,10 @@
      * @name _close
      * @description Closes option set
      * @param e [object] "Event data"
-     * @param data [object] "Instance data"
+     * @param instanceData [object] "Instance data"
      */
-    function _close(e, data) {
-        var data = e ? e.data : data;
+    function _close(e, instanceData) {
+        var data = e ? e.data : instanceData;
 
         if (data.$autocompleter.hasClass("autocompleter-show")) {
             data.$autocompleter.removeClass("autocompleter-show").addClass("autocompleter-closed");
@@ -638,14 +637,14 @@
      */
     function _select(e) {
         // Disable middle & right mouse click
-        if (e.type == "mousedown" && [2, 3].indexOf(e.which) != -1) { return; }
+        if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) { return; }
 
         var data = e.data;
 
         e.preventDefault();
         e.stopPropagation();
 
-        if (e.type == "mousedown" && $(this).length) {
+        if (e.type === "mousedown" && $(this).length) {
             data.$selected = $(this);
             data.index = data.$list.index(data.$selected);
         }
@@ -654,7 +653,7 @@
             _close(e);
             _update(data);
 
-            if (e.type == "click") {
+            if (e.type === "click") {
                 data.$node.trigger("focus", [true]);
             }
         }
@@ -786,13 +785,20 @@
      * @description Clone JavaScript object
      */
     function _clone(obj) {
-        if (null == obj || "object" != typeof obj) return obj;
+        if (null === obj || "object" !== typeof obj) {
+            return obj;
+        }
         var copy = obj.constructor();
         for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+            if (obj.hasOwnProperty(attr)) {
+                copy[attr] = obj[attr];
+            }
         }
         return copy;
     }
+
+    // Load cache
+    var cache = _loadCache();
 
     $.fn.autocompleter = function (method) {
         if (publics[method]) {
