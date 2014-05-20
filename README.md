@@ -75,6 +75,34 @@ Autocompleter has the following options:
 
 ## Methods:
 
+#### Change option after plugin is defined:
+```javascript
+$('#input').autocompleter('option', data);
+```
+
+For example:
+```javascript
+$('#input').autocompleter('option', {
+    limit: 5,
+    template: '<img src="{{ image }}" alt="Image for autocompleter list item" /> {{ label }}'
+});
+```
+
+#### Open list:
+```javascript
+$('#input').autocompleter('open');
+```
+
+#### Close list:
+```javascript
+$('#input').autocompleter('close');
+```
+
+#### Destroy plugin:
+```javascript
+$('#input').autocompleter('destroy');
+```
+
 #### Clear all cache:
 ```javascript
 $.autocompleter('clearCache');
@@ -85,11 +113,6 @@ $.autocompleter('clearCache');
 $.autocompleter('defaults', {
     customClass: 'myClassForAutocompleter'
 });
-```
-
-#### Destroy plugin:
-```javascript
-$("#firstname").autocompleter('destroy');
 ```
 
 ## Example:
@@ -130,7 +153,7 @@ $(function () {
 
 ## Main structure:
 
-Simple 3-level: div (node) -> ul (list) -> li (item).
+Simple 3-level: ``div (node) -> ul (list) -> li (item)``.
 
 ```html
 <div class="autocompleter" id="autocompleter-1">
