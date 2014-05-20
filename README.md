@@ -9,11 +9,11 @@ Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-autoco
 
 ### Bower support:
 
-Use: ``bower install Autocompleter`` command.
+Use ``bower install Autocompleter`` command.
 
 ### Manually:
 
-The minimum to include: ``jquery.autocompleter.css`` and ``jquery.autocompleter.min.js``.
+Minimum requirements: ``jquery.autocompleter.css`` and ``jquery.autocompleter.min.js``.
 
 #### Scripts:
 ```html
@@ -48,29 +48,29 @@ $(function () {
 });
 ```
 
-If you will not defined a value in source object, label will be used as value in input field after select.
+If you will not define a value in source object, label will be used as a default value in input field after select.
 
 ## Options:
 
-Autocompleter has some options.
+Autocompleter has the following options:
 
 | Name        | Type | Description           | Deafult  |
 | ------------- |:-------------:| -----:|-----:|
-| source | str, obj | URL to server or local object  | null |
-| empty | bool | Launch if value are empty |  true  |
-| limit | int | Count results to show | 10 |
+| source | str, obj | URL to the server or a local object  | null |
+| empty | bool | Launch if value is empty |  true  |
+| limit | int | Number of results to be displayed | 10 |
 | customClass | array | Array with custom classes for autocompleter element | [] |
-| cache | bool | Save xhr data to localStorage to avoid repeated requests | true |
-| focusOpen | bool | Launch autocompleter when input get focus  | true |
-| hint | bool | Add hint to input with first match label, appropriate styles should be established | false |
-| selectFirst | bool | If set ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on | false |
-| changeWhenSelect | bool | Change input value when use arrow keys navigation in autocomplete list | true |
-| highlightmatches | bool | This option define ``<strong>`` tag wrap for matches in autocomplete results | false |
+| cache | bool | Save xhr data to localStorage to avoid the repetition of requests | true |
+| focusOpen | bool | Launch autocompleter when input gets focus  | true |
+| hint | bool | Add hint to input with first matched label, correct styles should be installed | false |
+| selectFirst | bool | If set to ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on | false |
+| changeWhenSelect | bool | Allows to change input value using arrow keys navigation in autocomplete list | true |
+| highlightmatches | bool | This option defines ``<strong>`` tag wrap for matches in autocomplete results | false |
 | ignoredKeyCode | array |  Array with ignorable keycodes, by default: ``9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`` | [] |
-| customLabel  | str | Property name in source who will be implemented as label | false |
-| customValue  | str | Property name in source who will be implemented as value | false |
+| customLabel  | str | The name of object's property which will be used as a label | false |
+| customValue  | str | The name of object's property which will be used as a value | false |
 | template | str | Custom template for list items. For example: ``<span>{{ label }} is {{ customPropertyFromSource }}</span>``. Template appends to ``.autocompleter-item``. | false |
-| combine | function | Returns an object for extend ajax data. Useful if you want to pass on any additional server options | $.noop |
+| combine | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options | $.noop |
 | callback | function | Select value callback function. Arguments: ``value``, ``index`` | $.noop |
 
 ## Methods:
@@ -94,7 +94,7 @@ $("#firstname").autocompleter('destroy');
 
 ## Example:
 
-Autocompleter for firstname input with caching, highlight matches and 5 results limit. Remote response depends from gender:
+Autocompleter for the first name input with caching, match highlighting and 5 results limit. Remote response depends on a gender:
 
 #### Form:
 ```html
