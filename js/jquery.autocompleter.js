@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.1 - 2014-05-18 
+ * Autocompleter v0.1.2 - 2014-05-20 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -11,6 +11,7 @@
 
     var guid = 0,
         ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
+        allowOptions = ['source', 'empty', 'limit', 'cache', 'focusOpen', 'selectFirst', 'changeWhenSelect', 'highlightMatches', 'ignoredKeyCode', 'customLabel', 'customValue', 'template', 'combine', 'callback'],
         userAgent = (window.navigator.userAgent||window.navigator.vendor||window.opera),
         isFirefox = /Firefox/i.test(userAgent),
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
@@ -32,21 +33,21 @@
 
     /**
 	 * @options
-	 * @param source [(string|object)] <null> "URL to server or local object"
-	 * @param empty [boolean] <true> "Launch if value are empty"
-	 * @param limit [int] <10> "Count results to show"
+	 * @param source [(string|object)] <null> "URL to the server or a local object"
+	 * @param empty [boolean] <true> "Launch if value is empty"
+	 * @param limit [int] <10> "Number of results to be displayed"
 	 * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
-	 * @param cache [boolean] <true> "Save xhr data to localStorage to avoid repeated requests"
-	 * @param focusOpen [boolean] <true> "Launch autocompleter when input get focus"
-	 * @param hint [boolean] <false> "Add hint to input with first match label, appropriate styles should be established "
-	 * @param selectFirst [boolean] <false> "If set true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect are on"
-	 * @param changeWhenSelect [boolean] <true> "Change input value when use arrow keys navigation in autocomplete list"
-	 * @param highlightMatches [boolean] <false> "This option define <strong> tag wrap for matches in autocomplete results"
+	 * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
+	 * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
+	 * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
+	 * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
+	 * @param changeWhenSelect [boolean] <true> "Allows to change input value using arrow keys navigation in autocomplete list"
+	 * @param highlightMatches [boolean] <false> "This option defines <strong> tag wrap for matches in autocomplete results"
 	 * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
-	 * @param customLabel [boolean] <false> "Property name in source who will be implemented as label"
-	 * @param customValue [boolean] <false> "Property name in source who will be implemented as value"
+	 * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
+	 * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
      * @param template [(string|boolean)] <false> "Custom template for list items"
-	 * @param combine [function] <$.noop> "Returns an object for extend ajax data. Useful if you want to pass on any additional server options"
+	 * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
 	 * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
 	 */
     var options = {
@@ -80,6 +81,53 @@
         defaults: function (opts) {
             options = $.extend(options, opts || {});
             return $(this);
+        },
+
+        /**
+         * @method
+         * @name option
+         * @description Open autocompleter list
+         */
+        option: function (properties) {
+            return $(this).each(function(i, input) {
+                var data = $(input).next(".autocompleter").data("autocompleter");
+
+                for (var property in properties) {
+                    if ($.inArray(property, allowOptions) !== -1) {
+                        data[property] = properties[property];
+                    }
+                }
+            });
+        },
+
+        /**
+         * @method
+         * @name open
+         * @description Open autocompleter list
+         */
+        open: function () {
+            return $(this).each(function(i, input) {
+                var data = $(input).next(".autocompleter").data("autocompleter");
+
+                if (data) {
+                    _open(null, data);
+                }
+            });
+        },
+
+        /**
+         * @method
+         * @name close
+         * @description Close autocompleter list
+         */
+        close: function () {
+            return $(this).each(function(i, input) {
+                var data = $(input).next(".autocompleter").data("autocompleter");
+
+                if (data) {
+                    _close(null, data);
+                }
+            });
         },
 
         /**

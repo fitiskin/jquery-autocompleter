@@ -156,7 +156,7 @@ p.caption {
     font-weight: 400;
     left: 0;
     width: 100%;
-    padding: 12px;
+    padding: 12px 12px 12px 13px;
     font-size: 24px;
     display: none;
 }
