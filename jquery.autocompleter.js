@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.1 - 2014-05-20 
+ * Autocompleter v0.1.2 - 2014-05-20 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
