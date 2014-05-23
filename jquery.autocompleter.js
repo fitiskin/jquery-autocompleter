@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.2 - 2014-05-20 
+ * Autocompleter v0.1.2.1 - 2014-05-23 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -47,6 +47,7 @@
 	 * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
 	 * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
      * @param template [(string|boolean)] <false> "Custom template for list items"
+     * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
 	 * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
 	 * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
 	 */
@@ -65,6 +66,7 @@
         customLabel: false,
         customValue: false,
         template: false,
+        offset: false,
         combine: $.noop,
         callback: $.noop
     };
@@ -169,9 +171,9 @@
                     }
 
                     // Remove autocompleter & unbind events
-                     data.$node.off(".autocompleter")
+                    data.$node.off(".autocompleter")
                                .removeClass("autocompleter-node");
-                     data.$autocompleter.off(".autocompleter")
+                    data.$autocompleter.off(".autocompleter")
                                          .remove();
                 }
             });
@@ -347,6 +349,10 @@
                     }
                 })
                 .done(function (response) {
+                    // Get subobject from responce
+                    if (data.offset) {
+                        response = _grab(response, data.offset);
+                    }
                     if (data.cache) {
                         _setCache(this.url, response);
                     }
@@ -760,6 +766,21 @@
     function _handleChange(data) {
         data.callback.call(data.$autocompleter, data.$node.val(), data.index, data.response[data.index]);
         data.$node.trigger("change");
+    }
+
+    /**
+     * @method private
+     * @name _grab
+     * @description Grab sub-object from object
+     * @param response [object] "Native object"
+     * @param offset [string] "Offset string"
+     */
+    function _grab(response, offset) {
+        offset = offset.split('.');
+        while ( response && offset.length ) {
+            response = response[offset.shift()];
+        }
+        return response;
     }
 
     /**
