@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.2.1 - 2014-05-23 
+ * Autocompleter v0.1.3 - 2014-06-07 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -32,24 +32,24 @@
         })();
 
     /**
-	 * @options
-	 * @param source [(string|object)] <null> "URL to the server or a local object"
-	 * @param empty [boolean] <true> "Launch if value is empty"
-	 * @param limit [int] <10> "Number of results to be displayed"
-	 * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
-	 * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
-	 * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
-	 * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
-	 * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
-	 * @param changeWhenSelect [boolean] <true> "Allows to change input value using arrow keys navigation in autocomplete list"
-	 * @param highlightMatches [boolean] <false> "This option defines <strong> tag wrap for matches in autocomplete results"
-	 * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
-	 * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
-	 * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
+     * @options
+     * @param source [(string|object)] <null> "URL to the server or a local object"
+     * @param empty [boolean] <true> "Launch if value is empty"
+     * @param limit [int] <10> "Number of results to be displayed"
+     * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
+     * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
+     * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
+     * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
+     * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
+     * @param changeWhenSelect [boolean] <true> "Allows to change input value using arrow keys navigation in autocomplete list"
+     * @param highlightMatches [boolean] <false> "This option defines <strong> tag wrap for matches in autocomplete results"
+     * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
+     * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
+     * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
      * @param template [(string|boolean)] <false> "Custom template for list items"
      * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
-	 * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
-	 * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
+     * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
+     * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
 	 */
     var options = {
         source: null,
@@ -216,6 +216,18 @@
             // Extend options
             opts = $.extend({}, opts, $node.data("autocompleter-options"));
 
+            // Check for local .json
+            if (typeof opts.source === 'string' && opts.source.slice(-5) === '.json') {
+                $.ajax({
+                    url: opts.source,
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false
+                }).done(function (response) {
+                    opts.source = response;
+                });
+            }
+
             var html = '<div class="autocompleter '+opts.customClass.join(' ')+'" id="autocompleter-'+(guid+1)+'">';
                 if (opts.hint) {
                     html += '<div class="autocompleter-hint"></div>';
@@ -334,7 +346,7 @@
 
                 data.jqxhr = $.ajax({
                     url:        data.source,
-                    dataType:   "json",
+                    dataType:   'json',
                     data:       ajaxData,
                     beforeSend: function (xhr) {
                         data.$autocompleter.addClass('autocompleter-ajax');
