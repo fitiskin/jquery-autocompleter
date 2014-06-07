@@ -11,15 +11,15 @@
 
     var guid = 0,
         ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
-        allowOptions = ['source', 'empty', 'limit', 'cache', 'focusOpen', 'selectFirst', 'changeWhenSelect', 'highlightMatches', 'ignoredKeyCode', 'customLabel', 'customValue', 'template', 'offset', 'combine', 'callback'],
+        allowOptions = ["source", "empty", "limit", "cache", "focusOpen", "selectFirst", "changeWhenSelect", "highlightMatches", "ignoredKeyCode", "customLabel", "customValue", "template", "offset", "combine", "callback"],
         userAgent = (window.navigator.userAgent||window.navigator.vendor||window.opera),
         isFirefox = /Firefox/i.test(userAgent),
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
         isFirefoxMobile = (isFirefox && isMobile),
         $body = null,
-        localStorageKey = 'autocompleterCache',
+        localStorageKey = "autocompleterCache",
         supportLocalStorage = (function () {
-            var supported = typeof window.localStorage !== 'undefined';
+            var supported = typeof window.localStorage !== "undefined";
             if (supported) {
                 try {
                     localStorage.setItem("autocompleter", "autocompleter");
@@ -50,7 +50,7 @@
      * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
      * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
      * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
-	 */
+     */
     var options = {
         source: null,
         empty: true,
@@ -217,11 +217,11 @@
             opts = $.extend({}, opts, $node.data("autocompleter-options"));
 
             // Check for local .json
-            if (typeof opts.source === 'string' && opts.source.slice(-5) === '.json') {
+            if (typeof opts.source === "string" && opts.source.slice(-5) === ".json") {
                 $.ajax({
                     url: opts.source,
-                    type: 'GET',
-                    dataType: 'json',
+                    type: "GET",
+                    dataType: "json",
                     async: false
                 }).done(function (response) {
                     opts.source = response;
@@ -326,7 +326,7 @@
             _clear(data);
             return;
         } else {
-            if (typeof data.source === 'object') {
+            if (typeof data.source === "object") {
                 _clear(data);
 
                 // Local search
@@ -346,10 +346,10 @@
 
                 data.jqxhr = $.ajax({
                     url:        data.source,
-                    dataType:   'json',
+                    dataType:   "json",
                     data:       ajaxData,
                     beforeSend: function (xhr) {
-                        data.$autocompleter.addClass('autocompleter-ajax');
+                        data.$autocompleter.addClass("autocompleter-ajax");
                         _clear(data);
                         if (data.cache) {
                             var stored = _getCache(this.url);
@@ -389,7 +389,7 @@
         data.$selected = null;
         data.index = 0;
         data.$autocompleter.find(".autocompleter-list").empty();
-        data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show').empty();
+        data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show").empty();
         data.hintText = false;
 
         _close(null, data);
@@ -405,7 +405,7 @@
     function _response(response, data) {
         _buildList(response, data);
 
-        if (data.$autocompleter.hasClass('autocompleter-focus')) {
+        if (data.$autocompleter.hasClass("autocompleter-focus")) {
             _open(null, data);
         }
     }
@@ -442,7 +442,7 @@
 
                 for (var property in list[item]) {
                     if (list[item].hasOwnProperty(property)) {
-                        var regex = new RegExp('{{ '+ property +' }}', 'gi');
+                        var regex = new RegExp("{{ " + property + " }}", "gi");
                         template = template.replace(regex, list[item][property]);
                     }
                 }
@@ -463,7 +463,7 @@
             if (hint && (data.query !== list[0].label)) {
                 var hintReg = new RegExp(data.query, "i");
                 var hintText = hint.replace(hintReg, "<span>"+data.query+"</span>");
-                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
+                data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show").html(hintText);
                 data.hintText = hintText;
             }
         }
@@ -489,7 +489,7 @@
         var data = e.data;
         var code = e.keyCode ? e.keyCode : e.which;
 
-        if ( (code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
+        if ( (code === 40 || code === 38) && data.$autocompleter.hasClass("autocompleter-show") ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -551,11 +551,11 @@
             e.stopPropagation();
         } else if (code === 39) {
             // Right arrow
-            if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+            if (data.hint && data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr('data-label') : false;
+                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr("data-label") : false;
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
@@ -563,7 +563,7 @@
             }
         } else if (code === 13) {
             // Enter
-            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
+            if (data.$autocompleter.hasClass("autocompleter-show") && data.$selected) {
                 _select(e);
             }
         }
@@ -582,7 +582,7 @@
 
             data.$autocompleter.addClass("autocompleter-focus");
 
-            if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass('autocompleter-show')) {
+            if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show")) {
                 if (data.focusOpen) {
                     _launch(data);
                     data.focused = true;
@@ -657,7 +657,7 @@
     function _open(e, instanceData) {
         var data = e ? e.data : instanceData;
 
-        if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length ) {
+        if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length) {
             data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
             $body.on("click.autocompleter-" + data.guid, ":not(.autocompleter-item)", data, _closeHelper);
         }
@@ -670,7 +670,7 @@
      * @param e [object] "Event data"
      */
     function _closeHelper(e) {
-        if ( $(e.target).hasClass('autocompleter-node') ) {
+        if ( $(e.target).hasClass("autocompleter-node") ) {
             return;
         }
 
@@ -745,14 +745,14 @@
      */
     function _setValue(data) {
         if (data.$selected) {
-            if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
-                data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
+            if (data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
+                data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show");
             }
-            var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label');
+            var value = data.$selected.attr("data-value") ? data.$selected.attr("data-value") : data.$selected.attr("data-label");
             data.$node.val(value);
         } else {
-            if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
-                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
+            if (data.hintText && !data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
+                data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show");
             }
             data.$node.val(data.query);
         }
@@ -788,7 +788,7 @@
      * @param offset [string] "Offset string"
      */
     function _grab(response, offset) {
-        offset = offset.split('.');
+        offset = offset.split(".");
         while ( response && offset.length ) {
             response = response[offset.shift()];
         }
@@ -842,7 +842,7 @@
      */
     function _loadCache() {
         if (!supportLocalStorage) { return; }
-        var json = localStorage.getItem(localStorageKey) || '{}';
+        var json = localStorage.getItem(localStorageKey) || "{}";
         return JSON.parse(json);
     }
 
@@ -884,7 +884,7 @@
     $.fn.autocompleter = function (method) {
         if (publics[method]) {
             return publics[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
+        } else if (typeof method === "object" || !method) {
             return _init.apply(this, arguments);
         }
         return this;
