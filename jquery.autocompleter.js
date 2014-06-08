@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.3 - 2014-06-07 
+ * Autocompleter v0.1.3.1 - 2014-06-08 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -34,6 +34,7 @@
     /**
      * @options
      * @param source [(string|object)] <null> "URL to the server or a local object"
+     * @param asLocal [boolean] <false> "Parse remote response as local source"
      * @param empty [boolean] <true> "Launch if value is empty"
      * @param limit [int] <10> "Number of results to be displayed"
      * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
@@ -53,6 +54,7 @@
      */
     var options = {
         source: null,
+        asLocal: false,
         empty: true,
         limit: 10,
         customClass: [],
@@ -216,8 +218,8 @@
             // Extend options
             opts = $.extend({}, opts, $node.data("autocompleter-options"));
 
-            // Check for local .json
-            if (typeof opts.source === "string" && opts.source.slice(-5) === ".json") {
+            // Check for as local or .json file
+            if (typeof opts.source === "string" && (opts.source.slice(-5) === ".json" || opts.asLocal === true)) {
                 $.ajax({
                     url: opts.source,
                     type: "GET",

@@ -57,6 +57,7 @@ Autocompleter has the following options:
 | Name        | Type | Description           | Deafult  |
 | ------------- |:-------------:| -----:|-----:|
 | source | str, obj | URL to the server or a local object  | null |
+| asLocal | bool | Parse remote response as local source | false |
 | empty | bool | Launch if value is empty |  true  |
 | limit | int | Number of results to be displayed | 10 |
 | customClass | array | Array with custom classes for autocompleter element | [] |
