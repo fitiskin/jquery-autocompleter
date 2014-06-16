@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.4 - 2014-06-11 
+ * Autocompleter v0.1.4 - 2014-06-16 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -282,26 +282,27 @@
      * @description Local search function, return best collation
      * @param query [string] "Query string"
      * @param source [object] "Source data"
-     * @param limit [integer] "Results length"
+     * @param data [object] "Instance data"
      */
-    function _search(query, source, limit) {
+    function _search(query, source, data) {
         var response = [];
         query = query.toUpperCase();
 
         if (source.length) {
             for (var i = 0; i < 2; i++) {
                 for (var item in source) {
-                    if (response.length < limit) {
+                    if (response.length < data.limit) {
+                        var label = (data.customLabel && source[item][data.customLabel]) ? source[item][data.customLabel] : source[item].label;
                         switch (i) {
                             case 0:
-                                if (source[item].label.toUpperCase().search(query) === 0) {
+                                if (label.toUpperCase().search(query) === 0) {
                                     response.push(source[item]);
                                     delete source[item];
                                 }
                             break;
 
                             case 1:
-                                if (source[item].label.toUpperCase().search(query) !== -1) {
+                                if (label.toUpperCase().search(query) !== -1) {
                                     response.push(source[item]);
                                     delete source[item];
                                 }
@@ -332,7 +333,7 @@
                 _clear(data);
 
                 // Local search
-                var search = _search(data.query, _clone(data.source), data.limit);
+                var search = _search(data.query, _clone(data.source), data);
                 if (search.length) {
                     _response(search, data);
                 }
