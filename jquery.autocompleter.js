@@ -1,5 +1,5 @@
 /* 
- * Autocompleter v0.1.4 - 2014-06-16 
+ * Autocompleter v0.1.6 - 2014-09-13 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -32,12 +32,14 @@
         })();
 
     /**
+     * Don't forget update README.md
+     *
      * @options
      * @param source [(string|object)] <null> "URL to the server or a local object"
      * @param asLocal [boolean] <false> "Parse remote response as local source"
      * @param empty [boolean] <true> "Launch if value is empty"
      * @param limit [int] <10> "Number of results to be displayed"
-	 * @param minLength [int] <0> "Minimum length for auto completer"
+     * @param minLength [int] <0> "Minimum length for autocompleter"
      * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
      * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
      * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
@@ -58,7 +60,7 @@
         asLocal: false,
         empty: true,
         limit: 10,
-		minLength: 0,
+        minLength: 0,
         customClass: [],
         cache: true,
         focusOpen: true,
@@ -327,7 +329,7 @@
     function _launch(data) {
         data.query = $.trim(data.$node.val());
 
-        if (!data.empty && data.query.length < data.minLength) {
+        if ((!data.empty && data.query.length === 0) || (data.minLength && (data.query.length < data.minLength))) {
             _clear(data);
             return;
         } else {

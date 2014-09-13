@@ -60,6 +60,7 @@ Autocompleter has the following options:
 | asLocal | bool | Parse remote response as local source | false |
 | empty | bool | Launch if value is empty |  true  |
 | limit | int | Number of results to be displayed | 10 |
+| minLength | int | Minimum length for autocompleter | 0 |
 | customClass | array | Array with custom classes for autocompleter element | [] |
 | cache | bool | Save xhr data to localStorage to avoid the repetition of requests | true |
 | focusOpen | bool | Launch autocompleter when input gets focus  | true |
