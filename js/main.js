@@ -689,7 +689,7 @@ $(function () {
         empty: false,
 
         // max results
-        limit: 5,
+        limit: 10,
 
         callback: function (value, index, selected) {
             if (selected) {

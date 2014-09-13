@@ -6,13 +6,20 @@ body {
     /* Pattern made by Atle Mo. */
     background-image: url('../img/bcg.png');
     font-family: 'Helvetica', 'Arial', sans-serif;
-    text-align: center;
     color: #ffffff;
 }
 
 main {
-    width: 600px;
+    width: 960px;
     margin: 40px auto;
+    font-size: 0;
+}
+
+main > div {
+    display: inline-block;
+    width: 50%;
+    font-size: 14px;
+    vertical-align: top;
 }
 
 h1 {
@@ -20,15 +27,21 @@ h1 {
 }
 
 hr {
-    width: 50%;
     border: 0;
     height: 1px;
-    margin: 40px auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
     background: #4d4d4d;
 }
 
 a {
-    color: #777;
+    color: #70b3eb;
+    text-decoration: none;
+    border-bottom: 1px #ffffff solid;
+}
+
+a:hover {
+    color: #ffffff;
 }
 
 p {
@@ -40,6 +53,16 @@ p {
 /**
  * Custom
  */
+
+#content {
+    padding-right: 40px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+p.accent {
+    color: #dbed8a;
+}
 
 p.caption {
     color: #ccc;
@@ -60,6 +83,7 @@ p.caption {
     -webkit-transition: 0.2s ease -webkit-transform;
     -moz-transition: 0.2s ease -moz-transform;
     transition: 0.2s ease transform;
+    border-bottom: 1px rgba(255,255,255,0.8) solid;
 }
 
 .button:hover {
@@ -70,6 +94,7 @@ p.caption {
 
 .field {
     position: relative;
+    margin-top: 170px;
 }
 
 .field input {
@@ -88,17 +113,17 @@ p.caption {
 }
 
 .icon {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 60px;
-  height: 60px;
-  background-image: url('../img/icon.png');
-  background-color: #ffffff;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60px;
+    height: 60px;
+    background-image: url('../img/icon.png');
+    background-color: #ffffff;
 }
 
 /**
- * Simplecomplete
+ * Autocompleter styles
  */
 
 .autocompleter {
