@@ -3,13 +3,31 @@
 
     var guid = 0,
         ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
-        allowOptions = ["source", "empty", "limit", "cache", "focusOpen", "selectFirst", "changeWhenSelect", "highlightMatches", "ignoredKeyCode", "customLabel", "customValue", "template", "offset", "combine", "callback", "minLength", "delay"],
+        allowOptions = [
+            "source",
+            "empty",
+            "limit",
+            "cache",
+            "focusOpen",
+            "selectFirst",
+            "changeWhenSelect",
+            "highlightMatches",
+            "ignoredKeyCode",
+            "customLabel",
+            "customValue",
+            "template",
+            "offset",
+            "combine",
+            "callback",
+            "minLength",
+            "delay"
+        ],
         userAgent = (window.navigator.userAgent||window.navigator.vendor||window.opera),
         isFirefox = /Firefox/i.test(userAgent),
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
         isFirefoxMobile = (isFirefox && isMobile),
         $body = null,
-		delayTimer = null,
+        delayTimeout = null,
         localStorageKey = "autocompleterCache",
         supportLocalStorage = (function () {
             var supported = typeof window.localStorage !== "undefined";
@@ -33,7 +51,7 @@
      * @param empty [boolean] <true> "Launch if value is empty"
      * @param limit [int] <10> "Number of results to be displayed"
      * @param minLength [int] <0> "Minimum length for autocompleter"
-	 * @param delay [int] <0> "Few milliseconds to defer the request"
+     * @param delay [int] <0> "Few milliseconds to defer the request"
      * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
      * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
      * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
@@ -55,7 +73,7 @@
         empty: true,
         limit: 10,
         minLength: 0,
-		delay: 0,
+        delay: 0,
         customClass: [],
         cache: true,
         focusOpen: true,
@@ -206,12 +224,12 @@
     }
 
     /**
-	 * @method private
-	 * @name _build
-	 * @description Builds each instance
-	 * @param $node [jQuery object] "Target jQuery object"
-	 * @param opts [object] <{}> "Options object"
-	 */
+     * @method private
+     * @name _build
+     * @description Builds each instance
+     * @param $node [jQuery object] "Target jQuery object"
+     * @param opts [object] <{}> "Options object"
+     */
     function _build($node, opts) {
         if (!$node.hasClass("autocompleter-node")) {
             // Extend options
@@ -315,79 +333,85 @@
         return response;
     }
 
-	/**
-	 * @method private
-	 * @name _launch
-	 * @description Use source locally or create xhr
-	 * @param data [object] "Instance data"
-	 */
-	function _launch(data) {
-		clearTimeout(delayTimer);
+    /**
+     * @method private
+     * @name _launch
+     * @description Launch autocompleter
+     * @param data [object] "Instance data"
+     */
+    function _launch(data) {
+        // Clear previous timeout
+        clearTimeout(delayTimeout);
 
-		data.query = $.trim(data.$node.val());
-		if ((!data.empty && data.query.length === 0) || (data.minLength && (data.query.length < data.minLength))) {
-			_clear(data);
-			return;
-		}
+        data.query = $.trim(data.$node.val());
+        if ((!data.empty && data.query.length === 0) || (data.minLength && (data.query.length < data.minLength))) {
+            _clear(data);
+            return;
+        }
 
-		delayTimer = setTimeout(function() { _launchCallback(data); }, data.delay);
-	}
+        if (data.delay) {
+            // Be careful: delay used also with local source
+            delayTimeout = setTimeout(function() { _xhr(data); }, data.delay);
+        } else {
+            _xhr(data);
+        }
+    }
 
     /**
      * @method private
-     * @name _launchCallback
+     * @name _xhr
      * @description Use source locally or create xhr
      * @param data [object] "Instance data"
      */
-    function _launchCallback(data) {
-		if (typeof data.source === "object") {
-			_clear(data);
+    function _xhr(data) {
+        if (typeof data.source === "object") {
+            _clear(data);
 
-			// Local search
-			var search = _search(data.query, _clone(data.source), data);
-			if (search.length) {
-				_response(search, data);
-			}
-		} else {
-			if (data.jqxhr) {
-				data.jqxhr.abort();
-			}
+            // Local search
+            var search = _search(data.query, _clone(data.source), data);
+            if (search.length) {
+                _response(search, data);
+            }
+        } else {
+            if (data.jqxhr) {
+                data.jqxhr.abort();
+            }
 
-			var ajaxData = $.extend({
-				limit: data.limit,
-				query: data.query
-			}, data.combine());
+            var ajaxData = $.extend({
+                limit: data.limit,
+                query: data.query
+            }, data.combine());
 
-			data.jqxhr = $.ajax({
-				url:        data.source,
-				dataType:   "json",
-				data:       ajaxData,
-				beforeSend: function (xhr) {
-					data.$autocompleter.addClass("autocompleter-ajax");
-					_clear(data);
-					if (data.cache) {
-						var stored = _getCache(this.url);
-						if (stored) {
-							xhr.abort();
-							_response(stored, data);
-						}
-					}
-				}
-			})
-			.done(function (response) {
-				// Get subobject from responce
-				if (data.offset) {
-					response = _grab(response, data.offset);
-				}
-				if (data.cache) {
-					_setCache(this.url, response);
-				}
-				_response(response, data);
-			})
-			.always(function () {
-				data.$autocompleter.removeClass('autocompleter-ajax');
-			});
-		}
+            data.jqxhr = $.ajax({
+                url:        data.source,
+                dataType:   "json",
+                data:       ajaxData,
+                beforeSend: function (xhr) {
+                    data.$autocompleter.addClass("autocompleter-ajax");
+                    _clear(data);
+                    if (data.cache) {
+                        var stored = _getCache(this.url);
+                        if (stored) {
+                            xhr.abort();
+                            _response(stored, data);
+                        }
+                    }
+                }
+            })
+            .done(function (response) {
+                // Get subobject from responce
+                if (data.offset) {
+                    response = _grab(response, data.offset);
+                }
+                if (data.cache) {
+                    _setCache(this.url, response);
+                }
+                _response(response, data);
+            })
+            .always(function () {
+                data.$autocompleter.removeClass('autocompleter-ajax');
+            });
+        }
     }
 
     /**
@@ -860,7 +884,7 @@
     }
 
     /**
-	 * @method private
+     * @method private
      * @name _deleteCache
      * @description Delete all plugin cache from localStorage
      */
