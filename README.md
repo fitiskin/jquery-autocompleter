@@ -67,7 +67,7 @@ Autocompleter has the following options:
 | hint | bool | Add hint to input with first matched label, correct styles should be installed | false |
 | selectFirst | bool | If set to ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on | false |
 | changeWhenSelect | bool | Allows to change input value using arrow keys navigation in autocomplete list | true |
-| highlightmatches | bool | This option defines ``<strong>`` tag wrap for matches in autocomplete results | false |
+| highlightMatches | bool | This option defines ``<strong>`` tag wrap for matches in autocomplete results | false |
 | ignoredKeyCode | array |  Array with ignorable keycodes, by default: ``9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`` | [] |
 | customLabel  | str | The name of object's property which will be used as a label | false |
 | customValue  | str | The name of object's property which will be used as a value | false |
