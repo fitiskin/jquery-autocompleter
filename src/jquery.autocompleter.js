@@ -103,7 +103,7 @@
             options = $.extend(options, opts || {});
 
             if (typeof this === 'object') {
-                return $(this);
+                return (typeof this === 'object') ? $(this) : true;
             }
         },
 
