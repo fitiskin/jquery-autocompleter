@@ -1,5 +1,5 @@
 /* 
- * jquery-autocompleter v0.1.7 - 2014-11-22 
+ * jquery-autocompleter v0.1.7 - 2014-11-25 
  * Simple, easy, customisable and with cache support. 
  * http://github.com/ArtemFitiskin/jquery-autocompleter 
  * 
@@ -109,7 +109,6 @@
          */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
-            return $(this);
         },
 
         /**

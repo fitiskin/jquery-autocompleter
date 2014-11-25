@@ -101,7 +101,6 @@
          */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
-            return $(this);
         },
 
         /**
