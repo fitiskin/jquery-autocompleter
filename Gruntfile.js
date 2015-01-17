@@ -3,13 +3,13 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		meta: {
-			banner: '/* \n' +
-					' * <%= pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> \n' +
-					' * <%= pkg.description %> \n' +
-					' * <%= pkg.homepage %> \n' +
-					' * \n' +
-					' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; <%= pkg.license %> Licensed \n' +
-					' */ \n\n'
+			banner: '/*\n' +
+					' * <%= pkg.name %> v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+					' * <%= pkg.description %>\n' +
+					' * <%= pkg.homepage %>\n' +
+					' *\n' +
+					' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; <%= pkg.license %> Licensed\n' +
+					' */\n\n'
 		},
 		// JS Hint
 		jshint: {
@@ -66,24 +66,6 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		// jQuery Manifest
-		jquerymanifest: {
-			options: {
-				source: grunt.file.readJSON('package.json'),
-				overrides: {
-					name:     '<%= pkg.id %>',
-					keywords: '<%= pkg.keywords %>',
-					homepage: '<%= pkg.homepage %>',
-					docs: 	  '<%= pkg.homepage %>',
-					demo: 	  '<%= pkg.demo %>',
-					download: '<%= pkg.repository.url %>',
-					bugs: 	  '<%= pkg.repository.url %>/issues',
-					dependencies: {
-						jquery: '>=1.7'
-					}
-				}
-			}
-		},
 		//Bower sync
 		sync: {
 			all: {
@@ -109,5 +91,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-npm2bower-sync');
 
 	// Default task.
-	grunt.registerTask('default', [ 'jshint', 'concat', 'uglify', 'jquerymanifest', 'sync' ]);
+	grunt.registerTask('default', [ 'jshint', 'concat', 'uglify', 'sync' ]);
 };
