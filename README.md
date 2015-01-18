@@ -39,7 +39,7 @@ or for local JSON source:
 ```javascript
 var data = [
     { 'value': '1', 'label': 'one' },
-    { 'value': '2', 'label': "two' },
+    { 'value': '2', 'label': 'two' },
     { 'value': '3', 'label': 'three' }
 ];
 
@@ -126,13 +126,13 @@ Autocompleter for the first name input with caching, match highlighting and 5 re
 #### Form:
 ```html
 <label for="gender_male">Male</label>
-<input type="radio" name="gender" value="male" id="gender_male" checked="checked" />
+<input type="radio" name="gender" value="male" id="gender_male" checked="checked">
 
 <label for="gender_female">Female</label>
-<input type="radio" name="gender" value="female" id="gender_female" />
+<input type="radio" name="gender" value="female" id="gender_female">
 
 <label for="firstname">First Name</label>
-<input type="text" name="firstname" id="firstname" />
+<input type="text" name="firstname" id="firstname">
 ```
 
 #### JavaScript:
@@ -160,11 +160,11 @@ $(function () {
 Simple 3-level: ``div (node) -> ul (list) -> li (item)``.
 
 ```html
-<div class='autocompleter' id='autocompleter-1'>
-	<ul class='autocompleter-list'>
-		<li class='autocompleter-item'>First</li>
+<div class="autocompleter" id="autocompleter-1">
+	<ul class="autocompleter-list">
+		<li class="autocompleter-item">First</li>
 		...
-		<li class='autocompleter-item'>Last</li>
+		<li class="autocompleter-item">Last</li>
 	</ul>
 </div>
 ```
