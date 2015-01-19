@@ -76,7 +76,7 @@ module.exports = function(grunt) {
 							'<%= pkg.codename %>.js',
 							'<%= pkg.codename %>.css'
 						],
-						ignore: [ "*.jquery.json", "Gruntfile.js", "src/" ]
+						ignore: [ 'Gruntfile.js', 'src/' ]
 					}
 				}
 			}

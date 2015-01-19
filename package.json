@@ -3,7 +3,7 @@
   "id": "autocompleter",
   "codename": "jquery.autocompleter",
   "version": "0.1.9",
-  "description": "Simple, easy, customisable and with cache support.",
+  "description": "Simple, easy, customisable and with localStorage cache support.",
   "keywords": [
     "jquery-plugin",
     "autocomplete",
@@ -11,8 +11,7 @@
     "ajax",
     "input",
     "javascript",
-    "jquery",
-    "codler"
+    "jquery"
   ],
   "repository": {
     "type": "git",
@@ -24,13 +23,13 @@
   "author": {
     "name": "Artem Fitiskin",
     "email": "me@artemfitiskin.ru",
-    "url": "http://codler.ru"
+    "url": "http://artemfitiskin.ru"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-concat": "latest",
-    "grunt-contrib-jshint": "~0.7.2",
-    "grunt-contrib-uglify": "latest",
-    "grunt-npm2bower-sync": "~0.3.0"
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-npm2bower-sync": "^0.8.1"
   }
 }

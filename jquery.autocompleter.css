@@ -1,6 +1,6 @@
 /*
- * jquery-autocompleter v0.1.9 - 2015-01-17
- * Simple, easy, customisable and with cache support.
+ * jquery-autocompleter v0.1.9 - 2015-01-19
+ * Simple, easy, customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
  * Copyright 2015 Artem Fitiskin; MIT Licensed
