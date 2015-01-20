@@ -2,7 +2,7 @@
   "name": "jquery-autocompleter",
   "id": "autocompleter",
   "codename": "jquery.autocompleter",
-  "version": "0.1.9",
+  "version": "0.1.9.2",
   "description": "Simple, easy, customisable and with localStorage cache support.",
   "keywords": [
     "jquery-plugin",

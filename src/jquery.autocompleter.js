@@ -31,6 +31,7 @@
         localStorageKey = 'autocompleterCache',
         supportLocalStorage = (function () {
             var supported = typeof window.localStorage !== 'undefined';
+
             if (supported) {
                 try {
                     localStorage.setItem('autocompleter', 'autocompleter');
@@ -39,6 +40,7 @@
                     supported = false;
                 }
             }
+
             return supported;
         })();
 
@@ -91,7 +93,6 @@
     };
 
     var publics = {
-
         /**
          * @method
          * @name defaults
@@ -111,7 +112,7 @@
          * @description Open autocompleter list
          */
         option: function (properties) {
-            return $(this).each(function(i, input) {
+            return $(this).each(function (i, input) {
                 var data = $(input).next('.autocompleter').data('autocompleter');
 
                 for (var property in properties) {
@@ -128,7 +129,7 @@
          * @description Open autocompleter list
          */
         open: function () {
-            return $(this).each(function(i, input) {
+            return $(this).each(function (i, input) {
                 var data = $(input).next('.autocompleter').data('autocompleter');
 
                 if (data) {
@@ -143,7 +144,7 @@
          * @description Close autocompleter list
          */
         close: function () {
-            return $(this).each(function(i, input) {
+            return $(this).each(function (i, input) {
                 var data = $(input).next('.autocompleter').data('autocompleter');
 
                 if (data) {
@@ -180,11 +181,11 @@
                     // If has selected item & open - confirm it
                     if (data.$autocompleter.hasClass('open')) {
                         data.$autocompleter.find('.autocompleter-selected')
-                                            .trigger('click.autocompleter');
+                                           .trigger('click.autocompleter');
                     }
 
                     // Restore original autocomplete attr
-                    if(!data.originalAutocomplete) {
+                    if (!data.originalAutocomplete) {
                         data.$node.removeAttr('autocomplete');
                     } else {
                         data.$node.attr('autocomplete', data.originalAutocomplete);
@@ -248,12 +249,14 @@
                 });
             }
 
-            var html = '<div class="autocompleter '+opts.customClass.join(' ')+'" id="autocompleter-'+(guid+1)+'">';
-                if (opts.hint) {
-                    html += '<div class="autocompleter-hint"></div>';
-                }
-                html += '<ul class="autocompleter-list"></ul>';
-                html += '</div>';
+            var html = '<div class="autocompleter ' + opts.customClass.join(' ') + '" id="autocompleter-' + (guid + 1) + '">';
+
+            if (opts.hint) {
+                html += '<div class="autocompleter-hint"></div>';
+            }
+
+            html += '<ul class="autocompleter-list"></ul>';
+            html += '</div>';
 
             $node.addClass('autocompleter-node')
                  .after(html);
@@ -283,11 +286,11 @@
 
             // Bind autocompleter events
             data.$autocompleter.on('mousedown.autocompleter', '.autocompleter-item', data, _select)
-                                .data('autocompleter', data);
+                               .data('autocompleter', data);
 
             // Bind node events
             data.$node.on('keyup.autocompleter', data, _onKeyup)
-                      .on('keydown.autocompleter', data, _onKeydownHelper)
+                      .on('keydown.autocompleter', data, _onKeydown)
                       .on('focus.autocompleter', data, _onFocus)
                       .on('blur.autocompleter', data, _onBlur)
                       .on('mousedown.autocompleter', data, _onMousedown);
@@ -304,6 +307,7 @@
      */
     function _search(query, source, data) {
         var response = [];
+
         query = query.toUpperCase();
 
         if (source.length) {
@@ -311,19 +315,20 @@
                 for (var item in source) {
                     if (response.length < data.limit) {
                         var label = (data.customLabel && source[item][data.customLabel]) ? source[item][data.customLabel] : source[item].label;
+
                         switch (i) {
-                            case 0:
-                                if (label.toUpperCase().search(query) === 0) {
-                                    response.push(source[item]);
-                                    delete source[item];
-                                }
+                        case 0:
+                            if (label.toUpperCase().search(query) === 0) {
+                                response.push(source[item]);
+                                delete source[item];
+                            }
                             break;
 
-                            case 1:
-                                if (label.toUpperCase().search(query) !== -1) {
-                                    response.push(source[item]);
-                                    delete source[item];
-                                }
+                        case 1:
+                            if (label.toUpperCase().search(query) !== -1) {
+                                response.push(source[item]);
+                                delete source[item];
+                            }
                             break;
                         }
                     }
@@ -345,6 +350,7 @@
         clearTimeout(delayTimeout);
 
         data.query = $.trim(data.$node.val());
+
         if ((!data.empty && data.query.length === 0) || (data.minLength && (data.query.length < data.minLength))) {
             _clear(data);
             return;
@@ -370,6 +376,7 @@
 
             // Local search
             var search = _search(data.query, _clone(data.source), data);
+
             if (search.length) {
                 _response(search, data);
             }
@@ -390,8 +397,10 @@
                 beforeSend: function (xhr) {
                     data.$autocompleter.addClass('autocompleter-ajax');
                     _clear(data);
+
                     if (data.cache) {
                         var stored = _getCache(this.url);
+
                         if (stored) {
                             xhr.abort();
                             _response(stored, data);
@@ -407,6 +416,7 @@
                 if (data.cache) {
                     _setCache(this.url, response);
                 }
+
                 _response(response, data);
             })
             .always(function () {
@@ -459,16 +469,15 @@
         var menu = '';
 
         for (var item = 0, count = list.length; item < count; item++) {
-            var classes = ['autocompleter-item'];
+            var classes = ['autocompleter-item'],
+                highlightReg = new RegExp(data.query, 'gi');
 
             if (data.selectFirst && item === 0 && !data.changeWhenSelect) {
                 classes.push('autocompleter-item-selected');
             }
 
-            var highlightReg = new RegExp(data.query, 'gi');
-            var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label;
-
-            var clear = label;
+            var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label,
+                clear = label;
 
             label = data.highlightMatches ? label.replace(highlightReg, '<strong>$&</strong>') : label;
 
@@ -481,6 +490,7 @@
                 for (var property in list[item]) {
                     if (list[item].hasOwnProperty(property)) {
                         var regex = new RegExp('{{ ' + property + ' }}', 'gi');
+
                         template = template.replace(regex, list[item][property]);
                     }
                 }
@@ -498,9 +508,11 @@
         // Set hint
         if (list.length && data.hint) {
             var hint = ( list[0].label.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ) ? list[0].label : false;
+
             if (hint && (data.query !== list[0].label)) {
                 var hintReg = new RegExp(data.query, 'i');
-                var hintText = hint.replace(hintReg, '<span>'+data.query+'</span>');
+                var hintText = hint.replace(hintReg, '<span>' + data.query + '</span>');
+
                 data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
                 data.hintText = hintText;
             }
@@ -524,8 +536,8 @@
      * @param e [object] "Event data"
      */
     function _onKeyup(e) {
-        var data = e.data;
-        var code = e.keyCode ? e.keyCode : e.which;
+        var data = e.data,
+            code = e.keyCode ? e.keyCode : e.which;
 
         if ( (code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
             // Arrows up & down
@@ -556,14 +568,18 @@
                     prev = -1;
                     next = -1;
                 }
+
                 data.index = (code === 40) ? next : prev;
 
                 // Update HTML
                 data.$list.removeClass('autocompleter-item-selected');
+
                 if (data.index !== -1) {
                     data.$list.eq(data.index).addClass('autocompleter-item-selected');
                 }
+
                 data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
+
                 if (data.changeWhenSelect) {
                     _setValue(data);
                 }
@@ -576,13 +592,13 @@
 
     /**
      * @method private
-     * @name _onKeydownHelper
+     * @name _onKeydown
      * @description Keydown events in node, up/down for prevent cursor moving and right arrow for hint
      * @param e [object] "Event data"
      */
-    function _onKeydownHelper(e) {
-        var code = e.keyCode ? e.keyCode : e.which;
-        var data = e.data;
+    function _onKeydown(e) {
+        var data = e.data,
+            code = e.keyCode ? e.keyCode : e.which;
 
         if (code === 40 || code === 38 ) {
             e.preventDefault();
@@ -594,6 +610,7 @@
                 e.stopPropagation();
 
                 var hintOrigin = data.$autocompleter.find('.autocompleter-item').length ? data.$autocompleter.find('.autocompleter-item').eq(0).attr('data-label') : false;
+
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
@@ -624,6 +641,7 @@
                 if (data.focusOpen) {
                     _launch(data);
                     data.focused = true;
+
                     setTimeout(function () {
                         data.focused = false;
                     }, 500);
@@ -662,10 +680,12 @@
         if (e.type === 'mousedown' && $.inArray(e.which, [2, 3]) !== -1) { return; }
 
         var data = e.data;
+
         if (data.$list && !data.focused) {
             if (!data.$node.is(':disabled')) {
                 if (isMobile && !isFirefoxMobile) {
                     var el = data.$select[0];
+
                     if (window.document.createEvent) { // All
                         var evt = window.document.createEvent('MouseEvents');
                         evt.initMouseEvent('mousedown', false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -788,12 +808,13 @@
             if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
             }
-            var value = data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label');
-            data.$node.val(value);
+
+            data.$node.val(data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label'));
         } else {
             if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
             }
+
             data.$node.val(data.query);
         }
     }
@@ -829,9 +850,11 @@
      */
     function _grab(response, offset) {
         offset = offset.split('.');
-        while ( response && offset.length ) {
+
+        while (response && offset.length) {
             response = response[offset.shift()];
         }
+
         return response;
     }
 
@@ -843,7 +866,10 @@
      * @param data [object] "AJAX response data"
      */
     function _setCache(url, data) {
-        if (!supportLocalStorage) { return; }
+        if (!supportLocalStorage) {
+            return;
+        }
+
         if (url && data) {
             cache[url] = {
                 value: data
@@ -851,14 +877,15 @@
 
             // Proccess to localStorage
             try {
-                  localStorage.setItem(localStorageKey, JSON.stringify(cache));
+                localStorage.setItem(localStorageKey, JSON.stringify(cache));
             } catch (e) {
-                  var code = e.code || e.number || e.message;
-                  if (code === 22) {
+                var code = e.code || e.number || e.message;
+
+                if (code === 22) {
                     _deleteCache();
-                  } else {
+                } else {
                     throw(e);
-                  }
+                }
             }
         }
     }
@@ -870,8 +897,12 @@
      * @param url [string] "AJAX get query string"
      */
     function _getCache(url) {
-        if (!url) { return; }
+        if (!url) {
+            return;
+        }
+
         var response = (cache[url] && cache[url].value) ? cache[url].value : false;
+
         return response;
     }
 
@@ -908,15 +939,20 @@
      * @description Clone JavaScript object
      */
     function _clone(obj) {
+        var copy;
+
         if (null === obj || 'object' !== typeof obj) {
             return obj;
         }
-        var copy = obj.constructor();
+
+        copy = obj.constructor();
+
         for (var attr in obj) {
             if (obj.hasOwnProperty(attr)) {
                 copy[attr] = obj[attr];
             }
         }
+
         return copy;
     }
 
@@ -939,5 +975,4 @@
             publics.clearCache.apply(this, null);
         }
     };
-
 })(jQuery, window);
