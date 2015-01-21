@@ -1,5 +1,5 @@
 <a href="http://gruntjs.com" target="_blank"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a>
-# jQuery Autocompleter :octocat: 
+# jQuery Autocompleter :octocat:
 
 ## Demo:
 
@@ -64,6 +64,7 @@ Autocompleter has the following options:
 | delay | int | Few milliseconds to defer the request | 0 |
 | customClass | array | Array with custom classes for autocompleter element | [] |
 | cache | bool | Save xhr data to localStorage to avoid the repetition of requests | true |
+| cacheExpires | int | localStorage data lifetime in sec | 86400 |
 | focusOpen | bool | Launch autocompleter when input gets focus  | true |
 | hint | bool | Add hint to input with first matched label, correct styles should be installed | false |
 | selectFirst | bool | If set to ``true``, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on | false |

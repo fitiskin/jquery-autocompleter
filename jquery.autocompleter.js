@@ -1,5 +1,5 @@
 /*
- * jquery-autocompleter v0.1.9.2 - 2015-01-20
+ * jquery-autocompleter v0.1.9.3 - 2015-01-21
  * Simple, easy, customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
@@ -64,6 +64,7 @@
      * @param delay [int] <0> "Few milliseconds to defer the request"
      * @param customClass [array] <[]> "Array with custom classes for autocompleter element"
      * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
+     * @param cacheExpires [int] <86400> "localStorage data lifetime"
      * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
      * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
      * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
@@ -86,6 +87,7 @@
         delay: 0,
         customClass: [],
         cache: true,
+        cacheExpires: 86400,
         focusOpen: true,
         hint: false,
         selectFirst: false,
@@ -396,18 +398,19 @@
             var ajaxData = $.extend({
                 limit: data.limit,
                 query: data.query
-            }, data.combine());
+            }, data.combine(data.query));
 
             data.jqxhr = $.ajax({
                 url:        data.source,
                 dataType:   'json',
+                crossDomain: true,
                 data:       ajaxData,
                 beforeSend: function (xhr) {
                     data.$autocompleter.addClass('autocompleter-ajax');
                     _clear(data);
 
                     if (data.cache) {
-                        var stored = _getCache(this.url);
+                        var stored = _getCache(this.url, data.cacheExpires);
 
                         if (stored) {
                             xhr.abort();
@@ -421,6 +424,8 @@
                 if (data.offset) {
                     response = _grab(response, data.offset);
                 }
+
+                // Set cache
                 if (data.cache) {
                     _setCache(this.url, response);
                 }
@@ -515,9 +520,10 @@
 
         // Set hint
         if (list.length && data.hint) {
-            var hint = ( list[0].label.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ) ? list[0].label : false;
+            var hintLabel = (data.customLabel && list[0][data.customLabel]) ? list[0][data.customLabel] : list[0].label,
+                hint = ( hintLabel.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ) ? hintLabel : false;
 
-            if (hint && (data.query !== list[0].label)) {
+            if (hint && (data.query !== hintLabel)) {
                 var hintReg = new RegExp(data.query, 'i');
                 var hintText = hint.replace(hintReg, '<span>' + data.query + '</span>');
 
@@ -868,7 +874,7 @@
 
     /**
      * @method private
-     * @name _getCache
+     * @name _setCache
      * @description Store AJAX response in plugin cache
      * @param url [string] "AJAX get query string"
      * @param data [object] "AJAX response data"
@@ -880,7 +886,8 @@
 
         if (url && data) {
             cache[url] = {
-                value: data
+                value: data,
+                timestamp: +new Date()
             };
 
             // Proccess to localStorage
@@ -904,14 +911,29 @@
      * @description Get cached data by url if exist
      * @param url [string] "AJAX get query string"
      */
-    function _getCache(url) {
+    function _getCache(url, expires) {
+        var response = false,
+            item;
+
+        expires = expires || false;
+
         if (!url) {
-            return;
+            return false;
         }
 
-        var response = (cache[url] && cache[url].value) ? cache[url].value : false;
+        item = cache[url];
 
-        return response;
+        if (item && item.value) {
+            response = item.value;
+
+            if (item.timestamp && expires && (+new Date() - item.timestamp > expires * 1000)) {
+                return false;
+            } else {
+                return response;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
