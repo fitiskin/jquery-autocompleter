@@ -1,34 +1,34 @@
-/* 
- * jquery-autocompleter v0.1.7 - 2014-11-22 
- * Simple, easy, customisable and with cache support. 
- * http://github.com/ArtemFitiskin/jquery-autocompleter 
- * 
- * Copyright 2014 Artem Fitiskin; MIT Licensed 
- */ 
+/*
+ * jquery-autocompleter v0.1.9.2 - 2015-01-20
+ * Simple, easy, customisable and with localStorage cache support.
+ * http://github.com/ArtemFitiskin/jquery-autocompleter
+ *
+ * Copyright 2015 Artem Fitiskin; MIT Licensed
+ */
 
 ;(function ($, window) {
-    "use strict";
+    'use strict';
 
     var guid = 0,
         ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
         allowOptions = [
-            "source",
-            "empty",
-            "limit",
-            "cache",
-            "focusOpen",
-            "selectFirst",
-            "changeWhenSelect",
-            "highlightMatches",
-            "ignoredKeyCode",
-            "customLabel",
-            "customValue",
-            "template",
-            "offset",
-            "combine",
-            "callback",
-            "minLength",
-            "delay"
+            'source',
+            'empty',
+            'limit',
+            'cache',
+            'focusOpen',
+            'selectFirst',
+            'changeWhenSelect',
+            'highlightMatches',
+            'ignoredKeyCode',
+            'customLabel',
+            'customValue',
+            'template',
+            'offset',
+            'combine',
+            'callback',
+            'minLength',
+            'delay'
         ],
         userAgent = (window.navigator.userAgent||window.navigator.vendor||window.opera),
         isFirefox = /Firefox/i.test(userAgent),
@@ -36,17 +36,19 @@
         isFirefoxMobile = (isFirefox && isMobile),
         $body = null,
         delayTimeout = null,
-        localStorageKey = "autocompleterCache",
+        localStorageKey = 'autocompleterCache',
         supportLocalStorage = (function () {
-            var supported = typeof window.localStorage !== "undefined";
+            var supported = typeof window.localStorage !== 'undefined';
+
             if (supported) {
                 try {
-                    localStorage.setItem("autocompleter", "autocompleter");
-                    localStorage.removeItem("autocompleter");
+                    localStorage.setItem('autocompleter', 'autocompleter');
+                    localStorage.removeItem('autocompleter');
                 } catch (e) {
                     supported = false;
                 }
             }
+
             return supported;
         })();
 
@@ -99,17 +101,17 @@
     };
 
     var publics = {
-
         /**
          * @method
          * @name defaults
          * @description Sets default plugin options
          * @param opts [object] <{}> "Options object"
-         * @example $.autocompleter("defaults", opts);
+         * @example $.autocompleter('defaults', opts);
          */
         defaults: function (opts) {
             options = $.extend(options, opts || {});
-            return $(this);
+
+            return (typeof this === 'object') ? $(this) : true;
         },
 
         /**
@@ -118,8 +120,8 @@
          * @description Open autocompleter list
          */
         option: function (properties) {
-            return $(this).each(function(i, input) {
-                var data = $(input).next(".autocompleter").data("autocompleter");
+            return $(this).each(function (i, input) {
+                var data = $(input).next('.autocompleter').data('autocompleter');
 
                 for (var property in properties) {
                     if ($.inArray(property, allowOptions) !== -1) {
@@ -135,8 +137,8 @@
          * @description Open autocompleter list
          */
         open: function () {
-            return $(this).each(function(i, input) {
-                var data = $(input).next(".autocompleter").data("autocompleter");
+            return $(this).each(function (i, input) {
+                var data = $(input).next('.autocompleter').data('autocompleter');
 
                 if (data) {
                     _open(null, data);
@@ -150,8 +152,8 @@
          * @description Close autocompleter list
          */
         close: function () {
-            return $(this).each(function(i, input) {
-                var data = $(input).next(".autocompleter").data("autocompleter");
+            return $(this).each(function (i, input) {
+                var data = $(input).next('.autocompleter').data('autocompleter');
 
                 if (data) {
                     _close(null, data);
@@ -172,11 +174,11 @@
          * @method
          * @name destroy
          * @description Removes instance of plugin
-         * @example $(".target").autocompleter("destroy");
+         * @example $('.target').autocompleter('destroy');
          */
         destroy: function () {
             return $(this).each(function (i, input) {
-                var data = $(input).next(".autocompleter").data("autocompleter");
+                var data = $(input).next('.autocompleter').data('autocompleter');
 
                 if (data) {
                     // Abort xhr
@@ -185,22 +187,22 @@
                     }
 
                     // If has selected item & open - confirm it
-                    if (data.$autocompleter.hasClass("open")) {
-                        data.$autocompleter.find(".autocompleter-selected")
-                                            .trigger("click.autocompleter");
+                    if (data.$autocompleter.hasClass('open')) {
+                        data.$autocompleter.find('.autocompleter-selected')
+                                           .trigger('click.autocompleter');
                     }
 
                     // Restore original autocomplete attr
-                    if(!data.originalAutocomplete) {
-                        data.$node.removeAttr("autocomplete");
+                    if (!data.originalAutocomplete) {
+                        data.$node.removeAttr('autocomplete');
                     } else {
-                        data.$node.attr("autocomplete", data.originalAutocomplete);
+                        data.$node.attr('autocomplete', data.originalAutocomplete);
                     }
 
                     // Remove autocompleter & unbind events
-                    data.$node.off(".autocompleter")
-                               .removeClass("autocompleter-node");
-                    data.$autocompleter.off(".autocompleter")
+                    data.$node.off('.autocompleter')
+                               .removeClass('autocompleter-node');
+                    data.$autocompleter.off('.autocompleter')
                                          .remove();
                 }
             });
@@ -219,7 +221,7 @@
 
         // Check for Body
         if ($body === null) {
-            $body = $("body");
+            $body = $('body');
         }
 
         // Apply to each element
@@ -239,37 +241,39 @@
      * @param opts [object] <{}> "Options object"
      */
     function _build($node, opts) {
-        if (!$node.hasClass("autocompleter-node")) {
+        if (!$node.hasClass('autocompleter-node')) {
             // Extend options
-            opts = $.extend({}, opts, $node.data("autocompleter-options"));
+            opts = $.extend({}, opts, $node.data('autocompleter-options'));
 
             // Check for as local or .json file
-            if (typeof opts.source === "string" && (opts.source.slice(-5) === ".json" || opts.asLocal === true)) {
+            if (typeof opts.source === 'string' && (opts.source.slice(-5) === '.json' || opts.asLocal === true)) {
                 $.ajax({
                     url: opts.source,
-                    type: "GET",
-                    dataType: "json",
+                    type: 'GET',
+                    dataType: 'json',
                     async: false
                 }).done(function (response) {
                     opts.source = response;
                 });
             }
 
-            var html = '<div class="autocompleter '+opts.customClass.join(' ')+'" id="autocompleter-'+(guid+1)+'">';
-                if (opts.hint) {
-                    html += '<div class="autocompleter-hint"></div>';
-                }
-                html += '<ul class="autocompleter-list"></ul>';
-                html += '</div>';
+            var html = '<div class="autocompleter ' + opts.customClass.join(' ') + '" id="autocompleter-' + (guid + 1) + '">';
 
-            $node.addClass("autocompleter-node")
+            if (opts.hint) {
+                html += '<div class="autocompleter-hint"></div>';
+            }
+
+            html += '<ul class="autocompleter-list"></ul>';
+            html += '</div>';
+
+            $node.addClass('autocompleter-node')
                  .after(html);
 
-            var $autocompleter = $node.next(".autocompleter").eq(0);
+            var $autocompleter = $node.next('.autocompleter').eq(0);
 
             // Set autocomplete to off for warn overlay
-            var originalAutocomplete = $node.attr("autocomplete");
-            $node.attr("autocomplete", "off");
+            var originalAutocomplete = $node.attr('autocomplete');
+            $node.attr('autocomplete', 'off');
 
             // Store plugin data
             var data = $.extend({
@@ -289,15 +293,15 @@
             }, opts);
 
             // Bind autocompleter events
-            data.$autocompleter.on("mousedown.autocompleter", ".autocompleter-item", data, _select)
-                                .data("autocompleter", data);
+            data.$autocompleter.on('mousedown.autocompleter', '.autocompleter-item', data, _select)
+                               .data('autocompleter', data);
 
             // Bind node events
-            data.$node.on("keyup.autocompleter", data, _onKeyup)
-                      .on("keydown.autocompleter", data, _onKeydownHelper)
-                      .on("focus.autocompleter", data, _onFocus)
-                      .on("blur.autocompleter", data, _onBlur)
-                      .on("mousedown.autocompleter", data, _onMousedown);
+            data.$node.on('keyup.autocompleter', data, _onKeyup)
+                      .on('keydown.autocompleter', data, _onKeydown)
+                      .on('focus.autocompleter', data, _onFocus)
+                      .on('blur.autocompleter', data, _onBlur)
+                      .on('mousedown.autocompleter', data, _onMousedown);
         }
     }
 
@@ -311,6 +315,7 @@
      */
     function _search(query, source, data) {
         var response = [];
+
         query = query.toUpperCase();
 
         if (source.length) {
@@ -318,19 +323,20 @@
                 for (var item in source) {
                     if (response.length < data.limit) {
                         var label = (data.customLabel && source[item][data.customLabel]) ? source[item][data.customLabel] : source[item].label;
+
                         switch (i) {
-                            case 0:
-                                if (label.toUpperCase().search(query) === 0) {
-                                    response.push(source[item]);
-                                    delete source[item];
-                                }
+                        case 0:
+                            if (label.toUpperCase().search(query) === 0) {
+                                response.push(source[item]);
+                                delete source[item];
+                            }
                             break;
 
-                            case 1:
-                                if (label.toUpperCase().search(query) !== -1) {
-                                    response.push(source[item]);
-                                    delete source[item];
-                                }
+                        case 1:
+                            if (label.toUpperCase().search(query) !== -1) {
+                                response.push(source[item]);
+                                delete source[item];
+                            }
                             break;
                         }
                     }
@@ -352,6 +358,7 @@
         clearTimeout(delayTimeout);
 
         data.query = $.trim(data.$node.val());
+
         if ((!data.empty && data.query.length === 0) || (data.minLength && (data.query.length < data.minLength))) {
             _clear(data);
             return;
@@ -359,7 +366,7 @@
 
         if (data.delay) {
             // Be careful: delay used also with local source
-            delayTimeout = setTimeout(function() { _xhr(data); }, data.delay);
+            delayTimeout = setTimeout(function () { _xhr(data); }, data.delay);
         } else {
             _xhr(data);
         }
@@ -372,11 +379,12 @@
      * @param data [object] "Instance data"
      */
     function _xhr(data) {
-        if (typeof data.source === "object") {
+        if (typeof data.source === 'object') {
             _clear(data);
 
             // Local search
             var search = _search(data.query, _clone(data.source), data);
+
             if (search.length) {
                 _response(search, data);
             }
@@ -392,13 +400,15 @@
 
             data.jqxhr = $.ajax({
                 url:        data.source,
-                dataType:   "json",
+                dataType:   'json',
                 data:       ajaxData,
                 beforeSend: function (xhr) {
-                    data.$autocompleter.addClass("autocompleter-ajax");
+                    data.$autocompleter.addClass('autocompleter-ajax');
                     _clear(data);
+
                     if (data.cache) {
                         var stored = _getCache(this.url);
+
                         if (stored) {
                             xhr.abort();
                             _response(stored, data);
@@ -414,6 +424,7 @@
                 if (data.cache) {
                     _setCache(this.url, response);
                 }
+
                 _response(response, data);
             })
             .always(function () {
@@ -433,8 +444,8 @@
         data.$list = null;
         data.$selected = null;
         data.index = 0;
-        data.$autocompleter.find(".autocompleter-list").empty();
-        data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show").empty();
+        data.$autocompleter.find('.autocompleter-list').empty();
+        data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show').empty();
         data.hintText = false;
 
         _close(null, data);
@@ -450,7 +461,7 @@
     function _response(response, data) {
         _buildList(response, data);
 
-        if (data.$autocompleter.hasClass("autocompleter-focus")) {
+        if (data.$autocompleter.hasClass('autocompleter-focus')) {
             _open(null, data);
         }
     }
@@ -466,18 +477,17 @@
         var menu = '';
 
         for (var item = 0, count = list.length; item < count; item++) {
-            var classes = ["autocompleter-item"];
+            var classes = ['autocompleter-item'],
+                highlightReg = new RegExp(data.query, 'gi');
 
             if (data.selectFirst && item === 0 && !data.changeWhenSelect) {
-                classes.push("autocompleter-item-selected");
+                classes.push('autocompleter-item-selected');
             }
 
-            var highlightReg = new RegExp(data.query, "gi");
-            var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label;
+            var label = (data.customLabel && list[item][data.customLabel]) ? list[item][data.customLabel] : list[item].label,
+                clear = label;
 
-            var clear = label;
-
-            label = data.highlightMatches ? label.replace(highlightReg, "<strong>$&</strong>") : label;
+            label = data.highlightMatches ? label.replace(highlightReg, '<strong>$&</strong>') : label;
 
             var value = (data.customValue && list[item][data.customValue]) ? list[item][data.customValue] : list[item].value;
 
@@ -487,7 +497,8 @@
 
                 for (var property in list[item]) {
                     if (list[item].hasOwnProperty(property)) {
-                        var regex = new RegExp("{{ " + property + " }}", "gi");
+                        var regex = new RegExp('{{ ' + property + ' }}', 'gi');
+
                         template = template.replace(regex, list[item][property]);
                     }
                 }
@@ -496,30 +507,32 @@
             }
 
             if (value) {
-                menu += '<li data-value="'+value+'" data-label="'+clear+'" class="'+classes.join(' ')+'">'+label+'</li>';
+                menu += '<li data-value="' + value + '" data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
             } else {
-                menu += '<li data-label="'+clear+'" class="'+classes.join(' ')+'">'+label+'</li>';
+                menu += '<li data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
             }
         }
 
         // Set hint
         if (list.length && data.hint) {
             var hint = ( list[0].label.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ) ? list[0].label : false;
+
             if (hint && (data.query !== list[0].label)) {
-                var hintReg = new RegExp(data.query, "i");
-                var hintText = hint.replace(hintReg, "<span>"+data.query+"</span>");
-                data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show").html(hintText);
+                var hintReg = new RegExp(data.query, 'i');
+                var hintText = hint.replace(hintReg, '<span>' + data.query + '</span>');
+
+                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
                 data.hintText = hintText;
             }
         }
 
         // Update data
         data.response = list;
-        data.$autocompleter.find(".autocompleter-list").html(menu);
-        data.$selected = (data.$autocompleter.find(".autocompleter-item-selected").length) ? data.$autocompleter.find(".autocompleter-item-selected") : null;
-        data.$list = (list.length) ? data.$autocompleter.find(".autocompleter-item") : null;
+        data.$autocompleter.find('.autocompleter-list').html(menu);
+        data.$selected = (data.$autocompleter.find('.autocompleter-item-selected').length) ? data.$autocompleter.find('.autocompleter-item-selected') : null;
+        data.$list = (list.length) ? data.$autocompleter.find('.autocompleter-item') : null;
         data.index = data.$selected ? data.$list.index(data.$selected) : -1;
-        data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
+        data.$autocompleter.find('.autocompleter-item').each(function (i, j) {
             $(j).data(data.response[i]);
         });
     }
@@ -531,10 +544,10 @@
      * @param e [object] "Event data"
      */
     function _onKeyup(e) {
-        var data = e.data;
-        var code = e.keyCode ? e.keyCode : e.which;
+        var data = e.data,
+            code = e.keyCode ? e.keyCode : e.which;
 
-        if ( (code === 40 || code === 38) && data.$autocompleter.hasClass("autocompleter-show") ) {
+        if ( (code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show') ) {
             // Arrows up & down
             var len = data.$list.length,
                 next,
@@ -563,14 +576,18 @@
                     prev = -1;
                     next = -1;
                 }
+
                 data.index = (code === 40) ? next : prev;
 
                 // Update HTML
-                data.$list.removeClass("autocompleter-item-selected");
+                data.$list.removeClass('autocompleter-item-selected');
+
                 if (data.index !== -1) {
-                    data.$list.eq(data.index).addClass("autocompleter-item-selected");
+                    data.$list.eq(data.index).addClass('autocompleter-item-selected');
                 }
-                data.$selected = data.$autocompleter.find(".autocompleter-item-selected").length ? data.$autocompleter.find(".autocompleter-item-selected") : null;
+
+                data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
+
                 if (data.changeWhenSelect) {
                     _setValue(data);
                 }
@@ -583,24 +600,25 @@
 
     /**
      * @method private
-     * @name _onKeydownHelper
+     * @name _onKeydown
      * @description Keydown events in node, up/down for prevent cursor moving and right arrow for hint
      * @param e [object] "Event data"
      */
-    function _onKeydownHelper(e) {
-        var code = e.keyCode ? e.keyCode : e.which;
-        var data = e.data;
+    function _onKeydown(e) {
+        var data = e.data,
+            code = e.keyCode ? e.keyCode : e.which;
 
         if (code === 40 || code === 38 ) {
             e.preventDefault();
             e.stopPropagation();
         } else if (code === 39) {
             // Right arrow
-            if (data.hint && data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
+            if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr("data-label") : false;
+                var hintOrigin = data.$autocompleter.find('.autocompleter-item').length ? data.$autocompleter.find('.autocompleter-item').eq(0).attr('data-label') : false;
+
                 if (hintOrigin) {
                     data.query = hintOrigin;
                     _setHint(data);
@@ -608,7 +626,7 @@
             }
         } else if (code === 13) {
             // Enter
-            if (data.$autocompleter.hasClass("autocompleter-show") && data.$selected) {
+            if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
                 _select(e);
             }
         }
@@ -625,12 +643,13 @@
         if (!internal) {
             var data = e.data;
 
-            data.$autocompleter.addClass("autocompleter-focus");
+            data.$autocompleter.addClass('autocompleter-focus');
 
-            if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show")) {
+            if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show')) {
                 if (data.focusOpen) {
                     _launch(data);
                     data.focused = true;
+
                     setTimeout(function () {
                         data.focused = false;
                     }, 500);
@@ -653,7 +672,7 @@
         var data = e.data;
 
         if (!internal) {
-            data.$autocompleter.removeClass("autocompleter-focus");
+            data.$autocompleter.removeClass('autocompleter-focus');
             _close(e);
         }
     }
@@ -666,25 +685,27 @@
      */
     function _onMousedown(e) {
         // Disable middle & right mouse click
-        if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) { return; }
+        if (e.type === 'mousedown' && $.inArray(e.which, [2, 3]) !== -1) { return; }
 
         var data = e.data;
+
         if (data.$list && !data.focused) {
-            if (!data.$node.is(":disabled")) {
+            if (!data.$node.is(':disabled')) {
                 if (isMobile && !isFirefoxMobile) {
                     var el = data.$select[0];
+
                     if (window.document.createEvent) { // All
-                        var evt = window.document.createEvent("MouseEvents");
-                        evt.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                        var evt = window.document.createEvent('MouseEvents');
+                        evt.initMouseEvent('mousedown', false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
                         el.dispatchEvent(evt);
                     } else if (el.fireEvent) { // IE
-                        el.fireEvent("onmousedown");
+                        el.fireEvent('onmousedown');
                     }
                 } else {
                     // Delegate intent
-                    if (data.$autocompleter.hasClass("autocompleter-closed")) {
+                    if (data.$autocompleter.hasClass('autocompleter-closed')) {
                         _open(e);
-                    } else if (data.$autocompleter.hasClass("autocompleter-show")) {
+                    } else if (data.$autocompleter.hasClass('autocompleter-show')) {
                         _close(e);
                     }
                 }
@@ -702,9 +723,9 @@
     function _open(e, instanceData) {
         var data = e ? e.data : instanceData;
 
-        if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length) {
-            data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
-            $body.on("click.autocompleter-" + data.guid, ":not(.autocompleter-item)", data, _closeHelper);
+        if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show') && data.$list && data.$list.length) {
+            data.$autocompleter.removeClass('autocompleter-closed').addClass('autocompleter-show');
+            $body.on('click.autocompleter-' + data.guid, ':not(.autocompleter-item)', data, _closeHelper);
         }
     }
 
@@ -715,11 +736,11 @@
      * @param e [object] "Event data"
      */
     function _closeHelper(e) {
-        if ( $(e.target).hasClass("autocompleter-node") ) {
+        if ( $(e.target).hasClass('autocompleter-node') ) {
             return;
         }
 
-        if ($(e.currentTarget).parents(".autocompleter").length === 0) {
+        if ($(e.currentTarget).parents('.autocompleter').length === 0) {
             _close(e);
         }
     }
@@ -734,9 +755,9 @@
     function _close(e, instanceData) {
         var data = e ? e.data : instanceData;
 
-        if (data.$autocompleter.hasClass("autocompleter-show")) {
-            data.$autocompleter.removeClass("autocompleter-show").addClass("autocompleter-closed");
-            $body.off(".autocompleter-" + data.guid);
+        if (data.$autocompleter.hasClass('autocompleter-show')) {
+            data.$autocompleter.removeClass('autocompleter-show').addClass('autocompleter-closed');
+            $body.off('.autocompleter-' + data.guid);
         }
     }
 
@@ -748,24 +769,26 @@
      */
     function _select(e) {
         // Disable middle & right mouse click
-        if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) { return; }
+        if (e.type === 'mousedown' && $.inArray(e.which, [2, 3]) !== -1) {
+            return;
+        }
 
         var data = e.data;
 
         e.preventDefault();
         e.stopPropagation();
 
-        if (e.type === "mousedown" && $(this).length) {
+        if (e.type === 'mousedown' && $(this).length) {
             data.$selected = $(this);
             data.index = data.$list.index(data.$selected);
         }
 
-        if (!data.$node.prop("disabled")) {
+        if (!data.$node.prop('disabled')) {
             _close(e);
             _update(data);
 
-            if (e.type === "click") {
-                data.$node.trigger("focus", [true]);
+            if (e.type === 'click') {
+                data.$node.trigger('focus', [ true ]);
             }
         }
     }
@@ -790,15 +813,16 @@
      */
     function _setValue(data) {
         if (data.$selected) {
-            if (data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
-                data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show");
+            if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+                data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
             }
-            var value = data.$selected.attr("data-value") ? data.$selected.attr("data-value") : data.$selected.attr("data-label");
-            data.$node.val(value);
+
+            data.$node.val(data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label'));
         } else {
-            if (data.hintText && !data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
-                data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show");
+            if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+                data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
             }
+
             data.$node.val(data.query);
         }
     }
@@ -822,7 +846,7 @@
      */
     function _handleChange(data) {
         data.callback.call(data.$autocompleter, data.$node.val(), data.index, data.response[data.index]);
-        data.$node.trigger("change");
+        data.$node.trigger('change');
     }
 
     /**
@@ -833,10 +857,12 @@
      * @param offset [string] "Offset string"
      */
     function _grab(response, offset) {
-        offset = offset.split(".");
-        while ( response && offset.length ) {
+        offset = offset.split('.');
+
+        while (response && offset.length) {
             response = response[offset.shift()];
         }
+
         return response;
     }
 
@@ -848,7 +874,10 @@
      * @param data [object] "AJAX response data"
      */
     function _setCache(url, data) {
-        if (!supportLocalStorage) { return; }
+        if (!supportLocalStorage) {
+            return;
+        }
+
         if (url && data) {
             cache[url] = {
                 value: data
@@ -856,14 +885,15 @@
 
             // Proccess to localStorage
             try {
-                  localStorage.setItem(localStorageKey, JSON.stringify(cache));
+                localStorage.setItem(localStorageKey, JSON.stringify(cache));
             } catch (e) {
-                  var code = e.code || e.number || e.message;
-                  if (code === 22) {
+                var code = e.code || e.number || e.message;
+
+                if (code === 22) {
                     _deleteCache();
-                  } else {
+                } else {
                     throw(e);
-                  }
+                }
             }
         }
     }
@@ -875,8 +905,12 @@
      * @param url [string] "AJAX get query string"
      */
     function _getCache(url) {
-        if (!url) { return; }
+        if (!url) {
+            return;
+        }
+
         var response = (cache[url] && cache[url].value) ? cache[url].value : false;
+
         return response;
     }
 
@@ -886,9 +920,11 @@
      * @description Load all plugin cache from localStorage
      */
     function _loadCache() {
-        if (!supportLocalStorage) { return; }
-        var json = localStorage.getItem(localStorageKey) || "{}";
-        return JSON.parse(json);
+        if (!supportLocalStorage) {
+            return;
+        }
+
+        return JSON.parse(localStorage.getItem(localStorageKey) || '{}');
     }
 
     /**
@@ -911,15 +947,20 @@
      * @description Clone JavaScript object
      */
     function _clone(obj) {
-        if (null === obj || "object" !== typeof obj) {
+        var copy;
+
+        if (null === obj || 'object' !== typeof obj) {
             return obj;
         }
-        var copy = obj.constructor();
+
+        copy = obj.constructor();
+
         for (var attr in obj) {
             if (obj.hasOwnProperty(attr)) {
                 copy[attr] = obj[attr];
             }
         }
+
         return copy;
     }
 
@@ -929,16 +970,16 @@
     $.fn.autocompleter = function (method) {
         if (publics[method]) {
             return publics[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === "object" || !method) {
+        } else if (typeof method === 'object' || !method) {
             return _init.apply(this, arguments);
         }
         return this;
     };
 
     $.autocompleter = function (method) {
-        if (method === "defaults") {
+        if (method === 'defaults') {
             publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (method === "clearCache") {
+        } else if (method === 'clearCache') {
             publics.clearCache.apply(this, null);
         }
     };
