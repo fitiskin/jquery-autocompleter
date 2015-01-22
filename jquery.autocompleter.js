@@ -1,5 +1,5 @@
 /*
- * jquery-autocompleter v0.1.9.3 - 2015-01-21
+ * jquery-autocompleter v0.1.10 - 2015-01-22
  * Simple, easy, customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
@@ -16,6 +16,7 @@
             'empty',
             'limit',
             'cache',
+            'cacheExpires',
             'focusOpen',
             'selectFirst',
             'changeWhenSelect',

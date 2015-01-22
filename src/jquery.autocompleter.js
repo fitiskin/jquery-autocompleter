@@ -8,6 +8,7 @@
             'empty',
             'limit',
             'cache',
+            'cacheExpires',
             'focusOpen',
             'selectFirst',
             'changeWhenSelect',
