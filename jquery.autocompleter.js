@@ -24,6 +24,7 @@
             'ignoredKeyCode',
             'customLabel',
             'customValue',
+            'onShowList',
             'template',
             'offset',
             'combine',
@@ -74,6 +75,7 @@
      * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
      * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
      * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
+     * @param onShowList [function] "This function is triggered when the list is shown"
      * @param template [(string|boolean)] <false> "Custom template for list items"
      * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
      * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
@@ -97,6 +99,7 @@
         ignoredKeyCode: [],
         customLabel: false,
         customValue: false,
+        onShowList: function(){},
         template: false,
         offset: false,
         combine: $.noop,
@@ -466,6 +469,8 @@
      */
     function _response(response, data) {
         _buildList(response, data);
+
+        data.onShowList(response);
 
         if (data.$autocompleter.hasClass('autocompleter-focus')) {
             _open(null, data);

@@ -73,6 +73,7 @@ Autocompleter has the following options:
 | ignoredKeyCode | array |  Array with ignorable keycodes, by default: ``9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`` | [] |
 | customLabel  | str | The name of object's property which will be used as a label | false |
 | customValue  | str | The name of object's property which will be used as a value | false |
+| onShowList | function | This function is triggered when the list is shown | function(){} |
 | template | str | Custom template for list items. For example: ``<span>{{ label }} is {{ customPropertyFromSource }}</span>``. Template appends to ``.autocompleter-item``. | false |
 | offset | str | Source response offset, for example: response.items.posts | false |
 | combine | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options | $.noop |
