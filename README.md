@@ -57,6 +57,7 @@ Autocompleter has the following options:
 | Name        | Type | Description           | Deafult  |
 | ------------- |:-------------:| -----:|-----:|
 | source | str, obj | URL to the server or a local object  | null |
+| persistentData | array | This able to set an array of data with no ajax request | [] |
 | asLocal | bool | Parse remote response as local source | false |
 | empty | bool | Launch if value is empty |  true  |
 | limit | int | Number of results to be displayed | 10 |
