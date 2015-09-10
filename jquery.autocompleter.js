@@ -19,6 +19,7 @@
             'cacheExpires',
             'focusOpen',
             'selectFirst',
+            'noSelect',
             'changeWhenSelect',
             'highlightMatches',
             'ignoredKeyCode',
@@ -69,6 +70,7 @@
      * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
      * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
      * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
+     * @param noSelect [boolean] <false> "If set to true, the item is not selected when you click on"
      * @param changeWhenSelect [boolean] <true> "Allows to change input value using arrow keys navigation in autocomplete list"
      * @param highlightMatches [boolean] <false> "This option defines <strong> tag wrap for matches in autocomplete results"
      * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
@@ -92,6 +94,7 @@
         focusOpen: true,
         hint: false,
         selectFirst: false,
+        noSelect: false,
         changeWhenSelect: true,
         highlightMatches: false,
         ignoredKeyCode: [],
@@ -840,7 +843,9 @@
      * @param data [object] "Instance data"
      */
     function _update(data) {
-        _setValue(data);
+        if(!data.noSelect){
+            _setValue(data);
+        }
         _handleChange(data);
         _clear(data);
     }
