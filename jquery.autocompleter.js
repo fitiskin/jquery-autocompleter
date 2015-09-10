@@ -24,6 +24,7 @@
             'ignoredKeyCode',
             'customLabel',
             'customValue',
+            'onBeforeShow',
             'template',
             'offset',
             'combine',
@@ -74,6 +75,7 @@
      * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
      * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
      * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
+     * @oaran onBeforeShow [function] "This function is triggerred when the list is ready to be shown"
      * @param template [(string|boolean)] <false> "Custom template for list items"
      * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
      * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
@@ -97,6 +99,7 @@
         ignoredKeyCode: [],
         customLabel: false,
         customValue: false,
+        onBeforeShow: function(){},
         template: false,
         offset: false,
         combine: $.noop,
@@ -542,6 +545,8 @@
         data.$autocompleter.find('.autocompleter-item').each(function (i, j) {
             $(j).data(data.response[i]);
         });
+
+        data.onBeforeShow();
     }
 
     /**
