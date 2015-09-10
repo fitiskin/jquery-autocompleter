@@ -787,7 +787,7 @@
 
         if (e.type === 'mousedown' && $(this).length) {
             data.$selected = $(this);
-            data.index = data.$list.index(data.$selected);
+            data.index = $(this).index();
         }
 
         if (!data.$node.prop('disabled')) {
