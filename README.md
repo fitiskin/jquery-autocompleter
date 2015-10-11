@@ -76,7 +76,7 @@ Autocompleter has the following options:
 | template | str | Custom template for list items. For example: ``<span>{{ label }} is {{ customPropertyFromSource }}</span>``. Template appends to ``.autocompleter-item``. | false |
 | offset | str | Source response offset, for example: response.items.posts | false |
 | combine | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options | $.noop |
-| callback | function | Select value callback function. Arguments: ``value``, ``index`` | $.noop |
+| callback | function | Select value callback function. Arguments: ``value``, ``index``, ``object`` | $.noop |
 
 ## Methods:
 
@@ -149,8 +149,9 @@ $(function () {
                 gender: gender
             };
         },
-        callback: function (value, index) {
+        callback: function (value, index, object) {
             console.log('Value ' + value + ' are selected (with index ' + index + ').');
+			console.log(object);
         }
     });
 });
