@@ -1,4 +1,2 @@
-node_modules/*
-npm-debug.log
-.DS_Store
-demo/*
+node_modules
+*.log
