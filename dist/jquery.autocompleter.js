@@ -1,75 +1,49 @@
-(function($, window) {
-  'use strict';
+/**
+ * jquery-autocompleter v0.1.10 - 2018-03-07
+ * Easy customisable and with localStorage cache support.
+ * http://github.com/ArtemFitiskin/jquery-autocompleter
+ *
+ * @license (c) 2018 Artem Fitiskin MIT Licensed
+ */
+
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(factory());
+}(this, (function () { 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+(function ($, window) {
 
   var guid = 0,
-    ignoredKeyCode = [
-      9,
-      13,
-      17,
-      19,
-      20,
-      27,
-      33,
-      34,
-      35,
-      36,
-      37,
-      39,
-      44,
-      92,
-      113,
-      114,
-      115,
-      118,
-      119,
-      120,
-      122,
-      123,
-      144,
-      145
-    ],
-    allowOptions = [
-      'source',
-      'empty',
-      'limit',
-      'cache',
-      'cacheExpires',
-      'focusOpen',
-      'selectFirst',
-      'changeWhenSelect',
-      'highlightMatches',
-      'ignoredKeyCode',
-      'customLabel',
-      'customValue',
-      'template',
-      'offset',
-      'combine',
-      'callback',
-      'minLength',
-      'delay'
-    ],
-    userAgent =
-      window.navigator.userAgent || window.navigator.vendor || window.opera,
-    isFirefox = /Firefox/i.test(userAgent),
-    isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
-    isFirefoxMobile = isFirefox && isMobile,
-    $body = null,
-    delayTimeout = null,
-    localStorageKey = 'autocompleterCache',
-    supportLocalStorage = (function() {
-      var supported = typeof window.localStorage !== 'undefined';
+      ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
+      allowOptions = ['source', 'empty', 'limit', 'cache', 'cacheExpires', 'focusOpen', 'selectFirst', 'changeWhenSelect', 'highlightMatches', 'ignoredKeyCode', 'customLabel', 'customValue', 'template', 'offset', 'combine', 'callback', 'minLength', 'delay'],
+      userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera,
+      isFirefox = /Firefox/i.test(userAgent),
+      isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
+      isFirefoxMobile = isFirefox && isMobile,
+      $body = null,
+      delayTimeout = null,
+      localStorageKey = 'autocompleterCache',
+      supportLocalStorage = function () {
+    var supported = typeof window.localStorage !== 'undefined';
 
-      if (supported) {
-        try {
-          localStorage.setItem('autocompleter', 'autocompleter');
-          localStorage.removeItem('autocompleter');
-        } catch (e) {
-          supported = false;
-        }
+    if (supported) {
+      try {
+        localStorage.setItem('autocompleter', 'autocompleter');
+        localStorage.removeItem('autocompleter');
+      } catch (e) {
+        supported = false;
       }
+    }
 
-      return supported;
-    })();
+    return supported;
+  }();
 
   /**
    * Don't forget update README.md
@@ -129,10 +103,10 @@
      * @param opts [object] <{}> "Options object"
      * @example $.autocompleter('defaults', opts);
      */
-    defaults: function(opts) {
+    defaults: function defaults$$1(opts) {
       options = $.extend(options, opts || {});
 
-      return typeof this === 'object' ? $(this) : true;
+      return _typeof(this) === 'object' ? $(this) : true;
     },
 
     /**
@@ -140,11 +114,9 @@
      * @name option
      * @description Open autocompleter list
      */
-    option: function(properties) {
-      return $(this).each(function(i, input) {
-        var data = $(input)
-          .next('.autocompleter')
-          .data('autocompleter');
+    option: function option(properties) {
+      return $(this).each(function (i, input) {
+        var data = $(input).next('.autocompleter').data('autocompleter');
 
         for (var property in properties) {
           if ($.inArray(property, allowOptions) !== -1) {
@@ -159,11 +131,9 @@
      * @name open
      * @description Open autocompleter list
      */
-    open: function() {
-      return $(this).each(function(i, input) {
-        var data = $(input)
-          .next('.autocompleter')
-          .data('autocompleter');
+    open: function open() {
+      return $(this).each(function (i, input) {
+        var data = $(input).next('.autocompleter').data('autocompleter');
 
         if (data) {
           _open(null, data);
@@ -176,11 +146,9 @@
      * @name close
      * @description Close autocompleter list
      */
-    close: function() {
-      return $(this).each(function(i, input) {
-        var data = $(input)
-          .next('.autocompleter')
-          .data('autocompleter');
+    close: function close() {
+      return $(this).each(function (i, input) {
+        var data = $(input).next('.autocompleter').data('autocompleter');
 
         if (data) {
           _close(null, data);
@@ -193,7 +161,7 @@
      * @name clearCache
      * @description Remove localStorage cache
      */
-    clearCache: function() {
+    clearCache: function clearCache() {
       _deleteCache();
     },
 
@@ -203,11 +171,9 @@
      * @description Removes instance of plugin
      * @example $('.target').autocompleter('destroy');
      */
-    destroy: function() {
-      return $(this).each(function(i, input) {
-        var data = $(input)
-          .next('.autocompleter')
-          .data('autocompleter');
+    destroy: function destroy() {
+      return $(this).each(function (i, input) {
+        var data = $(input).next('.autocompleter').data('autocompleter');
 
         if (data) {
           // Abort xhr
@@ -217,9 +183,7 @@
 
           // If has selected item & open - confirm it
           if (data.$autocompleter.hasClass('open')) {
-            data.$autocompleter
-              .find('.autocompleter-selected')
-              .trigger('click.autocompleter');
+            data.$autocompleter.find('.autocompleter-selected').trigger('click.autocompleter');
           }
 
           // Restore original autocomplete attr
@@ -274,26 +238,18 @@
       opts = $.extend({}, opts, $node.data('autocompleter-options'));
 
       // Check for as local or .json file
-      if (
-        typeof opts.source === 'string' &&
-        (opts.source.slice(-5) === '.json' || opts.asLocal === true)
-      ) {
+      if (typeof opts.source === 'string' && (opts.source.slice(-5) === '.json' || opts.asLocal === true)) {
         $.ajax({
           url: opts.source,
           type: 'GET',
           dataType: 'json',
           async: false
-        }).done(function(response) {
+        }).done(function (response) {
           opts.source = response;
         });
       }
 
-      var html =
-        '<div class="autocompleter ' +
-        opts.customClass.join(' ') +
-        '" id="autocompleter-' +
-        (guid + 1) +
-        '">';
+      var html = '<div class="autocompleter ' + opts.customClass.join(' ') + '" id="autocompleter-' + (guid + 1) + '">';
 
       if (opts.hint) {
         html += '<div class="autocompleter-hint"></div>';
@@ -311,37 +267,27 @@
       $node.attr('autocomplete', 'off');
 
       // Store plugin data
-      var data = $.extend(
-        {
-          $node: $node,
-          $autocompleter: $autocompleter,
-          $selected: null,
-          $list: null,
-          index: -1,
-          hintText: false,
-          source: false,
-          jqxhr: false,
-          response: null,
-          focused: false,
-          query: '',
-          originalAutocomplete: originalAutocomplete,
-          guid: guid++
-        },
-        opts
-      );
+      var data = $.extend({
+        $node: $node,
+        $autocompleter: $autocompleter,
+        $selected: null,
+        $list: null,
+        index: -1,
+        hintText: false,
+        source: false,
+        jqxhr: false,
+        response: null,
+        focused: false,
+        query: '',
+        originalAutocomplete: originalAutocomplete,
+        guid: guid++
+      }, opts);
 
       // Bind autocompleter events
-      data.$autocompleter
-        .on('mousedown.autocompleter', '.autocompleter-item', data, _select)
-        .data('autocompleter', data);
+      data.$autocompleter.on('mousedown.autocompleter', '.autocompleter-item', data, _select).data('autocompleter', data);
 
       // Bind node events
-      data.$node
-        .on('keyup.autocompleter', data, _onKeyup)
-        .on('keydown.autocompleter', data, _onKeydown)
-        .on('focus.autocompleter', data, _onFocus)
-        .on('blur.autocompleter', data, _onBlur)
-        .on('mousedown.autocompleter', data, _onMousedown);
+      data.$node.on('keyup.autocompleter', data, _onKeyup).on('keydown.autocompleter', data, _onKeydown).on('focus.autocompleter', data, _onFocus).on('blur.autocompleter', data, _onBlur).on('mousedown.autocompleter', data, _onMousedown);
     }
   }
 
@@ -362,10 +308,7 @@
       for (var i = 0; i < 2; i++) {
         for (var item in source) {
           if (response.length < data.limit) {
-            var label =
-              data.customLabel && source[item][data.customLabel]
-                ? source[item][data.customLabel]
-                : source[item].label;
+            var label = data.customLabel && source[item][data.customLabel] ? source[item][data.customLabel] : source[item].label;
 
             switch (i) {
               case 0:
@@ -402,17 +345,14 @@
 
     data.query = $.trim(data.$node.val());
 
-    if (
-      (!data.empty && data.query.length === 0) ||
-      (data.minLength && data.query.length < data.minLength)
-    ) {
+    if (!data.empty && data.query.length === 0 || data.minLength && data.query.length < data.minLength) {
       _clear(data);
       return;
     }
 
     if (data.delay) {
       // Be careful: delay used also with local source
-      delayTimeout = setTimeout(function() {
+      delayTimeout = setTimeout(function () {
         _xhr(data);
       }, data.delay);
     } else {
@@ -427,7 +367,7 @@
    * @param data [object] "Instance data"
    */
   function _xhr(data) {
-    if (typeof data.source === 'object') {
+    if (_typeof(data.source) === 'object') {
       _clear(data);
 
       // Local search
@@ -441,20 +381,17 @@
         data.jqxhr.abort();
       }
 
-      var ajaxData = $.extend(
-        {
-          limit: data.limit,
-          query: data.query
-        },
-        data.combine(data.query)
-      );
+      var ajaxData = $.extend({
+        limit: data.limit,
+        query: data.query
+      }, data.combine(data.query));
 
       data.jqxhr = $.ajax({
         url: data.source,
         dataType: 'json',
         crossDomain: true,
         data: ajaxData,
-        beforeSend: function(xhr) {
+        beforeSend: function beforeSend(xhr) {
           data.$autocompleter.addClass('autocompleter-ajax');
           _clear(data);
 
@@ -467,23 +404,21 @@
             }
           }
         }
-      })
-        .done(function(response) {
-          // Get subobject from responce
-          if (data.offset) {
-            response = _grab(response, data.offset);
-          }
+      }).done(function (response) {
+        // Get subobject from responce
+        if (data.offset) {
+          response = _grab(response, data.offset);
+        }
 
-          // Set cache
-          if (data.cache) {
-            _setCache(this.url, response);
-          }
+        // Set cache
+        if (data.cache) {
+          _setCache(this.url, response);
+        }
 
-          _response(response, data);
-        })
-        .always(function() {
-          data.$autocompleter.removeClass('autocompleter-ajax');
-        });
+        _response(response, data);
+      }).always(function () {
+        data.$autocompleter.removeClass('autocompleter-ajax');
+      });
     }
   }
 
@@ -499,10 +434,7 @@
     data.$selected = null;
     data.index = 0;
     data.$autocompleter.find('.autocompleter-list').empty();
-    data.$autocompleter
-      .find('.autocompleter-hint')
-      .removeClass('autocompleter-hint-show')
-      .empty();
+    data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show').empty();
     data.hintText = false;
 
     _close(null, data);
@@ -535,26 +467,18 @@
 
     for (var item = 0, count = list.length; item < count; item++) {
       var classes = ['autocompleter-item'],
-        highlightReg = new RegExp(data.query, 'gi');
+          highlightReg = new RegExp(data.query, 'gi');
 
       if (data.selectFirst && item === 0 && !data.changeWhenSelect) {
         classes.push('autocompleter-item-selected');
       }
 
-      var label =
-          data.customLabel && list[item][data.customLabel]
-            ? list[item][data.customLabel]
-            : list[item].label,
-        clear = label;
+      var label = data.customLabel && list[item][data.customLabel] ? list[item][data.customLabel] : list[item].label,
+          clear = label;
 
-      label = data.highlightMatches
-        ? label.replace(highlightReg, '<strong>$&</strong>')
-        : label;
+      label = data.highlightMatches ? label.replace(highlightReg, '<strong>$&</strong>') : label;
 
-      var value =
-        data.customValue && list[item][data.customValue]
-          ? list[item][data.customValue]
-          : list[item].value;
+      var value = data.customValue && list[item][data.customValue] ? list[item][data.customValue] : list[item].value;
 
       // Apply custom template
       if (data.template) {
@@ -572,48 +496,22 @@
       }
 
       if (value) {
-        menu +=
-          '<li data-value="' +
-          value +
-          '" data-label="' +
-          clear +
-          '" class="' +
-          classes.join(' ') +
-          '">' +
-          label +
-          '</li>';
+        menu += '<li data-value="' + value + '" data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
       } else {
-        menu +=
-          '<li data-label="' +
-          clear +
-          '" class="' +
-          classes.join(' ') +
-          '">' +
-          label +
-          '</li>';
+        menu += '<li data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
       }
     }
 
     // Set hint
     if (list.length && data.hint) {
-      var hintLabel =
-          data.customLabel && list[0][data.customLabel]
-            ? list[0][data.customLabel]
-            : list[0].label,
-        hint =
-          hintLabel.substr(0, data.query.length).toUpperCase() ===
-          data.query.toUpperCase()
-            ? hintLabel
-            : false;
+      var hintLabel = data.customLabel && list[0][data.customLabel] ? list[0][data.customLabel] : list[0].label,
+          hint = hintLabel.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ? hintLabel : false;
 
       if (hint && data.query !== hintLabel) {
         var hintReg = new RegExp(data.query, 'i');
         var hintText = hint.replace(hintReg, '<span>' + data.query + '</span>');
 
-        data.$autocompleter
-          .find('.autocompleter-hint')
-          .addClass('autocompleter-hint-show')
-          .html(hintText);
+        data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
         data.hintText = hintText;
       }
     }
@@ -621,15 +519,10 @@
     // Update data
     data.response = list;
     data.$autocompleter.find('.autocompleter-list').html(menu);
-    data.$selected = data.$autocompleter.find('.autocompleter-item-selected')
-      .length
-      ? data.$autocompleter.find('.autocompleter-item-selected')
-      : null;
-    data.$list = list.length
-      ? data.$autocompleter.find('.autocompleter-item')
-      : null;
+    data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
+    data.$list = list.length ? data.$autocompleter.find('.autocompleter-item') : null;
     data.index = data.$selected ? data.$list.index(data.$selected) : -1;
-    data.$autocompleter.find('.autocompleter-item').each(function(i, j) {
+    data.$autocompleter.find('.autocompleter-item').each(function (i, j) {
       $(j).data(data.response[i]);
     });
   }
@@ -642,16 +535,13 @@
    */
   function _onKeyup(e) {
     var data = e.data,
-      code = e.keyCode ? e.keyCode : e.which;
+        code = e.keyCode ? e.keyCode : e.which;
 
-    if (
-      (code === 40 || code === 38) &&
-      data.$autocompleter.hasClass('autocompleter-show')
-    ) {
+    if ((code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show')) {
       // Arrows up & down
       var len = data.$list.length,
-        next,
-        prev;
+          next,
+          prev;
 
       if (len) {
         // Determine new index
@@ -686,20 +576,13 @@
           data.$list.eq(data.index).addClass('autocompleter-item-selected');
         }
 
-        data.$selected = data.$autocompleter.find(
-          '.autocompleter-item-selected'
-        ).length
-          ? data.$autocompleter.find('.autocompleter-item-selected')
-          : null;
+        data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
 
         if (data.changeWhenSelect) {
           _setValue(data);
         }
       }
-    } else if (
-      $.inArray(code, ignoredKeyCode) === -1 &&
-      $.inArray(code, data.ignoredKeyCode) === -1
-    ) {
+    } else if ($.inArray(code, ignoredKeyCode) === -1 && $.inArray(code, data.ignoredKeyCode) === -1) {
       // Typing
       _launch(data);
     }
@@ -713,29 +596,18 @@
    */
   function _onKeydown(e) {
     var data = e.data,
-      code = e.keyCode ? e.keyCode : e.which;
+        code = e.keyCode ? e.keyCode : e.which;
 
     if (code === 40 || code === 38) {
       e.preventDefault();
       e.stopPropagation();
     } else if (code === 39) {
       // Right arrow
-      if (
-        data.hint &&
-        data.hintText &&
-        data.$autocompleter
-          .find('.autocompleter-hint')
-          .hasClass('autocompleter-hint-show')
-      ) {
+      if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
         e.preventDefault();
         e.stopPropagation();
 
-        var hintOrigin = data.$autocompleter.find('.autocompleter-item').length
-          ? data.$autocompleter
-              .find('.autocompleter-item')
-              .eq(0)
-              .attr('data-label')
-          : false;
+        var hintOrigin = data.$autocompleter.find('.autocompleter-item').length ? data.$autocompleter.find('.autocompleter-item').eq(0).attr('data-label') : false;
 
         if (hintOrigin) {
           data.query = hintOrigin;
@@ -744,10 +616,7 @@
       }
     } else if (code === 13) {
       // Enter
-      if (
-        data.$autocompleter.hasClass('autocompleter-show') &&
-        data.$selected
-      ) {
+      if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
         _select(e);
       }
     }
@@ -766,15 +635,12 @@
 
       data.$autocompleter.addClass('autocompleter-focus');
 
-      if (
-        !data.$node.prop('disabled') &&
-        !data.$autocompleter.hasClass('autocompleter-show')
-      ) {
+      if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show')) {
         if (data.focusOpen) {
           _launch(data);
           data.focused = true;
 
-          setTimeout(function() {
+          setTimeout(function () {
             data.focused = false;
           }, 500);
         }
@@ -823,23 +689,7 @@
           if (window.document.createEvent) {
             // All
             var evt = window.document.createEvent('MouseEvents');
-            evt.initMouseEvent(
-              'mousedown',
-              false,
-              true,
-              window,
-              0,
-              0,
-              0,
-              0,
-              0,
-              false,
-              false,
-              false,
-              false,
-              0,
-              null
-            );
+            evt.initMouseEvent('mousedown', false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             el.dispatchEvent(evt);
           } else if (el.fireEvent) {
             // IE
@@ -867,21 +717,9 @@
   function _open(e, instanceData) {
     var data = e ? e.data : instanceData;
 
-    if (
-      !data.$node.prop('disabled') &&
-      !data.$autocompleter.hasClass('autocompleter-show') &&
-      data.$list &&
-      data.$list.length
-    ) {
-      data.$autocompleter
-        .removeClass('autocompleter-closed')
-        .addClass('autocompleter-show');
-      $body.on(
-        'click.autocompleter-' + data.guid,
-        ':not(.autocompleter-item)',
-        data,
-        _closeHelper
-      );
+    if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show') && data.$list && data.$list.length) {
+      data.$autocompleter.removeClass('autocompleter-closed').addClass('autocompleter-show');
+      $body.on('click.autocompleter-' + data.guid, ':not(.autocompleter-item)', data, _closeHelper);
     }
   }
 
@@ -912,9 +750,7 @@
     var data = e ? e.data : instanceData;
 
     if (data.$autocompleter.hasClass('autocompleter-show')) {
-      data.$autocompleter
-        .removeClass('autocompleter-show')
-        .addClass('autocompleter-closed');
+      data.$autocompleter.removeClass('autocompleter-show').addClass('autocompleter-closed');
       $body.off('.autocompleter-' + data.guid);
     }
   }
@@ -971,32 +807,14 @@
    */
   function _setValue(data) {
     if (data.$selected) {
-      if (
-        data.hintText &&
-        data.$autocompleter
-          .find('.autocompleter-hint')
-          .hasClass('autocompleter-hint-show')
-      ) {
-        data.$autocompleter
-          .find('.autocompleter-hint')
-          .removeClass('autocompleter-hint-show');
+      if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+        data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
       }
 
-      data.$node.val(
-        data.$selected.attr('data-value')
-          ? data.$selected.attr('data-value')
-          : data.$selected.attr('data-label')
-      );
+      data.$node.val(data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label'));
     } else {
-      if (
-        data.hintText &&
-        !data.$autocompleter
-          .find('.autocompleter-hint')
-          .hasClass('autocompleter-hint-show')
-      ) {
-        data.$autocompleter
-          .find('.autocompleter-hint')
-          .addClass('autocompleter-hint-show');
+      if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+        data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
       }
 
       data.$node.val(data.query);
@@ -1021,12 +839,7 @@
    * @param data [object] "Instance data"
    */
   function _handleChange(data) {
-    data.callback.call(
-      data.$autocompleter,
-      data.$node.val(),
-      data.index,
-      data.response[data.index]
-    );
+    data.callback.call(data.$autocompleter, data.$node.val(), data.index, data.response[data.index]);
     data.$node.trigger('change');
   }
 
@@ -1088,7 +901,7 @@
    */
   function _getCache(url, expires) {
     var response = false,
-      item;
+        item;
 
     expires = expires || false;
 
@@ -1101,11 +914,7 @@
     if (item && item.value) {
       response = item.value;
 
-      if (
-        item.timestamp &&
-        expires &&
-        +new Date() - item.timestamp > expires * 1000
-      ) {
+      if (item.timestamp && expires && +new Date() - item.timestamp > expires * 1000) {
         return false;
       } else {
         return response;
@@ -1150,7 +959,7 @@
   function _clone(obj) {
     var copy;
 
-    if (null === obj || 'object' !== typeof obj) {
+    if (null === obj || 'object' !== (typeof obj === 'undefined' ? 'undefined' : _typeof(obj))) {
       return obj;
     }
 
@@ -1168,19 +977,16 @@
   // Load cache
   var cache = _loadCache();
 
-  $.fn.autocompleter = function(method) {
+  $.fn.autocompleter = function (method) {
     if (publics[method]) {
-      return publics[method].apply(
-        this,
-        Array.prototype.slice.call(arguments, 1)
-      );
-    } else if (typeof method === 'object' || !method) {
+      return publics[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else if ((typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' || !method) {
       return _init.apply(this, arguments);
     }
     return this;
   };
 
-  $.autocompleter = function(method) {
+  $.autocompleter = function (method) {
     if (method === 'defaults') {
       publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (method === 'clearCache') {
@@ -1188,3 +994,5 @@
     }
   };
 })(jQuery, window);
+
+})));

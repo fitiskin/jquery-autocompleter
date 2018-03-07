@@ -11,6 +11,8 @@
       "url": "https://github.com/ArtemFitiskin"
     }
   ],
+  "main": ["dist/jquery.autocompleter.js"],
+  "moduleType": "umd",
   "keywords": [
     "jquery-plugin",
     "autocomplete",
