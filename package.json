@@ -1,7 +1,7 @@
 {
   "name": "jquery-autocompleter",
   "id": "autocompleter",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "main": "dist/jquery.autocompleter.js",
   "unpkg": "dist/jquery.autocompleter.min.js",
   "description": "Easy customisable and with localStorage cache support.",
