@@ -172,10 +172,12 @@ $(function() {
   $('#firstname').autocompleter({
     limit: 5,
     cache: true,
-    combine: function() {
+    combine: function(params) {
       var gender = $('input:radio[name=gender]:checked').val();
 
       return {
+        q: params.query,
+        count: params.limit,
         gender: gender
       };
     },

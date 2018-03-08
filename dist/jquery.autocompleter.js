@@ -1,5 +1,5 @@
 /**
- * jquery-autocompleter v0.2.1 - 2018-03-07
+ * jquery-autocompleter v0.3.0 - 2018-03-08
  * Easy customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
@@ -68,7 +68,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
    * @param template [(string|boolean)] <false> "Custom template for list items"
    * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
-   * @param combine [function] <$.noop> "Returns an object which extends ajax data. Useful if you want to pass some additional server options"
+   * @param combine [function] <null> "Returns an object with ajax data. Useful if you want to pass some additional server options or replace it at all"
    * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
    */
   var options = {
@@ -91,7 +91,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     customValue: false,
     template: false,
     offset: false,
-    combine: $.noop,
+    combine: null,
     callback: $.noop
   };
 
@@ -381,10 +381,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         data.jqxhr.abort();
       }
 
-      var ajaxData = $.extend({
+      var ajaxData = {
         limit: data.limit,
         query: data.query
-      }, data.combine(data.query));
+      };
+
+      if (typeof data.combine === 'function') {
+        ajaxData = data.combine(ajaxData);
+      }
 
       data.jqxhr = $.ajax({
         url: data.source,
