@@ -74,29 +74,31 @@ Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-autoco
 
 Autocompleter has the following options:
 
-| Name             | Type     | Description                                                                                                                                           | Deafult |
-| ---------------- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- | :------ |
-| source           | str, obj | URL to the server or a local object                                                                                                                   | null    |
-| asLocal          | bool     | Parse remote response as local source                                                                                                                 | false   |
-| empty            | bool     | Launch if value is empty                                                                                                                              | true    |
-| limit            | int      | Number of results to be displayed                                                                                                                     | 10      |
-| minLength        | int      | Minimum length for autocompleter                                                                                                                      | 0       |
-| delay            | int      | Few milliseconds to defer the request                                                                                                                 | 0       |
-| customClass      | array    | Array with custom classes for autocompleter element                                                                                                   | []      |
-| cache            | bool     | Save xhr data to localStorage to avoid the repetition of requests                                                                                     | true    |
-| cacheExpires     | int      | localStorage data lifetime in sec (0 to disable cache expire)                                                                                         | 86400   |
-| focusOpen        | bool     | Launch autocompleter when input gets focus                                                                                                            | true    |
-| hint             | bool     | Add hint to input with first matched label, correct styles should be installed                                                                        | false   |
-| selectFirst      | bool     | If set to `true`, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on                                 | false   |
-| changeWhenSelect | bool     | Allows to change input value using arrow keys navigation in autocomplete list                                                                         | true    |
-| highlightMatches | bool     | This option defines `<strong>` tag wrap for matches in autocomplete results                                                                           | false   |
-| ignoredKeyCode   | array    | Array with ignorable keycodes, by default: `9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`  | []      |
-| customLabel      | str      | The name of object's property which will be used as a label                                                                                           | false   |
-| customValue      | str      | The name of object's property which will be used as a value                                                                                           | false   |
-| template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
-| offset           | str      | Source response offset, for example: response.items.posts                                                                                             | false   |
-| combine          | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options                                                  | $.noop  |
-| callback         | function | Select value callback function. Arguments: `value`, `index`, `object`                                                                                 | $.noop  |
+| Name              | Type     | Description                                                  | Deafult |
+| ----------------- | :------- | :----------------------------------------------------------- | :------ |
+| source            | str, obj | URL to the server or a local object                          | null    |
+| asLocal           | bool     | Parse remote response as local source                        | false   |
+| empty             | bool     | Launch if value is empty                                     | true    |
+| limit             | int      | Number of results to be displayed                            | 10      |
+| minLength         | int      | Minimum length for autocompleter                             | 0       |
+| delay             | int      | Few milliseconds to defer the request                        | 0       |
+| customClass       | array    | Array with custom classes for autocompleter element          | []      |
+| cache             | bool     | Save xhr data to localStorage to avoid the repetition of requests | true    |
+| cacheExpires      | int      | localStorage data lifetime in sec (0 to disable cache expire) | 86400   |
+| focusOpen         | bool     | Launch autocompleter when input gets focus                   | true    |
+| hint              | bool     | Add hint to input with first matched label, correct styles should be installed | false   |
+| selectFirst       | bool     | If set to `true`, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on | false   |
+| changeWhenSelect  | bool     | Allows to change input value using arrow keys navigation in autocomplete list | true    |
+| highlightMatches  | bool     | This option defines `<strong>` tag wrap for matches in autocomplete results | false   |
+| ignoredKeyCode    | array    | Array with ignorable keycodes, by default: `9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145` | []      |
+| customLabel       | str      | The name of object's property which will be used as a label  | false   |
+| customValue       | str      | The name of object's property which will be used as a value  | false   |
+| template          | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
+| offset            | str      | Source response offset, for example: response.items.posts    | false   |
+| combine           | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options | $.noop  |
+| callback          | function | Select value callback function. Arguments: `value`, `index`, `object` | $.noop  |
+| beforeNewLaunch   | function | The event was triggered before the new request (including local cache). | null    |
+| allowPreventEnter | bool     | Is it always blocking Enter events                           | false   |
 
 ## Methods
 

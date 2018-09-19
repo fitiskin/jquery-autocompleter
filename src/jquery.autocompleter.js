@@ -1,4 +1,4 @@
-(function($, window) {
+(function ($, window) {
   'use strict';
 
   var guid = 0,
@@ -46,7 +46,9 @@
       'combine',
       'callback',
       'minLength',
-      'delay'
+      'delay',
+      'beforeNewLaunch',
+      'allowPreventEnter'
     ],
     userAgent =
       window.navigator.userAgent || window.navigator.vendor || window.opera,
@@ -56,7 +58,7 @@
     $body = null,
     delayTimeout = null,
     localStorageKey = 'autocompleterCache',
-    supportLocalStorage = (function() {
+    supportLocalStorage = (function () {
       var supported = typeof window.localStorage !== 'undefined';
 
       if (supported) {
@@ -96,6 +98,8 @@
    * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
    * @param combine [function] <null> "Returns an object with ajax data. Useful if you want to pass some additional server options or replace it at all"
    * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
+         * @param beforeNewLaunch [function] <null> "The event was triggered before the new request (including local cache)."
+         * @param allowPreventEnter [boolean] <false> "Is it always blocking Enter events"
    */
   var options = {
     source: null,
@@ -118,7 +122,9 @@
     template: false,
     offset: false,
     combine: null,
-    callback: $.noop
+    callback: $.noop,
+    beforeNewLaunch: null,
+    allowPreventEnter: false
   };
 
   var publics = {
@@ -129,7 +135,7 @@
      * @param opts [object] <{}> "Options object"
      * @example $.autocompleter('defaults', opts);
      */
-    defaults: function(opts) {
+    defaults: function (opts) {
       options = $.extend(options, opts || {});
 
       return typeof this === 'object' ? $(this) : true;
@@ -140,8 +146,8 @@
      * @name option
      * @description Open autocompleter list
      */
-    option: function(properties) {
-      return $(this).each(function(i, input) {
+    option: function (properties) {
+      return $(this).each(function (i, input) {
         var data = $(input)
           .next('.autocompleter')
           .data('autocompleter');
@@ -159,8 +165,8 @@
      * @name open
      * @description Open autocompleter list
      */
-    open: function() {
-      return $(this).each(function(i, input) {
+    open: function () {
+      return $(this).each(function (i, input) {
         var data = $(input)
           .next('.autocompleter')
           .data('autocompleter');
@@ -176,8 +182,8 @@
      * @name close
      * @description Close autocompleter list
      */
-    close: function() {
-      return $(this).each(function(i, input) {
+    close: function () {
+      return $(this).each(function (i, input) {
         var data = $(input)
           .next('.autocompleter')
           .data('autocompleter');
@@ -193,7 +199,7 @@
      * @name clearCache
      * @description Remove localStorage cache
      */
-    clearCache: function() {
+    clearCache: function () {
       _deleteCache();
     },
 
@@ -203,8 +209,8 @@
      * @description Removes instance of plugin
      * @example $('.target').autocompleter('destroy');
      */
-    destroy: function() {
-      return $(this).each(function(i, input) {
+    destroy: function () {
+      return $(this).each(function (i, input) {
         var data = $(input)
           .next('.autocompleter')
           .data('autocompleter');
@@ -283,7 +289,7 @@
           type: 'GET',
           dataType: 'json',
           async: false
-        }).done(function(response) {
+        }).done(function (response) {
           opts.source = response;
         });
       }
@@ -400,6 +406,10 @@
     // Clear previous timeout
     clearTimeout(delayTimeout);
 
+    if (typeof data.beforeNewLaunch === 'function' && data.$node.val() !== _getCache('autocompleter-selectedtext')) {
+      data.beforeNewLaunch(data.$node);
+    }
+
     data.query = $.trim(data.$node.val());
 
     if (
@@ -412,7 +422,7 @@
 
     if (data.delay) {
       // Be careful: delay used also with local source
-      delayTimeout = setTimeout(function() {
+      delayTimeout = setTimeout(function () {
         _xhr(data);
       }, data.delay);
     } else {
@@ -455,7 +465,7 @@
         dataType: 'json',
         crossDomain: true,
         data: ajaxData,
-        beforeSend: function(xhr) {
+        beforeSend: function (xhr) {
           data.$autocompleter.addClass('autocompleter-ajax');
           _clear(data);
 
@@ -469,7 +479,7 @@
           }
         }
       })
-        .done(function(response) {
+        .done(function (response) {
           // Get subobject from responce
           if (data.offset) {
             response = _grab(response, data.offset);
@@ -482,7 +492,7 @@
 
           _response(response, data);
         })
-        .always(function() {
+        .always(function () {
           data.$autocompleter.removeClass('autocompleter-ajax');
         });
     }
@@ -543,9 +553,9 @@
       }
 
       var label =
-          data.customLabel && list[item][data.customLabel]
-            ? list[item][data.customLabel]
-            : list[item].label,
+        data.customLabel && list[item][data.customLabel]
+          ? list[item][data.customLabel]
+          : list[item].label,
         clear = label;
 
       label = data.highlightMatches
@@ -598,12 +608,12 @@
     // Set hint
     if (list.length && data.hint) {
       var hintLabel =
-          data.customLabel && list[0][data.customLabel]
-            ? list[0][data.customLabel]
-            : list[0].label,
+        data.customLabel && list[0][data.customLabel]
+          ? list[0][data.customLabel]
+          : list[0].label,
         hint =
           hintLabel.substr(0, data.query.length).toUpperCase() ===
-          data.query.toUpperCase()
+            data.query.toUpperCase()
             ? hintLabel
             : false;
 
@@ -630,7 +640,7 @@
       ? data.$autocompleter.find('.autocompleter-item')
       : null;
     data.index = data.$selected ? data.$list.index(data.$selected) : -1;
-    data.$autocompleter.find('.autocompleter-item').each(function(i, j) {
+    data.$autocompleter.find('.autocompleter-item').each(function (i, j) {
       $(j).data(data.response[i]);
     });
   }
@@ -733,9 +743,9 @@
 
         var hintOrigin = data.$autocompleter.find('.autocompleter-item').length
           ? data.$autocompleter
-              .find('.autocompleter-item')
-              .eq(0)
-              .attr('data-label')
+            .find('.autocompleter-item')
+            .eq(0)
+            .attr('data-label')
           : false;
 
         if (hintOrigin) {
@@ -750,6 +760,10 @@
         data.$selected
       ) {
         _select(e);
+      }
+      if (data.allowPreventEnter) {
+        e.preventDefault();
+        e.stopPropagation();
       }
     }
   }
@@ -775,7 +789,7 @@
           _launch(data);
           data.focused = true;
 
-          setTimeout(function() {
+          setTimeout(function () {
             data.focused = false;
           }, 500);
         }
@@ -1169,7 +1183,7 @@
   // Load cache
   var cache = _loadCache();
 
-  $.fn.autocompleter = function(method) {
+  $.fn.autocompleter = function (method) {
     if (publics[method]) {
       return publics[method].apply(
         this,
@@ -1181,7 +1195,7 @@
     return this;
   };
 
-  $.autocompleter = function(method) {
+  $.autocompleter = function (method) {
     if (method === 'defaults') {
       publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (method === 'clearCache') {
