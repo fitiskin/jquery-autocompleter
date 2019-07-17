@@ -2,7 +2,7 @@
 
 ## Demo
 
-Here: [Example with Crayola colors](http://artemfitiskin.github.io/jquery-autocompleter/).
+Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocompleter/).
 
 ## Usage
 
