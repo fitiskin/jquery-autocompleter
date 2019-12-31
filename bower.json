@@ -3,12 +3,12 @@
   "version": "0.1.10",
   "description": "Easy customisable and with localStorage cache support.",
   "license": "MIT",
-  "homepage": "http://github.com/ArtemFitiskin/jquery-autocompleter",
+  "homepage": "http://github.com/fitiskin/jquery-autocompleter",
   "authors": [
     {
       "name": "Artem Fitiskin",
       "email": "artemfitiskin@gmail.com",
-      "url": "https://github.com/ArtemFitiskin"
+      "url": "https://github.com/fitiskin"
     }
   ],
   "main": ["dist/jquery.autocompleter.js"],

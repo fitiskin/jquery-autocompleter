@@ -21,32 +21,32 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArtemFitiskin/jquery-autocompleter"
+    "url": "https://github.com/fitiskin/jquery-autocompleter"
   },
-  "homepage": "http://github.com/ArtemFitiskin/jquery-autocompleter",
+  "homepage": "http://github.com/fitiskin/jquery-autocompleter",
   "demo": "http://artemfitiskin.github.io/jquery-autocompleter/",
   "license": "MIT",
   "author": {
     "name": "Artem Fitiskin",
     "email": "artemfitiskin@gmail.com",
-    "url": "https://github.com/ArtemFitiskin"
+    "url": "https://github.com/fitiskin"
   },
   "peerDependencies": {
     "jquery": ">=1.11.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.2",
+    "babel-eslint": "^8.2.6",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babelrc-rollup": "^3.0.0",
-    "eslint": "^4.18.2",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "prettier": "^1.11.1",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.56.3",
-    "rollup-plugin-babel": "^3.0.3",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.10.0",
+    "eslint-plugin-prettier": "^2.7.0",
+    "prettier": "^1.19.1",
+    "rimraf": "^2.7.1",
+    "rollup": "^0.56.5",
+    "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-uglify": "^3.0.0"
   }
 }
