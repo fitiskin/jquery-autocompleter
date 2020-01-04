@@ -1,42 +1,50 @@
 /**
- * jquery-autocompleter v0.3.0 - 2018-03-08
- * Easy customisable and with localStorage cache support.
- * http://github.com/fitiskin/jquery-autocompleter
- *
- * @license (c) 2018 Artem Fitiskin MIT Licensed
- */
+* jquery-autocompleter v0.3.0 - 2020-01-04
+* Easy customisable and with localStorage cache support.
+* http://github.com/fitiskin/jquery-autocompleter
+*
+* @license (c) 2020 Artem Fitiskin MIT Licensed
+*/
 
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('jquery')) :
+  typeof define === 'function' && define.amd ? define(['jquery'], factory) :
+  (global = global || self, factory(global.$));
+}(this, (function ($) { 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
+  $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
 
-(function ($, window) {
+  function _typeof(obj) {
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
 
   var guid = 0,
       ignoredKeyCode = [9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145],
-      allowOptions = ['source', 'empty', 'limit', 'cache', 'cacheExpires', 'focusOpen', 'selectFirst', 'changeWhenSelect', 'highlightMatches', 'ignoredKeyCode', 'customLabel', 'customValue', 'template', 'offset', 'combine', 'callback', 'minLength', 'delay'],
+      allowOptions = ["source", "empty", "limit", "cache", "cacheExpires", "focusOpen", "selectFirst", "changeWhenSelect", "highlightMatches", "ignoredKeyCode", "customLabel", "customValue", "template", "offset", "combine", "callback", "minLength", "delay"],
       userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera,
       isFirefox = /Firefox/i.test(userAgent),
       isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(userAgent),
       isFirefoxMobile = isFirefox && isMobile,
       $body = null,
       delayTimeout = null,
-      localStorageKey = 'autocompleterCache',
+      localStorageKey = "autocompleterCache",
       supportLocalStorage = function () {
-    var supported = typeof window.localStorage !== 'undefined';
+    var supported = typeof window.localStorage !== "undefined";
 
     if (supported) {
       try {
-        localStorage.setItem('autocompleter', 'autocompleter');
-        localStorage.removeItem('autocompleter');
+        localStorage.setItem("autocompleter", "autocompleter");
+        localStorage.removeItem("autocompleter");
       } catch (e) {
         supported = false;
       }
@@ -44,7 +52,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     return supported;
   }();
-
   /**
    * Don't forget update README.md
    *
@@ -71,6 +78,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param combine [function] <null> "Returns an object with ajax data. Useful if you want to pass some additional server options or replace it at all"
    * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
    */
+
+
   var options = {
     source: null,
     asLocal: false,
@@ -94,7 +103,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     combine: null,
     callback: $.noop
   };
-
   var publics = {
     /**
      * @method
@@ -103,10 +111,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param opts [object] <{}> "Options object"
      * @example $.autocompleter('defaults', opts);
      */
-    defaults: function defaults$$1(opts) {
+    defaults: function defaults(opts) {
       options = $.extend(options, opts || {});
-
-      return _typeof(this) === 'object' ? $(this) : true;
+      return _typeof(this) === "object" ? $(this) : true;
     },
 
     /**
@@ -116,7 +123,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     option: function option(properties) {
       return $(this).each(function (i, input) {
-        var data = $(input).next('.autocompleter').data('autocompleter');
+        var data = $(input).next(".autocompleter").data("autocompleter");
 
         for (var property in properties) {
           if ($.inArray(property, allowOptions) !== -1) {
@@ -133,7 +140,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     open: function open() {
       return $(this).each(function (i, input) {
-        var data = $(input).next('.autocompleter').data('autocompleter');
+        var data = $(input).next(".autocompleter").data("autocompleter");
 
         if (data) {
           _open(null, data);
@@ -148,7 +155,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     close: function close() {
       return $(this).each(function (i, input) {
-        var data = $(input).next('.autocompleter').data('autocompleter');
+        var data = $(input).next(".autocompleter").data("autocompleter");
 
         if (data) {
           _close(null, data);
@@ -173,58 +180,57 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     destroy: function destroy() {
       return $(this).each(function (i, input) {
-        var data = $(input).next('.autocompleter').data('autocompleter');
+        var data = $(input).next(".autocompleter").data("autocompleter");
 
         if (data) {
           // Abort xhr
           if (data.jqxhr) {
             data.jqxhr.abort();
-          }
+          } // If has selected item & open - confirm it
 
-          // If has selected item & open - confirm it
-          if (data.$autocompleter.hasClass('open')) {
-            data.$autocompleter.find('.autocompleter-selected').trigger('click.autocompleter');
-          }
 
-          // Restore original autocomplete attr
+          if (data.$autocompleter.hasClass("open")) {
+            data.$autocompleter.find(".autocompleter-selected").trigger("click.autocompleter");
+          } // Restore original autocomplete attr
+
+
           if (!data.originalAutocomplete) {
-            data.$node.removeAttr('autocomplete');
+            data.$node.removeAttr("autocomplete");
           } else {
-            data.$node.attr('autocomplete', data.originalAutocomplete);
-          }
+            data.$node.attr("autocomplete", data.originalAutocomplete);
+          } // Remove autocompleter & unbind events
 
-          // Remove autocompleter & unbind events
-          data.$node.off('.autocompleter').removeClass('autocompleter-node');
-          data.$autocompleter.off('.autocompleter').remove();
+
+          data.$node.off(".autocompleter").removeClass("autocompleter-node");
+          data.$autocompleter.off(".autocompleter").remove();
         }
       });
     }
   };
-
   /**
    * @method private
    * @name _init
    * @description Initializes plugin
    * @param opts [object] "Initialization options"
    */
+
   function _init(opts) {
     // Local options
-    opts = $.extend({}, options, opts || {});
+    opts = $.extend({}, options, opts || {}); // Check for Body
 
-    // Check for Body
     if ($body === null) {
-      $body = $('body');
-    }
+      $body = $("body");
+    } // Apply to each element
 
-    // Apply to each element
+
     var $items = $(this);
+
     for (var i = 0, count = $items.length; i < count; i++) {
       _build($items.eq(i), opts);
     }
 
     return $items;
   }
-
   /**
    * @method private
    * @name _build
@@ -232,41 +238,38 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param $node [jQuery object] "Target jQuery object"
    * @param opts [object] <{}> "Options object"
    */
-  function _build($node, opts) {
-    if (!$node.hasClass('autocompleter-node')) {
-      // Extend options
-      opts = $.extend({}, opts, $node.data('autocompleter-options'));
 
-      // Check for as local or .json file
-      if (typeof opts.source === 'string' && (opts.source.slice(-5) === '.json' || opts.asLocal === true)) {
+
+  function _build($node, opts) {
+    if (!$node.hasClass("autocompleter-node")) {
+      // Extend options
+      opts = $.extend({}, opts, $node.data("autocompleter-options")); // Check for as local or .json file
+
+      if (typeof opts.source === "string" && (opts.source.slice(-5) === ".json" || opts.asLocal === true)) {
         $.ajax({
           url: opts.source,
-          type: 'GET',
-          dataType: 'json',
+          type: "GET",
+          dataType: "json",
           async: false
         }).done(function (response) {
           opts.source = response;
         });
       }
 
-      var html = '<div class="autocompleter ' + opts.customClass.join(' ') + '" id="autocompleter-' + (guid + 1) + '">';
+      var html = '<div class="autocompleter ' + opts.customClass.join(" ") + '" id="autocompleter-' + (guid + 1) + '">';
 
       if (opts.hint) {
         html += '<div class="autocompleter-hint"></div>';
       }
 
       html += '<ul class="autocompleter-list"></ul>';
-      html += '</div>';
+      html += "</div>";
+      $node.addClass("autocompleter-node").after(html);
+      var $autocompleter = $node.next(".autocompleter").eq(0); // Set autocomplete to off for warn overlay
 
-      $node.addClass('autocompleter-node').after(html);
+      var originalAutocomplete = $node.attr("autocomplete");
+      $node.attr("autocomplete", "off"); // Store plugin data
 
-      var $autocompleter = $node.next('.autocompleter').eq(0);
-
-      // Set autocomplete to off for warn overlay
-      var originalAutocomplete = $node.attr('autocomplete');
-      $node.attr('autocomplete', 'off');
-
-      // Store plugin data
       var data = $.extend({
         $node: $node,
         $autocompleter: $autocompleter,
@@ -278,19 +281,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         jqxhr: false,
         response: null,
         focused: false,
-        query: '',
+        query: "",
         originalAutocomplete: originalAutocomplete,
         guid: guid++
-      }, opts);
+      }, opts); // Bind autocompleter events
 
-      // Bind autocompleter events
-      data.$autocompleter.on('mousedown.autocompleter', '.autocompleter-item', data, _select).data('autocompleter', data);
+      data.$autocompleter.on("mousedown.autocompleter", ".autocompleter-item", data, _select).data("autocompleter", data); // Bind node events
 
-      // Bind node events
-      data.$node.on('keyup.autocompleter', data, _onKeyup).on('keydown.autocompleter', data, _onKeydown).on('focus.autocompleter', data, _onFocus).on('blur.autocompleter', data, _onBlur).on('mousedown.autocompleter', data, _onMousedown);
+      data.$node.on("keyup.autocompleter", data, _onKeyup).on("keydown.autocompleter", data, _onKeydown).on("focus.autocompleter", data, _onFocus).on("blur.autocompleter", data, _onBlur).on("mousedown.autocompleter", data, _onMousedown);
     }
   }
-
   /**
    * @method private
    * @name _search
@@ -299,9 +299,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param source [object] "Source data"
    * @param data [object] "Instance data"
    */
+
+
   function _search(query, source, data) {
     var response = [];
-
     query = query.toUpperCase();
 
     if (source.length) {
@@ -316,6 +317,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   response.push(source[item]);
                   delete source[item];
                 }
+
                 break;
 
               case 1:
@@ -323,6 +325,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   response.push(source[item]);
                   delete source[item];
                 }
+
                 break;
             }
           }
@@ -332,21 +335,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     return response;
   }
-
   /**
    * @method private
    * @name _launch
    * @description Launch autocompleter
    * @param data [object] "Instance data"
    */
+
+
   function _launch(data) {
     // Clear previous timeout
     clearTimeout(delayTimeout);
-
     data.query = $.trim(data.$node.val());
 
     if (!data.empty && data.query.length === 0 || data.minLength && data.query.length < data.minLength) {
       _clear(data);
+
       return;
     }
 
@@ -359,18 +363,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       _xhr(data);
     }
   }
-
   /**
    * @method private
    * @name _xhr
    * @description Use source locally or create xhr
    * @param data [object] "Instance data"
    */
-  function _xhr(data) {
-    if (_typeof(data.source) === 'object') {
-      _clear(data);
 
-      // Local search
+
+  function _xhr(data) {
+    if (_typeof(data.source) === "object") {
+      _clear(data); // Local search
+
+
       var search = _search(data.query, _clone(data.source), data);
 
       if (search.length) {
@@ -386,17 +391,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         query: data.query
       };
 
-      if (typeof data.combine === 'function') {
+      if (typeof data.combine === "function") {
         ajaxData = data.combine(ajaxData);
       }
 
       data.jqxhr = $.ajax({
         url: data.source,
-        dataType: 'json',
+        dataType: "json",
         crossDomain: true,
         data: ajaxData,
         beforeSend: function beforeSend(xhr) {
-          data.$autocompleter.addClass('autocompleter-ajax');
+          data.$autocompleter.addClass("autocompleter-ajax");
+
           _clear(data);
 
           if (data.cache) {
@@ -404,6 +410,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             if (stored) {
               xhr.abort();
+
               _response(stored, data);
             }
           }
@@ -412,38 +419,38 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // Get subobject from responce
         if (data.offset) {
           response = _grab(response, data.offset);
-        }
+        } // Set cache
 
-        // Set cache
+
         if (data.cache) {
           _setCache(this.url, response);
         }
 
         _response(response, data);
       }).always(function () {
-        data.$autocompleter.removeClass('autocompleter-ajax');
+        data.$autocompleter.removeClass("autocompleter-ajax");
       });
     }
   }
-
   /**
    * @method private
    * @name _clear
    * @param data [object] "Instance data"
    */
+
+
   function _clear(data) {
     // Clear data
     data.response = null;
     data.$list = null;
     data.$selected = null;
     data.index = 0;
-    data.$autocompleter.find('.autocompleter-list').empty();
-    data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show').empty();
+    data.$autocompleter.find(".autocompleter-list").empty();
+    data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show").empty();
     data.hintText = false;
 
     _close(null, data);
   }
-
   /**
    * @method private
    * @name _response
@@ -451,14 +458,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param response [object] "Source data"
    * @param data [object] "Instance data"
    */
+
+
   function _response(response, data) {
     _buildList(response, data);
 
-    if (data.$autocompleter.hasClass('autocompleter-focus')) {
+    if (data.$autocompleter.hasClass("autocompleter-focus")) {
       _open(null, data);
     }
   }
-
   /**
    * @method private
    * @name _buildList
@@ -466,32 +474,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param list [object] "Source data"
    * @param data [object] "Instance data"
    */
+
+
   function _buildList(list, data) {
-    var menu = '';
+    var menu = "";
 
     for (var item = 0, count = list.length; item < count; item++) {
-      var classes = ['autocompleter-item'],
-          highlightReg = new RegExp(data.query, 'gi');
+      var classes = ["autocompleter-item"],
+          highlightReg = new RegExp(data.query, "gi");
 
       if (data.selectFirst && item === 0 && !data.changeWhenSelect) {
-        classes.push('autocompleter-item-selected');
+        classes.push("autocompleter-item-selected");
       }
 
       var label = data.customLabel && list[item][data.customLabel] ? list[item][data.customLabel] : list[item].label,
           clear = label;
+      label = data.highlightMatches ? label.replace(highlightReg, "<strong>$&</strong>") : label;
+      var value = data.customValue && list[item][data.customValue] ? list[item][data.customValue] : list[item].value; // Apply custom template
 
-      label = data.highlightMatches ? label.replace(highlightReg, '<strong>$&</strong>') : label;
-
-      var value = data.customValue && list[item][data.customValue] ? list[item][data.customValue] : list[item].value;
-
-      // Apply custom template
       if (data.template) {
         var template = data.template.replace(/({{ label }})/gi, label);
 
         for (var property in list[item]) {
-          if (list[item].hasOwnProperty(property)) {
-            var regex = new RegExp('{{ ' + property + ' }}', 'gi');
-
+          if (Object.prototype.hasOwnProperty.call(list[item], property)) {
+            var regex = new RegExp("{{ " + property + " }}", "gi");
             template = template.replace(regex, list[item][property]);
           }
         }
@@ -500,48 +506,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       if (value) {
-        menu += '<li data-value="' + value + '" data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
+        menu += '<li data-value="' + value + '" data-label="' + clear + '" class="' + classes.join(" ") + '">' + label + "</li>";
       } else {
-        menu += '<li data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
+        menu += '<li data-label="' + clear + '" class="' + classes.join(" ") + '">' + label + "</li>";
       }
-    }
+    } // Set hint
 
-    // Set hint
+
     if (list.length && data.hint) {
       var hintLabel = data.customLabel && list[0][data.customLabel] ? list[0][data.customLabel] : list[0].label,
           hint = hintLabel.substr(0, data.query.length).toUpperCase() === data.query.toUpperCase() ? hintLabel : false;
 
       if (hint && data.query !== hintLabel) {
-        var hintReg = new RegExp(data.query, 'i');
-        var hintText = hint.replace(hintReg, '<span>' + data.query + '</span>');
-
-        data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show').html(hintText);
+        var hintReg = new RegExp(data.query, "i");
+        var hintText = hint.replace(hintReg, "<span>" + data.query + "</span>");
+        data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show").html(hintText);
         data.hintText = hintText;
       }
-    }
+    } // Update data
 
-    // Update data
+
     data.response = list;
-    data.$autocompleter.find('.autocompleter-list').html(menu);
-    data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
-    data.$list = list.length ? data.$autocompleter.find('.autocompleter-item') : null;
+    data.$autocompleter.find(".autocompleter-list").html(menu);
+    data.$selected = data.$autocompleter.find(".autocompleter-item-selected").length ? data.$autocompleter.find(".autocompleter-item-selected") : null;
+    data.$list = list.length ? data.$autocompleter.find(".autocompleter-item") : null;
     data.index = data.$selected ? data.$list.index(data.$selected) : -1;
-    data.$autocompleter.find('.autocompleter-item').each(function (i, j) {
+    data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
       $(j).data(data.response[i]);
     });
   }
-
   /**
    * @method private
    * @name _onKeyup
    * @description Keyup events in node, up/down autocompleter-list navigation, typing and enter button callbacks
    * @param e [object] "Event data"
    */
+
+
   function _onKeyup(e) {
     var data = e.data,
         code = e.keyCode ? e.keyCode : e.which;
 
-    if ((code === 40 || code === 38) && data.$autocompleter.hasClass('autocompleter-show')) {
+    if ((code === 40 || code === 38) && data.$autocompleter.hasClass("autocompleter-show")) {
       // Arrows up & down
       var len = data.$list.length,
           next,
@@ -571,16 +577,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           next = -1;
         }
 
-        data.index = code === 40 ? next : prev;
+        data.index = code === 40 ? next : prev; // Update HTML
 
-        // Update HTML
-        data.$list.removeClass('autocompleter-item-selected');
+        data.$list.removeClass("autocompleter-item-selected");
 
         if (data.index !== -1) {
-          data.$list.eq(data.index).addClass('autocompleter-item-selected');
+          data.$list.eq(data.index).addClass("autocompleter-item-selected");
         }
 
-        data.$selected = data.$autocompleter.find('.autocompleter-item-selected').length ? data.$autocompleter.find('.autocompleter-item-selected') : null;
+        data.$selected = data.$autocompleter.find(".autocompleter-item-selected").length ? data.$autocompleter.find(".autocompleter-item-selected") : null;
 
         if (data.changeWhenSelect) {
           _setValue(data);
@@ -591,13 +596,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       _launch(data);
     }
   }
-
   /**
    * @method private
    * @name _onKeydown
    * @description Keydown events in node, up/down for prevent cursor moving and right arrow for hint
    * @param e [object] "Event data"
    */
+
+
   function _onKeydown(e) {
     var data = e.data,
         code = e.keyCode ? e.keyCode : e.which;
@@ -607,25 +613,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       e.stopPropagation();
     } else if (code === 39) {
       // Right arrow
-      if (data.hint && data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
+      if (data.hint && data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
         e.preventDefault();
         e.stopPropagation();
-
-        var hintOrigin = data.$autocompleter.find('.autocompleter-item').length ? data.$autocompleter.find('.autocompleter-item').eq(0).attr('data-label') : false;
+        var hintOrigin = data.$autocompleter.find(".autocompleter-item").length ? data.$autocompleter.find(".autocompleter-item").eq(0).attr("data-label") : false;
 
         if (hintOrigin) {
           data.query = hintOrigin;
+
           _setHint(data);
         }
       }
     } else if (code === 13) {
       // Enter
-      if (data.$autocompleter.hasClass('autocompleter-show') && data.$selected) {
+      if (data.$autocompleter.hasClass("autocompleter-show") && data.$selected) {
         _select(e);
       }
     }
   }
-
   /**
    * @method private
    * @name _onFocus
@@ -633,17 +638,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param e [object] "Event data"
    * @param internal [boolean] "Called by plugin"
    */
+
+
   function _onFocus(e, internal) {
     if (!internal) {
       var data = e.data;
+      data.$autocompleter.addClass("autocompleter-focus");
 
-      data.$autocompleter.addClass('autocompleter-focus');
-
-      if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show')) {
+      if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show")) {
         if (data.focusOpen) {
           _launch(data);
-          data.focused = true;
 
+          data.focused = true;
           setTimeout(function () {
             data.focused = false;
           }, 500);
@@ -651,7 +657,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
     }
   }
-
   /**
    * @method private
    * @name _onBlur
@@ -659,58 +664,60 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param e [object] "Event data"
    * @param internal [boolean] "Called by plugin"
    */
+
+
   function _onBlur(e, internal) {
     e.preventDefault();
     e.stopPropagation();
-
     var data = e.data;
 
     if (!internal) {
-      data.$autocompleter.removeClass('autocompleter-focus');
+      data.$autocompleter.removeClass("autocompleter-focus");
+
       _close(e);
     }
   }
-
   /**
    * @method private
    * @name _onMousedown
    * @description Handles mousedown to node
    * @param e [object] "Event data"
    */
+
+
   function _onMousedown(e) {
     // Disable middle & right mouse click
-    if (e.type === 'mousedown' && $.inArray(e.which, [2, 3]) !== -1) {
+    if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) {
       return;
     }
 
     var data = e.data;
 
     if (data.$list && !data.focused) {
-      if (!data.$node.is(':disabled')) {
+      if (!data.$node.is(":disabled")) {
         if (isMobile && !isFirefoxMobile) {
           var el = data.$select[0];
 
           if (window.document.createEvent) {
             // All
-            var evt = window.document.createEvent('MouseEvents');
-            evt.initMouseEvent('mousedown', false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            var evt = window.document.createEvent("MouseEvents");
+            evt.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             el.dispatchEvent(evt);
           } else if (el.fireEvent) {
             // IE
-            el.fireEvent('onmousedown');
+            el.fireEvent("onmousedown");
           }
         } else {
           // Delegate intent
-          if (data.$autocompleter.hasClass('autocompleter-closed')) {
+          if (data.$autocompleter.hasClass("autocompleter-closed")) {
             _open(e);
-          } else if (data.$autocompleter.hasClass('autocompleter-show')) {
+          } else if (data.$autocompleter.hasClass("autocompleter-show")) {
             _close(e);
           }
         }
       }
     }
   }
-
   /**
    * @method private
    * @name _open
@@ -718,31 +725,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param e [object] "Event data"
    * @param instanceData [object] "Instance data"
    */
+
+
   function _open(e, instanceData) {
     var data = e ? e.data : instanceData;
 
-    if (!data.$node.prop('disabled') && !data.$autocompleter.hasClass('autocompleter-show') && data.$list && data.$list.length) {
-      data.$autocompleter.removeClass('autocompleter-closed').addClass('autocompleter-show');
-      $body.on('click.autocompleter-' + data.guid, ':not(.autocompleter-item)', data, _closeHelper);
+    if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length) {
+      data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
+      $body.on("click.autocompleter-" + data.guid, ":not(.autocompleter-item)", data, _closeHelper);
     }
   }
-
   /**
    * @method private
    * @name _closeHelper
    * @description Determines if event target is outside instance before closing
    * @param e [object] "Event data"
    */
+
+
   function _closeHelper(e) {
-    if ($(e.target).hasClass('autocompleter-node')) {
+    if ($(e.target).hasClass("autocompleter-node")) {
       return;
     }
 
-    if ($(e.currentTarget).parents('.autocompleter').length === 0) {
+    if ($(e.currentTarget).parents(".autocompleter").length === 0) {
       _close(e);
     }
   }
-
   /**
    * @method private
    * @name _close
@@ -750,103 +759,113 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param e [object] "Event data"
    * @param instanceData [object] "Instance data"
    */
+
+
   function _close(e, instanceData) {
     var data = e ? e.data : instanceData;
 
-    if (data.$autocompleter.hasClass('autocompleter-show')) {
-      data.$autocompleter.removeClass('autocompleter-show').addClass('autocompleter-closed');
-      $body.off('.autocompleter-' + data.guid);
+    if (data.$autocompleter.hasClass("autocompleter-show")) {
+      data.$autocompleter.removeClass("autocompleter-show").addClass("autocompleter-closed");
+      $body.off(".autocompleter-" + data.guid);
     }
   }
-
   /**
    * @method private
    * @name _select
    * @description Select item from .autocompleter-list
    * @param e [object] "Event data"
    */
+
+
   function _select(e) {
     // Disable middle & right mouse click
-    if (e.type === 'mousedown' && $.inArray(e.which, [2, 3]) !== -1) {
+    if (e.type === "mousedown" && $.inArray(e.which, [2, 3]) !== -1) {
       return;
     }
 
     var data = e.data;
-
     e.preventDefault();
     e.stopPropagation();
 
-    if (e.type === 'mousedown' && $(this).length) {
+    if (e.type === "mousedown" && $(this).length) {
       data.$selected = $(this);
       data.index = data.$list.index(data.$selected);
     }
 
-    if (!data.$node.prop('disabled')) {
+    if (!data.$node.prop("disabled")) {
       _close(e);
+
       _update(data);
 
-      if (e.type === 'click') {
-        data.$node.trigger('focus', [true]);
+      if (e.type === "click") {
+        data.$node.trigger("focus", [true]);
       }
     }
   }
-
   /**
    * @method private
    * @name _setHint
    * @description Set autocompleter by hint
    * @param data [object] "Instance data"
    */
+
+
   function _setHint(data) {
     _setValue(data);
+
     _handleChange(data);
+
     _launch(data);
   }
-
   /**
    * @method private
    * @name _setValue
    * @description Set value for native field
    * @param data [object] "Instance data"
    */
+
+
   function _setValue(data) {
     if (data.$selected) {
-      if (data.hintText && data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
-        data.$autocompleter.find('.autocompleter-hint').removeClass('autocompleter-hint-show');
+      if (data.hintText && data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
+        data.$autocompleter.find(".autocompleter-hint").removeClass("autocompleter-hint-show");
       }
 
-      data.$node.val(data.$selected.attr('data-value') ? data.$selected.attr('data-value') : data.$selected.attr('data-label'));
+      data.$node.val(data.$selected.attr("data-value") ? data.$selected.attr("data-value") : data.$selected.attr("data-label"));
     } else {
-      if (data.hintText && !data.$autocompleter.find('.autocompleter-hint').hasClass('autocompleter-hint-show')) {
-        data.$autocompleter.find('.autocompleter-hint').addClass('autocompleter-hint-show');
+      if (data.hintText && !data.$autocompleter.find(".autocompleter-hint").hasClass("autocompleter-hint-show")) {
+        data.$autocompleter.find(".autocompleter-hint").addClass("autocompleter-hint-show");
       }
 
       data.$node.val(data.query);
     }
   }
-
   /**
    * @method private
    * @name _update
    * @param data [object] "Instance data"
    */
+
+
   function _update(data) {
     _setValue(data);
+
     _handleChange(data);
+
     _clear(data);
   }
-
   /**
    * @method private
    * @name _handleChange
    * @description Trigger node change event and call the callback function
    * @param data [object] "Instance data"
    */
+
+
   function _handleChange(data) {
     data.callback.call(data.$autocompleter, data.$node.val(), data.index, data.response[data.index]);
-    data.$node.trigger('change');
+    data.$node.trigger("change");
   }
-
   /**
    * @method private
    * @name _grab
@@ -854,8 +873,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param response [object] "Native object"
    * @param offset [string] "Offset string"
    */
+
+
   function _grab(response, offset) {
-    offset = offset.split('.');
+    offset = offset.split(".");
 
     while (response && offset.length) {
       response = response[offset.shift()];
@@ -863,7 +884,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     return response;
   }
-
   /**
    * @method private
    * @name _setCache
@@ -871,6 +891,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
    * @param url [string] "AJAX get query string"
    * @param data [object] "AJAX response data"
    */
+
+
   function _setCache(url, data) {
     if (!supportLocalStorage) {
       return;
@@ -880,9 +902,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       cache[url] = {
         value: data,
         timestamp: +new Date()
-      };
+      }; // Proccess to localStorage
 
-      // Proccess to localStorage
       try {
         localStorage.setItem(localStorageKey, JSON.stringify(cache));
       } catch (e) {
@@ -896,17 +917,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
     }
   }
-
   /**
    * @method private
    * @name _getCache
    * @description Get cached data by url if exist
    * @param url [string] "AJAX get query string"
    */
+
+
   function _getCache(url, expires) {
     var response = false,
         item;
-
     expires = expires || false;
 
     if (!url) {
@@ -927,76 +948,78 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return false;
     }
   }
-
   /**
    * @method private
    * @name _loadCache
    * @description Load all plugin cache from localStorage
    */
+
+
   function _loadCache() {
     if (!supportLocalStorage) {
       return;
     }
 
-    return JSON.parse(localStorage.getItem(localStorageKey) || '{}');
+    return JSON.parse(localStorage.getItem(localStorageKey) || "{}");
   }
-
   /**
    * @method private
    * @name _deleteCache
    * @description Delete all plugin cache from localStorage
    */
+
+
   function _deleteCache() {
     try {
       localStorage.removeItem(localStorageKey);
       cache = _loadCache();
-    } catch (e) {
-      throw e;
+    } catch (e) {//
     }
   }
-
   /**
    * @method private
    * @name _clone
    * @description Clone JavaScript object
    */
+
+
   function _clone(obj) {
     var copy;
 
-    if (null === obj || 'object' !== (typeof obj === 'undefined' ? 'undefined' : _typeof(obj))) {
+    if (null === obj || "object" !== _typeof(obj)) {
       return obj;
     }
 
     copy = obj.constructor();
 
     for (var attr in obj) {
-      if (obj.hasOwnProperty(attr)) {
+      if (Object.prototype.hasOwnProperty.call(obj, attr)) {
         copy[attr] = obj[attr];
       }
     }
 
     return copy;
-  }
+  } // Load cache
 
-  // Load cache
+
   var cache = _loadCache();
 
   $.fn.autocompleter = function (method) {
     if (publics[method]) {
       return publics[method].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else if ((typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' || !method) {
+    } else if (_typeof(method) === "object" || !method) {
       return _init.apply(this, arguments);
     }
+
     return this;
   };
 
   $.autocompleter = function (method) {
-    if (method === 'defaults') {
+    if (method === "defaults") {
       publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
-    } else if (method === 'clearCache') {
+    } else if (method === "clearCache") {
       publics.clearCache.apply(this, null);
     }
   };
-})(jQuery, window);
 
 })));
