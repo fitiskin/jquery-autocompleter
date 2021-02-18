@@ -542,20 +542,26 @@
         classes.push('autocompleter-item-selected');
       }
 
-      var label =
-          data.customLabel && list[item][data.customLabel]
-            ? list[item][data.customLabel]
-            : list[item].label,
-        clear = label;
+      var label;
+      var attr;
+      if (typeof data.customLabel === 'function') {
+        label = data.customLabel(list[item]);
+      } else {
+        attr = data.customLabel || 'label';
+        label = list[item][attr];
+      }
 
       label = data.highlightMatches
         ? label.replace(highlightReg, '<strong>$&</strong>')
         : label;
 
-      var value =
-        data.customValue && list[item][data.customValue]
-          ? list[item][data.customValue]
-          : list[item].value;
+      var value;
+      if (typeof data.customValue === 'function') {
+        value = data.customValue(list[item]);
+      } else {
+        attr = data.customValue || 'value';
+        value = list[item][attr];
+      }
 
       // Apply custom template
       if (data.template) {
@@ -577,7 +583,7 @@
           '<li data-value="' +
           value +
           '" data-label="' +
-          clear +
+          label +
           '" class="' +
           classes.join(' ') +
           '">' +
@@ -586,7 +592,7 @@
       } else {
         menu +=
           '<li data-label="' +
-          clear +
+          label +
           '" class="' +
           classes.join(' ') +
           '">' +

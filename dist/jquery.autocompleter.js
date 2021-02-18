@@ -1,9 +1,9 @@
 /**
- * jquery-autocompleter v0.3.0 - 2018-03-08
+ * jquery-autocompleter v0.3.0 - 2021-02-18
  * Easy customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
- * @license (c) 2018 Artem Fitiskin MIT Licensed
+ * @license (c) 2021 Artem Fitiskin MIT Licensed
  */
 
 (function (global, factory) {
@@ -477,12 +477,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         classes.push('autocompleter-item-selected');
       }
 
-      var label = data.customLabel && list[item][data.customLabel] ? list[item][data.customLabel] : list[item].label,
-          clear = label;
+      var label;
+      var attr;
+      if (typeof data.customLabel === 'function') {
+        label = data.customLabel(list[item]);
+      } else {
+        attr = data.customLabel || 'label';
+        label = list[item][attr];
+      }
 
       label = data.highlightMatches ? label.replace(highlightReg, '<strong>$&</strong>') : label;
 
-      var value = data.customValue && list[item][data.customValue] ? list[item][data.customValue] : list[item].value;
+      var value;
+      if (typeof data.customValue === 'function') {
+        value = data.customValue(list[item]);
+      } else {
+        attr = data.customValue || 'value';
+        value = list[item][attr];
+      }
 
       // Apply custom template
       if (data.template) {
@@ -500,9 +512,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       if (value) {
-        menu += '<li data-value="' + value + '" data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
+        menu += '<li data-value="' + value + '" data-label="' + label + '" class="' + classes.join(' ') + '">' + label + '</li>';
       } else {
-        menu += '<li data-label="' + clear + '" class="' + classes.join(' ') + '">' + label + '</li>';
+        menu += '<li data-label="' + label + '" class="' + classes.join(' ') + '">' + label + '</li>';
       }
     }
 
