@@ -1,5 +1,5 @@
 /**
- * jquery-autocompleter v0.3.0 - 2021-02-18
+ * jquery-autocompleter v0.3.1 - 2021-02-18
  * Easy customisable and with localStorage cache support.
  * http://github.com/ArtemFitiskin/jquery-autocompleter
  *
