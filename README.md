@@ -91,8 +91,8 @@ Autocompleter has the following options:
 | changeWhenSelect | bool     | Allows to change input value using arrow keys navigation in autocomplete list                                                                         | true    |
 | highlightMatches | bool     | This option defines `<strong>` tag wrap for matches in autocomplete results                                                                           | false   |
 | ignoredKeyCode   | array    | Array with ignorable keycodes, by default: `9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118, 119, 120, 122, 123, 144, 145`  | []      |
-| customLabel      | str      | The name of object's property which will be used as a label                                                                                           | false   |
-| customValue      | str      | The name of object's property which will be used as a value                                                                                           | false   |
+| customLabel      | str      | The name of object's property which will be used as a label or a callback that receives an object an generates a label                                                                                          | false   |
+| customValue      | str      | The name of object's property which will be used as a value or a callback that receives an object an generates a value                                                                                        | false   |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
 | offset           | str      | Source response offset, for example: response.items.posts                                                                                             | false   |
 | combine          | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options                                                  | $.noop  |
