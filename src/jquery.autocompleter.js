@@ -20,6 +20,7 @@ var guid = 0,
     "customValue",
     "onBeforeSend",
     "onEmpty",
+    "onItem",
     "template",
     "offset",
     "format",
@@ -74,6 +75,7 @@ var guid = 0,
  * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
  * @param onBeforeSend [function] <$.noop> "This function is triggered before an ajax request"
  * @param onEmpty [function] <$.noop> "If data list if empty, trigger this function"
+ * @param onItem [function] <$.noop> "This function is triggered when each item is being prepared to be shown"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
  * @param format [function] null "Format response payload to source data"
@@ -100,6 +102,7 @@ var options = {
   customValue: false,
   onBeforeSend: $.noop,
   onEmpty: $.noop,
+  onItem: $.noop,
   template: false,
   offset: false,
   format: null,
@@ -616,6 +619,7 @@ function _buildList(list, data) {
   data.index = data.$selected ? data.$list.index(data.$selected) : -1;
   data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
     $(j).data(data.response[i]);
+    data.onItem(data.$autocompleter, $(j), i, data.response[i]);
   });
 
   if (!list.length) {
