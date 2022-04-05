@@ -21,6 +21,7 @@ var guid = 0,
     "onBeforeSend",
     "template",
     "offset",
+    "format",
     "combine",
     "callback",
     "minLength",
@@ -73,6 +74,7 @@ var guid = 0,
  * @param onBeforeSend [function] <$.noop> "This function is triggered before an ajax request"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
+ * @param format [function] null "Format response payload to source data"
  * @param combine [function] <null> "Returns an object with ajax data. Useful if you want to pass some additional server options or replace it at all"
  * @param callback [function] <$.noop> "Select value callback function. Arguments: value, index"
  */
@@ -97,6 +99,7 @@ var options = {
   onBeforeSend: $.noop,
   template: false,
   offset: false,
+  format: null,
   combine: null,
   callback: $.noop,
 };
@@ -447,6 +450,10 @@ function _xhr(data) {
         // Get subobject from responce
         if (data.offset) {
           response = _grab(response, data.offset);
+        }
+
+        if (typeof data.format === "function") {
+          response = data.format(response) || [];
         }
 
         // Set cache
