@@ -1,4 +1,17 @@
-# jQuery Autocompleter
+# jQuery Autocompleter Plugin
+
+<p>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/jquery-autocompleter">
+    <img alt="" src="https://badgen.net/npm/v/jquery-autocompleter">
+  </a>
+  <a aria-label="Package size" href="https://bundlephobia.com/result?p=jquery-autocompleter">
+    <img alt="" src="https://badgen.net/bundlephobia/minzip/jquery-autocompleter">
+  </a>
+  <a aria-label="License" href="https://github.com/fitiskin/jquery-autocompleter/blob/main/LICENSE">
+    <img alt="" src="https://badgen.net/npm/license/jquery-autocompleter">
+  </a>
+</p>
+
 
 ## Demo
 
