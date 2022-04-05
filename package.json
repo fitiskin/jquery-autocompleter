@@ -27,6 +27,7 @@
     "format": "prettier --write \"src/**/*.js\" \"**/*.md\" \"**/*.css\"",
     "lint": "eslint . --ext .js --cache",
     "lint:fix": "npm run lint --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "hooks:pre-commit": "lint-staged"
   },
