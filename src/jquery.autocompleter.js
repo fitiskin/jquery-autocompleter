@@ -19,6 +19,7 @@ var guid = 0,
     "customLabel",
     "customValue",
     "onBeforeSend",
+    "onBeforeShow",
     "onEmpty",
     "onItem",
     "template",
@@ -74,6 +75,7 @@ var guid = 0,
  * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
  * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
  * @param onBeforeSend [function] <$.noop> "This function is triggered before an ajax request"
+ * @param onBeforeShow [function] <$.noop> "This function is triggered when the list is ready to be shown"
  * @param onEmpty [function] <$.noop> "If data list if empty, trigger this function"
  * @param onItem [function] <$.noop> "This function is triggered when each item is being prepared to be shown"
  * @param template [(string|boolean)] <false> "Custom template for list items"
@@ -101,6 +103,7 @@ var options = {
   customLabel: false,
   customValue: false,
   onBeforeSend: $.noop,
+  onBeforeShow: $.noop,
   onEmpty: $.noop,
   onItem: $.noop,
   template: false,
@@ -625,6 +628,8 @@ function _buildList(list, data) {
   if (!list.length) {
     data.onEmpty();
   }
+
+  data.onBeforeShow();
 }
 
 /**
