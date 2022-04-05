@@ -1,52 +1,52 @@
 .autocompleter {
-    width: 100%;
-    display: none;
+  width: 100%;
+  display: none;
 }
 
 .autocompleter-show {
-    display: block;
+  display: block;
 }
 
 .autocompleter,
 .autocompleter-hint {
-    position: absolute;
+  position: absolute;
 }
 
 .autocompleter-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .autocompleter-item {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .autocompleter-item:hover {
-    /* Hover State */
+  /* Hover State */
 }
 
 .autocompleter-item-selected {
-    /* Selected State */
+  /* Selected State */
 }
 
 .autocompleter-item strong {
-    /* Highlight Matches */
+  /* Highlight Matches */
 }
 
 .autocompleter-hint {
-    width: 100%;
-    display: none;
+  width: 100%;
+  display: none;
 
-    /** Need absolute position over input text */
+  /** Need absolute position over input text */
 }
 
 .autocompleter-hint-show {
-    display: block;
+  display: block;
 }
 
 .autocompleter-hint span {
-    color: transparent;
+  color: transparent;
 }

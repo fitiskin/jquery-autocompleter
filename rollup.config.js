@@ -43,8 +43,7 @@ function getBanner() {
 * ${packageJson.name} v${packageJson.version} - ${day}
 * ${packageJson.description}
 * ${packageJson.homepage}
-*
-* @license (c) ${year} ${packageJson.author.name} ${packageJson.license} Licensed
+* @license (c) ${year} ${packageJson.author} ${packageJson.license} Licensed
 */
 `;
 }
