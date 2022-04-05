@@ -8,10 +8,6 @@ Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocomplet
 
 #### Installation
 
-[Bower](https://bower.io/):
-
-`bower install Autocompleter`
-
 [npm](https://www.npmjs.com/):
 
 `npm install --save jquery-autocompleter`
