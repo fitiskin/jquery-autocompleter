@@ -22,51 +22,51 @@ Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocomplet
 
 #### Add plugin to your project
 
-* include jQuery:
+- include jQuery:
 
   ```html
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   ```
 
-* include plugin's code:
+- include plugin's code:
 
   ```html
   <!-- Styles -->
-  <link rel="stylesheet" href="css/jquery.autocompleter.css">
+  <link rel="stylesheet" href="css/jquery.autocompleter.css" />
 
   <!-- Scripts -->
   <script src="js/jquery.autocompleter.min.js"></script>
   ```
 
-* call the plugin:
+- call the plugin:
 
   ```javascript
-  $('input').autocompleter({
+  $("input").autocompleter({
     /* options */
   });
   ```
 
 #### Examples
 
-* remote url
+- remote url
 
   ```javascript
   $(function() {
-    $('input').autocompleter({ source: 'path/to/get_data_request' });
+    $("input").autocompleter({ source: "path/to/get_data_request" });
   });
   ```
 
-* plain
+- plain
 
   ```javascript
   var data = [
-    { value: 1, label: 'one' },
-    { value: 2, label: 'two' },
-    { value: 3, label: 'three' }
+    { value: 1, label: "one" },
+    { value: 2, label: "two" },
+    { value: 3, label: "three" }
   ];
 
   $(function() {
-    $('input').autocompleter({ source: data });
+    $("input").autocompleter({ source: data });
   });
   ```
 
@@ -95,21 +95,21 @@ Autocompleter has the following options:
 | customValue      | str      | The name of object's property which will be used as a value                                                                                           | false   |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
 | offset           | str      | Source response offset, for example: response.items.posts                                                                                             | false   |
-| combine          | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options                                                  | $.noop  |
-| callback         | function | Select value callback function. Arguments: `value`, `index`, `object`                                                                                 | $.noop  |
+| combine          | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options                                                  | \$.noop |
+| callback         | function | Select value callback function. Arguments: `value`, `index`, `object`                                                                                 | \$.noop |
 
 ## Methods
 
 #### Change option after plugin is defined
 
 ```javascript
-$('#input').autocompleter('option', data);
+$("#input").autocompleter("option", data);
 ```
 
 For example:
 
 ```javascript
-$('#input').autocompleter('option', {
+$("#input").autocompleter("option", {
   limit: 5,
   template:
     '<img src="{{ image }}" alt="Image for autocompleter list item" /> {{ label }}'
@@ -119,32 +119,32 @@ $('#input').autocompleter('option', {
 #### Open list
 
 ```javascript
-$('#input').autocompleter('open');
+$("#input").autocompleter("open");
 ```
 
 #### Close list
 
 ```javascript
-$('#input').autocompleter('close');
+$("#input").autocompleter("close");
 ```
 
 #### Destroy plugin
 
 ```javascript
-$('#input').autocompleter('destroy');
+$("#input").autocompleter("destroy");
 ```
 
 #### Clear all cache
 
 ```javascript
-$.autocompleter('clearCache');
+$.autocompleter("clearCache");
 ```
 
 #### Set defaults
 
 ```javascript
-$.autocompleter('defaults', {
-  customClass: 'myClassForAutocompleter'
+$.autocompleter("defaults", {
+  customClass: "myClassForAutocompleter"
 });
 ```
 
@@ -156,24 +156,30 @@ Autocompleter for the first name input with caching, match highlighting and 5 re
 
 ```html
 <label for="gender_male">Male</label>
-<input type="radio" name="gender" value="male" id="gender_male" checked="checked">
+<input
+  type="radio"
+  name="gender"
+  value="male"
+  id="gender_male"
+  checked="checked"
+/>
 
 <label for="gender_female">Female</label>
-<input type="radio" name="gender" value="female" id="gender_female">
+<input type="radio" name="gender" value="female" id="gender_female" />
 
 <label for="firstname">First Name</label>
-<input type="text" name="firstname" id="firstname">
+<input type="text" name="firstname" id="firstname" />
 ```
 
 #### Code
 
 ```javascript
 $(function() {
-  $('#firstname').autocompleter({
+  $("#firstname").autocompleter({
     limit: 5,
     cache: true,
     combine: function(params) {
-      var gender = $('input:radio[name=gender]:checked').val();
+      var gender = $("input:radio[name=gender]:checked").val();
 
       return {
         q: params.query,
@@ -183,7 +189,7 @@ $(function() {
     },
     callback: function(value, index, object) {
       console.log(
-        'Value ' + value + ' are selected (with index ' + index + ').'
+        "Value " + value + " are selected (with index " + index + ")."
       );
       console.log(object);
     }
@@ -197,10 +203,10 @@ $(function() {
 
 ```html
 <div class="autocompleter" id="autocompleter-1">
-	<ul class="autocompleter-list">
-		<li class="autocompleter-item">First</li>
-		<!-- ... -->
-		<li class="autocompleter-item">Last</li>
-	</ul>
+  <ul class="autocompleter-list">
+    <li class="autocompleter-item">First</li>
+    <!-- ... -->
+    <li class="autocompleter-item">Last</li>
+  </ul>
 </div>
 ```
