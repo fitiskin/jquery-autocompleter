@@ -40,6 +40,7 @@ var guid = 0,
     "ignoredKeyCode",
     "customLabel",
     "customValue",
+    "onBeforeSend",
     "template",
     "offset",
     "combine",
@@ -91,6 +92,7 @@ var guid = 0,
  * @param ignoredKeyCode [array] <[]> "Array with ignorable keycodes"
  * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
  * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
+ * @param onBeforeSend [function] <$.noop> "This function is triggered before an ajax request"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
  * @param combine [function] <null> "Returns an object with ajax data. Useful if you want to pass some additional server options or replace it at all"
@@ -114,6 +116,7 @@ var options = {
   ignoredKeyCode: [],
   customLabel: false,
   customValue: false,
+  onBeforeSend: $.noop,
   template: false,
   offset: false,
   combine: null,
@@ -457,6 +460,8 @@ function _xhr(data) {
       beforeSend: function(xhr) {
         data.$autocompleter.addClass("autocompleter-ajax");
         _clear(data);
+
+        data.onBeforeSend();
 
         if (data.cache) {
           var stored = _getCache(this.url, data.cacheExpires);
