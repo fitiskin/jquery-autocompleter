@@ -14,7 +14,7 @@
 
 ## Demo
 
-Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocompleter/).
+Here: [Example with Crayola colors](https://fitiskin.ru/jquery-autocompleter/).
 
 ## Usage
 
@@ -164,20 +164,19 @@ Autocompleter for the first name input with caching, match highlighting and 5 re
 #### Form markup
 
 ```html
-<label for="gender_male">Male</label>
-<input
-  type="radio"
-  name="gender"
-  value="male"
-  id="gender_male"
-  checked="checked"
-/>
+<fieldset>
+  <label>Male</label>
+  <input type="radio" name="gender" value="male" checked="checked" />
 
-<label for="gender_female">Female</label>
-<input type="radio" name="gender" value="female" id="gender_female" />
+  <label>Female</label>
+  <input type="radio" name="gender" value="female" />
 
-<label for="firstname">First Name</label>
-<input type="text" name="firstname" id="firstname" />
+  <label>Other</label>
+  <input type="radio" name="gender" value="other" />
+
+  <label>First Name</label>
+  <input type="text" name="firstname" id="firstname" />
+</fieldset>
 ```
 
 #### Code
