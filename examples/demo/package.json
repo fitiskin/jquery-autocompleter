@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base=./",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.9.1"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "jquery-autocompleter": "^0.4.0"
+  }
+}

@@ -12,7 +12,6 @@
   </a>
 </p>
 
-
 ## Demo
 
 Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocompleter/).

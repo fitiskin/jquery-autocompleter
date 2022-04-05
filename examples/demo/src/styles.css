@@ -1,0 +1,200 @@
+/**
+ * Common
+ */
+
+body {
+  /* Pattern made by Atle Mo. */
+  background-image: url("./bg.png");
+  font-family: "Helvetica", "Arial", sans-serif;
+  color: #ffffff;
+}
+
+main {
+  width: 960px;
+  margin: 40px auto;
+  font-size: 0;
+}
+
+main > div {
+  display: inline-block;
+  width: 50%;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+h1 {
+  font-size: 58px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background: #4d4d4d;
+}
+
+a {
+  color: #70b3eb;
+  text-decoration: none;
+  border-bottom: 1px #ffffff solid;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+p {
+  color: #c8c7c7;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/**
+ * Custom
+ */
+
+#content {
+  padding-right: 40px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+p.accent {
+  color: #dbed8a;
+}
+
+p.caption {
+  color: #ccc;
+  font-size: 16px;
+}
+
+.button {
+  margin: 20px auto;
+  display: inline-block;
+  padding: 16px 40px;
+  background: #70b3eb;
+  text-decoration: none;
+  font-size: 30px;
+  color: #ffffff;
+  text-shadow: 0px -1px 1px rgba(26, 62, 103, 0.42);
+  box-shadow: inset 0 0 0 1px #70b3eb,
+    inset 0 1px 0 1px rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  -webkit-transition: 0.2s ease -webkit-transform;
+  -moz-transition: 0.2s ease -moz-transform;
+  transition: 0.2s ease transform;
+  border-bottom: 1px rgba(255, 255, 255, 0.8) solid;
+}
+
+.button:hover {
+  -webkit-transform: translateY(-3px);
+  -moz-transform: translateY(-3px);
+  transform: translateY(-3px);
+}
+
+.field {
+  position: relative;
+  margin-top: 170px;
+}
+
+.field input {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #000000;
+  height: 60px;
+  font-size: 24px;
+  padding: 0 12px;
+  border: 0;
+}
+
+.field input:focus {
+  outline: 0;
+}
+
+.icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 60px;
+  background-image: url("./icon.png");
+  background-color: #ffffff;
+}
+
+/**
+ * Autocompleter styles
+ */
+
+.autocompleter {
+  width: 100%;
+  background: #dddddd;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  z-index: 100;
+}
+
+.autocompleter,
+.autocompleter-hint {
+  position: absolute;
+}
+
+.autocompleter-list {
+  box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.autocompleter-item-selected {
+  background: #ffffff;
+}
+
+.autocompleter-item {
+  padding: 6px 12px;
+  color: #444444;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.autocompleter-item:hover {
+  background: #dbed8a;
+}
+
+.autocompleter-item strong {
+  background: #f9de8f;
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.autocompleter-item span {
+  color: #bbbbbb;
+}
+
+.autocompleter-hint {
+  color: #ccc;
+  text-align: left;
+  top: -56px;
+  font-weight: 400;
+  left: 0;
+  width: 100%;
+  padding: 12px 12px 12px 13px;
+  font-size: 24px;
+  display: none;
+}
+
+.autocompleter-hint span {
+  color: transparent;
+}
+
+.autocompleter-hint-show {
+  display: block;
+}
+
+.autocompleter-closed {
+  display: none;
+}
