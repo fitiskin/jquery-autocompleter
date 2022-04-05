@@ -2,30 +2,8 @@ import $ from "jquery";
 
 var guid = 0,
   ignoredKeyCode = [
-    9,
-    13,
-    17,
-    19,
-    20,
-    27,
-    33,
-    34,
-    35,
-    36,
-    37,
-    39,
-    44,
-    92,
-    113,
-    114,
-    115,
-    118,
-    119,
-    120,
-    122,
-    123,
-    144,
-    145
+    9, 13, 17, 19, 20, 27, 33, 34, 35, 36, 37, 39, 44, 92, 113, 114, 115, 118,
+    119, 120, 122, 123, 144, 145,
   ],
   allowOptions = [
     "source",
@@ -46,7 +24,7 @@ var guid = 0,
     "combine",
     "callback",
     "minLength",
-    "delay"
+    "delay",
   ],
   userAgent =
     window.navigator.userAgent || window.navigator.vendor || window.opera,
@@ -56,7 +34,7 @@ var guid = 0,
   $body = null,
   delayTimeout = null,
   localStorageKey = "autocompleterCache",
-  supportLocalStorage = (function() {
+  supportLocalStorage = (function () {
     var supported = typeof window.localStorage !== "undefined";
 
     if (supported) {
@@ -120,7 +98,7 @@ var options = {
   template: false,
   offset: false,
   combine: null,
-  callback: $.noop
+  callback: $.noop,
 };
 
 var publics = {
@@ -131,7 +109,7 @@ var publics = {
    * @param opts [object] <{}> "Options object"
    * @example $.autocompleter('defaults', opts);
    */
-  defaults: function(opts) {
+  defaults: function (opts) {
     options = $.extend(options, opts || {});
 
     return typeof this === "object" ? $(this) : true;
@@ -142,11 +120,9 @@ var publics = {
    * @name option
    * @description Open autocompleter list
    */
-  option: function(properties) {
-    return $(this).each(function(i, input) {
-      var data = $(input)
-        .next(".autocompleter")
-        .data("autocompleter");
+  option: function (properties) {
+    return $(this).each(function (i, input) {
+      var data = $(input).next(".autocompleter").data("autocompleter");
 
       for (var property in properties) {
         if ($.inArray(property, allowOptions) !== -1) {
@@ -161,11 +137,9 @@ var publics = {
    * @name open
    * @description Open autocompleter list
    */
-  open: function() {
-    return $(this).each(function(i, input) {
-      var data = $(input)
-        .next(".autocompleter")
-        .data("autocompleter");
+  open: function () {
+    return $(this).each(function (i, input) {
+      var data = $(input).next(".autocompleter").data("autocompleter");
 
       if (data) {
         _open(null, data);
@@ -178,11 +152,9 @@ var publics = {
    * @name close
    * @description Close autocompleter list
    */
-  close: function() {
-    return $(this).each(function(i, input) {
-      var data = $(input)
-        .next(".autocompleter")
-        .data("autocompleter");
+  close: function () {
+    return $(this).each(function (i, input) {
+      var data = $(input).next(".autocompleter").data("autocompleter");
 
       if (data) {
         _close(null, data);
@@ -195,7 +167,7 @@ var publics = {
    * @name clearCache
    * @description Remove localStorage cache
    */
-  clearCache: function() {
+  clearCache: function () {
     _deleteCache();
   },
 
@@ -205,11 +177,9 @@ var publics = {
    * @description Removes instance of plugin
    * @example $('.target').autocompleter('destroy');
    */
-  destroy: function() {
-    return $(this).each(function(i, input) {
-      var data = $(input)
-        .next(".autocompleter")
-        .data("autocompleter");
+  destroy: function () {
+    return $(this).each(function (i, input) {
+      var data = $(input).next(".autocompleter").data("autocompleter");
 
       if (data) {
         // Abort xhr
@@ -236,7 +206,7 @@ var publics = {
         data.$autocompleter.off(".autocompleter").remove();
       }
     });
-  }
+  },
 };
 
 /**
@@ -284,8 +254,8 @@ function _build($node, opts) {
         url: opts.source,
         type: "GET",
         dataType: "json",
-        async: false
-      }).done(function(response) {
+        async: false,
+      }).done(function (response) {
         opts.source = response;
       });
     }
@@ -327,7 +297,7 @@ function _build($node, opts) {
         focused: false,
         query: "",
         originalAutocomplete: originalAutocomplete,
-        guid: guid++
+        guid: guid++,
       },
       opts
     );
@@ -414,7 +384,7 @@ function _launch(data) {
 
   if (data.delay) {
     // Be careful: delay used also with local source
-    delayTimeout = setTimeout(function() {
+    delayTimeout = setTimeout(function () {
       _xhr(data);
     }, data.delay);
   } else {
@@ -445,7 +415,7 @@ function _xhr(data) {
 
     var ajaxData = {
       limit: data.limit,
-      query: data.query
+      query: data.query,
     };
 
     if (typeof data.combine === "function") {
@@ -457,7 +427,7 @@ function _xhr(data) {
       dataType: "json",
       crossDomain: true,
       data: ajaxData,
-      beforeSend: function(xhr) {
+      beforeSend: function (xhr) {
         data.$autocompleter.addClass("autocompleter-ajax");
         _clear(data);
 
@@ -471,9 +441,9 @@ function _xhr(data) {
             _response(stored, data);
           }
         }
-      }
+      },
     })
-      .done(function(response) {
+      .done(function (response) {
         // Get subobject from responce
         if (data.offset) {
           response = _grab(response, data.offset);
@@ -486,7 +456,7 @@ function _xhr(data) {
 
         _response(response, data);
       })
-      .always(function() {
+      .always(function () {
         data.$autocompleter.removeClass("autocompleter-ajax");
       });
   }
@@ -634,7 +604,7 @@ function _buildList(list, data) {
     ? data.$autocompleter.find(".autocompleter-item")
     : null;
   data.index = data.$selected ? data.$list.index(data.$selected) : -1;
-  data.$autocompleter.find(".autocompleter-item").each(function(i, j) {
+  data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
     $(j).data(data.response[i]);
   });
 }
@@ -775,7 +745,7 @@ function _onFocus(e, internal) {
         _launch(data);
         data.focused = true;
 
-        setTimeout(function() {
+        setTimeout(function () {
           data.focused = false;
         }, 500);
       }
@@ -1063,7 +1033,7 @@ function _setCache(url, data) {
   if (url && data) {
     cache[url] = {
       value: data,
-      timestamp: +new Date()
+      timestamp: +new Date(),
     };
 
     // Proccess to localStorage
@@ -1169,7 +1139,7 @@ function _clone(obj) {
 // Load cache
 var cache = _loadCache();
 
-$.fn.autocompleter = function(method) {
+$.fn.autocompleter = function (method) {
   if (publics[method]) {
     return publics[method].apply(
       this,
@@ -1181,7 +1151,7 @@ $.fn.autocompleter = function(method) {
   return this;
 };
 
-$.autocompleter = function(method) {
+$.autocompleter = function (method) {
   if (method === "defaults") {
     publics.defaults.apply(this, Array.prototype.slice.call(arguments, 1));
   } else if (method === "clearCache") {

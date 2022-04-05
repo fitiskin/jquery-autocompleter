@@ -51,7 +51,7 @@ Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocomplet
 - remote url
 
   ```javascript
-  $(function() {
+  $(function () {
     $("input").autocompleter({ source: "path/to/get_data_request" });
   });
   ```
@@ -62,10 +62,10 @@ Here: [Example with Crayola colors](http://fitiskin.github.io/jquery-autocomplet
   var data = [
     { value: 1, label: "one" },
     { value: 2, label: "two" },
-    { value: 3, label: "three" }
+    { value: 3, label: "three" },
   ];
 
-  $(function() {
+  $(function () {
     $("input").autocompleter({ source: data });
   });
   ```
@@ -113,7 +113,7 @@ For example:
 $("#input").autocompleter("option", {
   limit: 5,
   template:
-    '<img src="{{ image }}" alt="Image for autocompleter list item" /> {{ label }}'
+    '<img src="{{ image }}" alt="Image for autocompleter list item" /> {{ label }}',
 });
 ```
 
@@ -145,7 +145,7 @@ $.autocompleter("clearCache");
 
 ```javascript
 $.autocompleter("defaults", {
-  customClass: "myClassForAutocompleter"
+  customClass: "myClassForAutocompleter",
 });
 ```
 
@@ -175,25 +175,25 @@ Autocompleter for the first name input with caching, match highlighting and 5 re
 #### Code
 
 ```javascript
-$(function() {
+$(function () {
   $("#firstname").autocompleter({
     limit: 5,
     cache: true,
-    combine: function(params) {
+    combine: function (params) {
       var gender = $("input:radio[name=gender]:checked").val();
 
       return {
         q: params.query,
         count: params.limit,
-        gender: gender
+        gender: gender,
       };
     },
-    callback: function(value, index, object) {
+    callback: function (value, index, object) {
       console.log(
         "Value " + value + " are selected (with index " + index + ")."
       );
       console.log(object);
-    }
+    },
   });
 });
 ```
