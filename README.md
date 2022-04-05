@@ -102,6 +102,7 @@ Autocompleter has the following options:
 | customLabel      | str      | The name of object's property which will be used as a label                                                                                           | false   |
 | customValue      | str      | The name of object's property which will be used as a value                                                                                           | false   |
 | onBeforeSend     | function | This function is triggered before an ajax request                                                                                                     | \$.noop |
+| onBeforeShow     | function | This function is triggered when the list is ready to be shown                                                                                         | \$.noop |
 | onEmpty          | function | If data list if empty, trigger this function                                                                                                          | \$.noop |
 | onItem           | function | This function is triggered when each item is being prepared to be shown                                                                               | \$.noop |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
