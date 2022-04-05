@@ -103,7 +103,8 @@ Autocompleter has the following options:
 | customValue      | str      | The name of object's property which will be used as a value                                                                                           | false   |
 | onBeforeSend     | function | This function is triggered before an ajax request                                                                                                     | \$.noop |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
-| offset           | str      | Source response offset, for example: response.items.posts                                                                                             | false   |
+| offset           | str      | Source response offset, for example: `"response.items.posts"`. <br />**@deprecated** use `format` instead                                             | false   |
+| format           | function | Format response payload to return source data                                                                                                         | null    |
 | combine          | function | Returns an object which extends ajax data. Useful if you want to pass some additional server options                                                  | \$.noop |
 | callback         | function | Select value callback function. Arguments: `value`, `index`, `object`                                                                                 | \$.noop |
 
