@@ -19,6 +19,7 @@ var guid = 0,
     "customLabel",
     "customValue",
     "onBeforeSend",
+    "onEmpty",
     "template",
     "offset",
     "format",
@@ -72,6 +73,7 @@ var guid = 0,
  * @param customLabel [boolean] <false> "The name of object's property which will be used as a label"
  * @param customValue [boolean] <false> "The name of object's property which will be used as a value"
  * @param onBeforeSend [function] <$.noop> "This function is triggered before an ajax request"
+ * @param onEmpty [function] <$.noop> "If data list if empty, trigger this function"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
  * @param format [function] null "Format response payload to source data"
@@ -97,6 +99,7 @@ var options = {
   customLabel: false,
   customValue: false,
   onBeforeSend: $.noop,
+  onEmpty: $.noop,
   template: false,
   offset: false,
   format: null,
@@ -614,6 +617,10 @@ function _buildList(list, data) {
   data.$autocompleter.find(".autocompleter-item").each(function (i, j) {
     $(j).data(data.response[i]);
   });
+
+  if (!list.length) {
+    data.onEmpty();
+  }
 }
 
 /**
