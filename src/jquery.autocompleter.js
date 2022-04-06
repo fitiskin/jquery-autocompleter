@@ -12,6 +12,7 @@ var guid = 0,
     "cache",
     "cacheExpires",
     "focusOpen",
+    "enterSelect",
     "selectFirst",
     "changeWhenSelect",
     "highlightMatches",
@@ -24,6 +25,7 @@ var guid = 0,
     "onItem",
     "onListOpen",
     "onListClose",
+    "onBeforeLaunch",
     "template",
     "offset",
     "format",
@@ -69,6 +71,7 @@ var guid = 0,
  * @param cache [boolean] <true> "Save xhr data to localStorage to avoid the repetition of requests"
  * @param cacheExpires [int] <86400> "localStorage data lifetime"
  * @param focusOpen [boolean] <true> "Launch autocompleter when input gets focus"
+ * @param enterSelect [boolean] <true> "Allows to select using enter key"
  * @param hint [boolean] <false> "Add hint to input with first matched label, correct styles should be installed"
  * @param selectFirst [boolean] <false> "If set to true, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on"
  * @param changeWhenSelect [boolean] <true> "Allows to change input value using arrow keys navigation in autocomplete list"
@@ -82,6 +85,7 @@ var guid = 0,
  * @param onItem [function] <$.noop> "This function is triggered when each item is being prepared to be shown"
  * @param onListOpen [function] <$.noop> "This function is triggered when the list is shown"
  * @param onListClose [function] <$.noop> "This function is triggered when the list is hidden"
+ * @param onBeforeLaunch [function] <$.noop> "The event was triggered before the new request (including local cache)"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
  * @param format [function] null "Format response payload to source data"
@@ -99,6 +103,7 @@ var options = {
   cache: true,
   cacheExpires: 86400,
   focusOpen: true,
+  enterSelect: true,
   hint: false,
   selectFirst: false,
   changeWhenSelect: true,
@@ -112,6 +117,7 @@ var options = {
   onItem: $.noop,
   onListOpen: $.noop,
   onListClose: $.noop,
+  onBeforeLaunch: $.noop,
   template: false,
   offset: false,
   format: null,
@@ -390,6 +396,7 @@ function _launch(data) {
   // Clear previous timeout
   clearTimeout(delayTimeout);
 
+  data.onBeforeLaunch(data.$autocompleter, data.$node);
   data.query = $.trim(data.$node.val());
 
   if (
@@ -747,8 +754,16 @@ function _onKeydown(e) {
     }
   } else if (code === 13) {
     // Enter
-    if (data.$autocompleter.hasClass("autocompleter-show") && data.$selected) {
-      _select(e);
+    if (data.enterSelect) {
+      if (
+        data.$autocompleter.hasClass("autocompleter-show") &&
+        data.$selected
+      ) {
+        _select(e);
+      }
+    } else {
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 }

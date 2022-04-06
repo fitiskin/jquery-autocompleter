@@ -94,6 +94,7 @@ Autocompleter has the following options:
 | cache            | bool     | Save xhr data to localStorage to avoid the repetition of requests                                                                                     | true    |
 | cacheExpires     | int      | localStorage data lifetime in sec (0 to disable cache expire)                                                                                         | 86400   |
 | focusOpen        | bool     | Launch autocompleter when input gets focus                                                                                                            | true    |
+| enterSelect      | bool     | Allows to select using enter key                                                                                                                      | true    |
 | hint             | bool     | Add hint to input with first matched label, correct styles should be installed                                                                        | false   |
 | selectFirst      | bool     | If set to `true`, first element in autocomplete list will be selected automatically, ignore if changeWhenSelect is on                                 | false   |
 | changeWhenSelect | bool     | Allows to change input value using arrow keys navigation in autocomplete list                                                                         | true    |
@@ -107,6 +108,7 @@ Autocompleter has the following options:
 | onItem           | function | This function is triggered when each item is being prepared to be shown                                                                               | \$.noop |
 | onListOpen       | function | This function is triggered when the list is shown                                                                                                     | \$.noop |
 | onListClose      | function | This function is triggered when the list is hidden                                                                                                    | \$.noop |
+| onBeforeLaunch   | function | The event was triggered before the new request (including local cache)                                                                                | \$.noop |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
 | offset           | str      | Source response offset, for example: `"response.items.posts"`. <br />**@deprecated** use `format` instead                                             | false   |
 | format           | function | Format response payload to return source data                                                                                                         | null    |
