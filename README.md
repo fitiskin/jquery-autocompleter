@@ -192,16 +192,27 @@ Autocompleter for the first name input with caching, match highlighting and 5 re
 ```javascript
 $(function () {
   $("#firstname").autocompleter({
+    source: "https://EXAMPLE_API_ENDPOINT.com/api/search/name",
     limit: 5,
     cache: true,
     combine: function (params) {
       var gender = $("input:radio[name=gender]:checked").val();
 
+      // passing params to match endpoint
       return {
         q: params.query,
         count: params.limit,
         gender: gender,
       };
+    },
+    format: function (data) {
+      // map response data to match autocompleter
+      return data.entries.map(function (item) {
+        return {
+          label: item.name,
+          value: item.slug,
+        };
+      });
     },
     callback: function (value, index, object) {
       console.log(
