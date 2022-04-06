@@ -22,6 +22,8 @@ var guid = 0,
     "onBeforeShow",
     "onEmpty",
     "onItem",
+    "onListOpen",
+    "onListClose",
     "template",
     "offset",
     "format",
@@ -78,6 +80,8 @@ var guid = 0,
  * @param onBeforeShow [function] <$.noop> "This function is triggered when the list is ready to be shown"
  * @param onEmpty [function] <$.noop> "If data list if empty, trigger this function"
  * @param onItem [function] <$.noop> "This function is triggered when each item is being prepared to be shown"
+ * @param onListOpen [function] <$.noop> "This function is triggered when the list is shown"
+ * @param onListClose [function] <$.noop> "This function is triggered when the list is hidden"
  * @param template [(string|boolean)] <false> "Custom template for list items"
  * @param offset [(string|boolean)] <false> "Source response offset, for example: response.items.posts"
  * @param format [function] null "Format response payload to source data"
@@ -106,6 +110,8 @@ var options = {
   onBeforeShow: $.noop,
   onEmpty: $.noop,
   onItem: $.noop,
+  onListOpen: $.noop,
+  onListClose: $.noop,
   template: false,
   offset: false,
   format: null,
@@ -861,6 +867,8 @@ function _onMousedown(e) {
 function _open(e, instanceData) {
   var data = e ? e.data : instanceData;
 
+  data.onListOpen(data.$autocompleter, data.response);
+
   if (
     !data.$node.prop("disabled") &&
     !data.$autocompleter.hasClass("autocompleter-show") &&
@@ -904,6 +912,8 @@ function _closeHelper(e) {
  */
 function _close(e, instanceData) {
   var data = e ? e.data : instanceData;
+
+  data.onListClose();
 
   if (data.$autocompleter.hasClass("autocompleter-show")) {
     data.$autocompleter

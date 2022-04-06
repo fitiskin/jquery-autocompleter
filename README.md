@@ -105,6 +105,8 @@ Autocompleter has the following options:
 | onBeforeShow     | function | This function is triggered when the list is ready to be shown                                                                                         | \$.noop |
 | onEmpty          | function | If data list if empty, trigger this function                                                                                                          | \$.noop |
 | onItem           | function | This function is triggered when each item is being prepared to be shown                                                                               | \$.noop |
+| onListOpen       | function | This function is triggered when the list is shown                                                                                                     | \$.noop |
+| onListClose      | function | This function is triggered when the list is hidden                                                                                                    | \$.noop |
 | template         | str      | Custom template for list items. For example: `<span>{{ label }} is {{ customPropertyFromSource }}</span>`. Template appends to `.autocompleter-item`. | false   |
 | offset           | str      | Source response offset, for example: `"response.items.posts"`. <br />**@deprecated** use `format` instead                                             | false   |
 | format           | function | Format response payload to return source data                                                                                                         | null    |
