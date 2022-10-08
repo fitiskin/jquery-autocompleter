@@ -329,6 +329,9 @@ function _build($node, opts) {
     // Bind autocompleter events
     data.$autocompleter
       .on("mousedown.autocompleter", ".autocompleter-item", data, _select)
+      .on("mousedown.autocompleter", ".autocompleter-list", data, function () {
+        return false;
+      })
       .data("autocompleter", data);
 
     // Bind node events
@@ -830,43 +833,41 @@ function _onMousedown(e) {
 
   var data = e.data;
 
-  if (data.$list && !data.focused) {
-    if (!data.$node.is(":disabled")) {
-      if (isMobile && !isFirefoxMobile) {
-        var el = data.$select[0];
+  if (data.$list && !data.focused && !data.$node.is(":disabled")) {
+    if (isMobile && !isFirefoxMobile) {
+      var el = data.$select[0];
 
-        if (window.document.createEvent) {
-          // All
-          var evt = window.document.createEvent("MouseEvents");
-          evt.initMouseEvent(
-            "mousedown",
-            false,
-            true,
-            window,
-            0,
-            0,
-            0,
-            0,
-            0,
-            false,
-            false,
-            false,
-            false,
-            0,
-            null
-          );
-          el.dispatchEvent(evt);
-        } else if (el.fireEvent) {
-          // IE
-          el.fireEvent("onmousedown");
-        }
-      } else {
-        // Delegate intent
-        if (data.$autocompleter.hasClass("autocompleter-closed")) {
-          _open(e);
-        } else if (data.$autocompleter.hasClass("autocompleter-show")) {
-          _close(e);
-        }
+      if (window.document.createEvent) {
+        // All
+        var evt = window.document.createEvent("MouseEvents");
+        evt.initMouseEvent(
+          "mousedown",
+          false,
+          true,
+          window,
+          0,
+          0,
+          0,
+          0,
+          0,
+          false,
+          false,
+          false,
+          false,
+          0,
+          null
+        );
+        el.dispatchEvent(evt);
+      } else if (el.fireEvent) {
+        // IE
+        el.fireEvent("onmousedown");
+      }
+    } else {
+      // Delegate intent
+      if (data.$autocompleter.hasClass("autocompleter-closed")) {
+        _open(e);
+      } else if (data.$autocompleter.hasClass("autocompleter-show")) {
+        _close(e);
       }
     }
   }
@@ -893,12 +894,8 @@ function _open(e, instanceData) {
     data.$autocompleter
       .removeClass("autocompleter-closed")
       .addClass("autocompleter-show");
-    $body.on(
-      "click.autocompleter-" + data.guid,
-      ":not(.autocompleter-item)",
-      data,
-      _closeHelper
-    );
+
+    $body.on("click.autocompleter-" + data.guid, data, _closeHelper);
   }
 }
 
@@ -909,13 +906,14 @@ function _open(e, instanceData) {
  * @param e [object] "Event data"
  */
 function _closeHelper(e) {
-  if ($(e.target).hasClass("autocompleter-node")) {
-    return;
+  if (
+    $(e.target).hasClass("autocompleter-node") ||
+    $(e.target).parents(".autocompleter").length
+  ) {
+    return false;
   }
 
-  if ($(e.currentTarget).parents(".autocompleter").length === 0) {
-    _close(e);
-  }
+  _close(e);
 }
 
 /**

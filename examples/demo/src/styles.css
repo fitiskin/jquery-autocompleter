@@ -121,6 +121,7 @@ p.caption {
   height: 60px;
   background-image: url("./icon.png");
   background-color: #ffffff;
+  pointer-events: none;
 }
 
 /**
@@ -185,6 +186,7 @@ p.caption {
   padding: 12px 12px 12px 13px;
   font-size: 24px;
   display: none;
+  pointer-events: none;
 }
 
 .autocompleter-hint span {

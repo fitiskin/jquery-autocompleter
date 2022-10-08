@@ -39,6 +39,7 @@
 .autocompleter-hint {
   width: 100%;
   display: none;
+  pointer-events: none;
 
   /** Need absolute position over input text */
 }
